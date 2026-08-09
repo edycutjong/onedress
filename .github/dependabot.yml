@@ -5,6 +5,12 @@ updates:
     schedule:
       interval: 'weekly'
     open-pull-requests-limit: 10
+    # Submission freeze: security patches yes, framework migrations no.
+    # Majors (next 16, vitest 4, @types/node 26, …) land after judging, not days
+    # before it — a broken build costs more than a stale major gains.
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
