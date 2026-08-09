@@ -7,7 +7,7 @@
   <br/><br/>
 
   [![Live Demo](https://img.shields.io/badge/🚀_Live-App-06b6d4?style=for-the-badge)](https://onedress.edycu.dev/party)
-  [![Demo Video](https://img.shields.io/badge/🎬_Demo-Video-ef4444?style=for-the-badge)](https://youtu.be/PLACEHOLDER)
+  [![Demo Video](https://img.shields.io/badge/🎬_Demo-Video-ef4444?style=for-the-badge)](https://youtu.be/8iKm7LpjUEA)
   [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://onedress.edycu.dev/pitch)
   [![Devpost](https://img.shields.io/badge/Devpost-YouCam_API_Hackathon-8b5cf6?style=for-the-badge)](https://youcam-api.devpost.com/)
 
