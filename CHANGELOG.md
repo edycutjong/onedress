@@ -1,3 +1,14 @@
+## [1.2.0](https://github.com/edycutjong/onedress/compare/v1.1.1...v1.2.0) (2026-08-09)
+
+### Features
+
+* add a second, measured party of real people beside the synthetic demo ([4b75b08](https://github.com/edycutjong/onedress/commit/4b75b083128e69f18ecb2be793025b85441c0041)), closes [#5E2233](https://github.com/edycutjong/onedress/issues/5E2233)
+
+### Documentation
+
+* disclose the derivative reference set and the convergence finding ([0f9f1be](https://github.com/edycutjong/onedress/commit/0f9f1bebf717dbe23a96319bd12271b2325c9b14))
+* resolve the p6/p7 licence provenance — nappy.co, CC0 ([02bee3a](https://github.com/edycutjong/onedress/commit/02bee3aa4c0ab42a2dee4e8f5638c8bb93aa33a0))
+
 ## [1.1.1](https://github.com/edycutjong/onedress/compare/v1.1.0...v1.1.1) (2026-08-09)
 
 ### Bug Fixes
