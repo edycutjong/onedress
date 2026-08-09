@@ -1,17 +1,16 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { PartyRun } from '@/lib/pipeline/types';
 import { AppShell } from '@/components/shell/AppShell';
 import { DemoBanner } from '@/components/shell/DemoBanner';
 import { useCredit } from '@/components/shell/useCredit';
 import { CompareScreen } from '@/components/screens/CompareScreen';
+import { CreateScreen } from '@/components/screens/CreateScreen';
 import { MeasureScreen } from '@/components/screens/MeasureScreen';
 import { RenderScreen } from '@/components/screens/RenderScreen';
 import { ScoreScreen } from '@/components/screens/ScoreScreen';
 import { VerdictScreen } from '@/components/screens/VerdictScreen';
-import { Card, CardBody } from '@/components/ui/Card';
-import { ScreenHeading } from '@/components/ui/ScreenHeading';
 import { DEMO_PARTY } from '@/lib/demo/demo-party';
 import { accentHex, stepStatuses } from '@/lib/demo/select';
 import { stepById } from '@/lib/demo/steps';
@@ -27,9 +26,16 @@ import { stepById } from '@/lib/demo/steps';
  */
 
 export default function Home() {
-  const [party] = useState<PartyRun>(DEMO_PARTY);
+  const [party, setParty] = useState<PartyRun>(DEMO_PARTY);
   const [activeStepId, setActiveStepId] = useState('verdict');
   const credit = useCredit();
+
+  // A live run replaces the cached party and moves the spine to Measure once, then
+  // leaves navigation alone — the visitor should be able to look around while it runs.
+  const handleParty = useCallback((run: PartyRun) => {
+    setParty(run);
+    setActiveStepId((current) => (current === 'create' ? 'measure' : current));
+  }, []);
 
   const statuses = useMemo(() => stepStatuses(party), [party]);
   const step = stepById(activeStepId);
@@ -56,18 +62,7 @@ export default function Home() {
       ) : step.screen === 'render' ? (
         <RenderScreen run={party} />
       ) : (
-        <>
-          <ScreenHeading
-            eyebrow={`${step.label} · ${step.gloss}`}
-            title={`${step.label} is not wired up yet`}
-            lead="This build ships the verdict first; the earlier steps land in the next commits."
-          />
-          <Card tone="muted">
-            <CardBody>
-              <p className="text-sm text-text-mid">Jump back to Verdict from the spine above.</p>
-            </CardBody>
-          </Card>
-        </>
+        <CreateScreen onParty={handleParty} onGoToVerdict={() => setActiveStepId('verdict')} />
       )}
     </AppShell>
   );
