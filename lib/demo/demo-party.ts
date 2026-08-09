@@ -44,9 +44,11 @@ export interface DemoBridesmaid {
   skinHex: string;
   /** faceShape from face-attr-analysis — optional, degrades the earring silhouette only */
   faceShape?: string;
-  /** her face selfie once one exists; null → the UI draws an illustrated placeholder */
-  photoUrl: string | null;
-  /** her cloth-v3 render once one exists; null → the render card stays a skeleton */
+  /**
+   * Her cloth-v3 render, once one exists. This is the whole seam: set a URL here and
+   * her render stage flips to `done`, the tile swaps the illustration for the photo,
+   * and the render screen stops saying the frame is empty. Nothing else changes.
+   */
   renderUrl: string | null;
 }
 
@@ -57,7 +59,6 @@ export const DEMO_BRIDESMAIDS: readonly DemoBridesmaid[] = [
     fitzpatrick: 'I',
     skinHex: '#F3DCC9',
     faceShape: 'Oval',
-    photoUrl: null,
     renderUrl: null,
   },
   {
@@ -66,7 +67,6 @@ export const DEMO_BRIDESMAIDS: readonly DemoBridesmaid[] = [
     fitzpatrick: 'II',
     skinHex: '#E7C9A9',
     faceShape: 'Heart',
-    photoUrl: null,
     renderUrl: null,
   },
   {
@@ -76,7 +76,6 @@ export const DEMO_BRIDESMAIDS: readonly DemoBridesmaid[] = [
     skinHex: '#D0A375',
     // faceShape deliberately absent: face-attr-analysis is the one analyzer whose
     // failure costs nothing but a fallback silhouette. The UI says so on her card.
-    photoUrl: null,
     renderUrl: null,
   },
   {
@@ -85,7 +84,6 @@ export const DEMO_BRIDESMAIDS: readonly DemoBridesmaid[] = [
     fitzpatrick: 'IV',
     skinHex: '#A9714B',
     faceShape: 'Round',
-    photoUrl: null,
     renderUrl: null,
   },
   {
@@ -94,7 +92,6 @@ export const DEMO_BRIDESMAIDS: readonly DemoBridesmaid[] = [
     fitzpatrick: 'V',
     skinHex: '#7A4A33',
     faceShape: 'Square',
-    photoUrl: null,
     renderUrl: null,
   },
   {
@@ -103,7 +100,6 @@ export const DEMO_BRIDESMAIDS: readonly DemoBridesmaid[] = [
     fitzpatrick: 'VI',
     skinHex: '#4A2E20',
     faceShape: 'Oblong',
-    photoUrl: null,
     renderUrl: null,
   },
 ];
@@ -143,7 +139,7 @@ function buildScoring(): ScoringSummary {
   };
 }
 
-function buildBridesmaids(): BridesmaidState[] {
+function buildBridesmaids(winnerColorwayId: string): BridesmaidState[] {
   return DEMO_BRIDESMAIDS.map((b) => ({
     id: b.id,
     name: b.name,
@@ -158,8 +154,11 @@ function buildBridesmaids(): BridesmaidState[] {
         faceQuality: { has_face: true, frontal: 'ok', lighting: 'ok', faceangle: 'ok' },
       },
     },
-    render: skipped(),
+    render: b.renderUrl
+      ? { status: 'done', result: { url: b.renderUrl, colorwayId: winnerColorwayId } }
+      : skipped(),
     earring: skipped(),
+    finalUrl: b.renderUrl ?? undefined,
   }));
 }
 
@@ -190,7 +189,7 @@ export function buildDemoParty(): PartyRun {
     createdAt,
     status: 'done',
     stage: 'done',
-    bridesmaids: buildBridesmaids(),
+    bridesmaids: buildBridesmaids(scoring.winner.colorway.id),
     scoring,
     counterfactual: buildCounterfactual(scoring),
     units: { estimated: DEMO_ESTIMATED_UNITS, spent: 0 },
@@ -201,8 +200,3 @@ export function buildDemoParty(): PartyRun {
 
 /** The party the app opens on. */
 export const DEMO_PARTY: PartyRun = buildDemoParty();
-
-/** id → the images/skin data the run object does not carry. */
-export const DEMO_BY_ID: Readonly<Record<string, DemoBridesmaid>> = Object.fromEntries(
-  DEMO_BRIDESMAIDS.map((b) => [b.id, b]),
-);
