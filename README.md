@@ -83,8 +83,16 @@ winner        = argmax over colorways c of groupScore(c)     ← nobody is anyon
 by-eye pick   = argmax over colorways c of mean_p flatter    ← how it's chosen today
 ```
 
-The **by-eye** (mean-maximizing) pick is the counterfactual: it sacrifices the
-deepest-skin bridesmaid to lift the average — exactly the harm OneDress removes. The color
+The **by-eye** (mean-maximizing) pick is the counterfactual, and the gap between the two
+objectives is the whole product. Run on synthetic Fitzpatrick I–VI profiles, they choose
+**different colorways**: maximizing the average picks `rust`, which is excellent for four
+of six and drops the deepest-skin bridesmaid to **38.8/100**. The maximin winner,
+`marigold`, lifts her to **65.3** — a **26.5-point swing on one person** — with nobody in
+the party below **57.8**.
+
+Who the objective protects is **party-dependent, not structural**: it defends whoever the
+available palette serves worst, which on some parties is a mid-tone member nobody thinks to
+check. We report who it actually turned out to be on each run rather than assuming. The color
 math (sRGB → CIELAB D65, ITA°, hue angle, ΔE2000) is fixed physics; the three weights and
 transfer-function constants are disclosed, calibratable parameters. Full derivation:
 `lib/colorway/engine.ts`.
@@ -147,8 +155,8 @@ graph TD
 is the Topic C argument in one glance: five YouCam endpoints doing the measuring and the
 rendering, with a deterministic engine in between that turns measurements into a decision.
 
-Measurement happens **once per bridesmaid and is cached** — so re-scoring all 24 colorways
-costs nothing, and only a re-render touches the API again.
+Each bridesmaid is measured **once per run**; every re-score after that is pure local
+maths, so ranking all 24 colorways again costs zero API units. Only a re-render calls out.
 
 | Layer | Technology |
 |---|---|
@@ -161,7 +169,9 @@ costs nothing, and only a re-render touches the API again.
 
 ## 📊 Engineering rigor
 
-Every number below is printed by a command in this repo — none are estimates.
+Every number below is printed by a command in this repo — none are estimates. Where a
+number isn't measured yet, it says so instead of guessing. The live-API rows need a key;
+tests and coverage run with no key and no network.
 
 | Metric | Value | Where it comes from |
 |---|---|---|
@@ -169,7 +179,7 @@ Every number below is printed by a command in this repo — none are estimates.
 | Coverage | **100%** — statements, branches, functions, lines | `npm run test:coverage` |
 | E2E tests | **16 passing** (desktop + mobile) | `npm run e2e` |
 | CI pipeline | **6 stages**, parallel, concurrency-guarded | `.github/workflows/ci.yml` |
-| Render fidelity | **ΔE00 ≈ 7.7** vs the intended hex | `npm run spike` |
+| Render fidelity | **ΔE00 ≈ 7.7** vs the intended hex (n=1, one garment) | `npm run spike` |
 | API cost | **43 units** per bridesmaid, measured | `npm run spike` |
 | Live endpoints proven | **5 / 5 green** | `npm run spike` |
 | p50 / p95 end-to-end | *pending* — `npm run bench` publishes it | not guessed until measured |
@@ -196,6 +206,24 @@ shift. We publish that number and put the reference swatch beside every render r
 hide it. The *decision* is made on measured skin values and fixed color math, not on the
 render; the render is how you check the decision.
 
+## 🛍️ Why a retailer wants this
+
+The group is the unit of purchase. A bridal party is roughly **six dresses at ~$150 — a
+~$900 basket that closes or collapses on a single decision.** It's a final-sale category,
+so returns aren't the retailer's lever; the losses are **abandoned carts and stalled group
+chats**, which is exactly what an unresolvable colour argument produces.
+
+Perfect Corp already sells try-on widgets onto this precise product page for 800+ brand
+partners — and every one of them answers *"how does this look on me?"*. **There is no group
+primitive in the category.** OneDress is a net-new SKU for that shelf rather than a
+competitor to anything the sponsor ships: one embed that turns six undecided shoppers into
+one locked order, and differentiates the retailer on inclusivity in a category where
+getting skin tone wrong is permanently photographed.
+
+One honest boundary: the widely-cited ~24–30% apparel return-rate lever does **not** apply
+here, because bridalwear is final-sale. That lever belongs to the returnable-apparel
+extension, not to the flow we built.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -204,6 +232,8 @@ render; the render is how you check the decision.
 
 ### Installation
 ```bash
+# Repo is private during the build window — judges have access via the
+# email shared on the Devpost submission. Public at submission.
 git clone https://github.com/edycutjong/onedress.git
 cd onedress
 npm install
