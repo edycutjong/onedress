@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@lhci/cli": "0.14.0",
-    "@playwright/test": "1.55.0",
+    "@playwright/test": "1.62.1",
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
