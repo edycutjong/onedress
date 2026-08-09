@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/edycutjong/onedress/compare/v1.3.0...v1.3.1) (2026-08-09)
+
+### Bug Fixes
+
+* **readme:** point the demo-video badge at the published video ([6935a60](https://github.com/edycutjong/onedress/commit/6935a60965608f9ef9d4bdaa5be46c33f2a79b6d))
+
 ## [1.3.0](https://github.com/edycutjong/onedress/compare/v1.2.0...v1.3.0) (2026-08-09)
 
 ### Features
