@@ -37,8 +37,8 @@
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
-    "@vitest/coverage-istanbul": "^3.0.4",
-    "@vitest/coverage-v8": "3.0.4",
+    "@vitest/coverage-istanbul": "^4.1.10",
+    "@vitest/coverage-v8": "4.1.10",
     "autoprefixer": "10.4.20",
     "eslint": "8.57.1",
     "eslint-config-next": "15.5.22",
@@ -47,6 +47,6 @@
     "tailwindcss": "3.4.17",
     "tsx": "4.19.2",
     "typescript": "5.7.3",
-    "vitest": "3.0.4"
+    "vitest": "4.1.10"
   }
 }
