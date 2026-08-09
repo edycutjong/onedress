@@ -76,19 +76,27 @@ export default function PartyPage() {
         </>
       }
     >
-      {step.screen === 'verdict' ? (
-        <VerdictScreen run={party} />
-      ) : step.screen === 'compare' ? (
-        <CompareScreen run={party} />
-      ) : step.screen === 'measure' ? (
-        <MeasureScreen run={party} />
-      ) : step.screen === 'score' ? (
-        <ScoreScreen run={party} />
-      ) : step.screen === 'render' ? (
-        <RenderScreen run={party} />
-      ) : (
-        <CreateScreen onParty={handleParty} onGoToVerdict={() => setActiveStepId('verdict')} />
-      )}
+      {/*
+        `key` on the screen wrapper is what makes the transition exist: changing it
+        remounts the subtree, so the enter animation replays on every step change.
+        Without it React reconciles in place and screens swap in a single frame —
+        which reads as a glitch on camera rather than as navigation.
+      */}
+      <div key={step.screen} className="screen-enter">
+        {step.screen === 'verdict' ? (
+          <VerdictScreen run={party} />
+        ) : step.screen === 'compare' ? (
+          <CompareScreen run={party} />
+        ) : step.screen === 'measure' ? (
+          <MeasureScreen run={party} />
+        ) : step.screen === 'score' ? (
+          <ScoreScreen run={party} />
+        ) : step.screen === 'render' ? (
+          <RenderScreen run={party} />
+        ) : (
+          <CreateScreen onParty={handleParty} onGoToVerdict={() => setActiveStepId('verdict')} />
+        )}
+      </div>
     </AppShell>
   );
 }
