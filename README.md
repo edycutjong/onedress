@@ -6,7 +6,7 @@
 
   <br/><br/>
 
-  [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://onedress.edycu.dev)
+  [![Live Demo](https://img.shields.io/badge/🚀_Live-App-06b6d4?style=for-the-badge)](https://onedress.edycu.dev/party)
   [![Demo Video](https://img.shields.io/badge/🎬_Demo-Video-ef4444?style=for-the-badge)](https://youtu.be/PLACEHOLDER)
   [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://onedress.edycu.dev/pitch)
   [![Devpost](https://img.shields.io/badge/Devpost-YouCam_API_Hackathon-8b5cf6?style=for-the-badge)](https://youcam-api.devpost.com/)
@@ -244,6 +244,15 @@ cp .env.example .env.local   # add your YOUCAM_API_KEY
 npm run dev                  # http://localhost:3000
 ```
 
+**Routes — one deploy, three surfaces:**
+
+| Route | What it is | Where it lives |
+|---|---|---|
+| `/` | Landing page | `public/landing.html` (static, rewritten from `/`) |
+| `/pitch` | 10-slide pitch deck | `public/pitch.html` (static, rewritten from `/pitch`) |
+| `/party` | **The product** — the 7-step flow | `app/party/page.tsx` |
+| `/api/*` | Party orchestration, scoring, upload, credit | `app/api/**` |
+
 ### Prove the SDK integration yourself
 ```bash
 npm run spike     # runs all 5 endpoints live and prints a green summary + unit cost
@@ -267,7 +276,7 @@ make security-scan    # npm audit + license check
 |---|---|---|
 | Code Quality | ESLint + Prettier + TypeScript strict | ✅ |
 | Unit Testing | Vitest (77 tests, 100% coverage on all four metrics) | ✅ |
-| E2E Testing | Playwright (demo-mode, landing, responsive) | ✅ |
+| E2E Testing | Playwright (54 specs: app, marketing routes, demo-mode, responsive) | ✅ |
 | Security (SAST) | CodeQL | ✅ |
 | Security (SCA) | Dependabot + npm audit | ✅ |
 | Secret Scanning | TruffleHog | ✅ |
@@ -276,7 +285,9 @@ make security-scan    # npm audit + license check
 ## 📁 Project Structure
 ```
 onedress/
-├── app/               # Next.js App Router (UI — 7-step flow in progress)
+├── app/party/         # Next.js App Router — the product, the 7-step flow
+├── app/api/           # route handlers (party, score, upload, credit)
+├── public/            # landing.html + pitch.html (served at / and /pitch) + assets
 ├── lib/
 │   ├── youcam/        # typed API client (the only place calls are made)
 │   ├── color/         # CIELAB pipeline: ITA°, hue angle, ΔE2000
@@ -292,7 +303,10 @@ onedress/
 
 ## 📽️ Demo
 
-**Live:** [onedress.edycu.dev](https://onedress.edycu.dev) · **Video:** posted at submission
+**Live:** [onedress.edycu.dev](https://onedress.edycu.dev) — landing · [`/party`](https://onedress.edycu.dev/party) the app · [`/pitch`](https://onedress.edycu.dev/pitch) the deck
+**Video:** posted at submission
+
+Deployment is automated — see [`docs/deploy.md`](docs/deploy.md).
 
 ## 🗺️ Roadmap
 

@@ -13,7 +13,7 @@ test.describe('responsive layout', () => {
   for (const vp of VIEWPORTS) {
     test(`no horizontal overflow on any screen at ${vp.name} (${vp.width}px)`, async ({ page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
-      await page.goto('/');
+      await page.goto('/party');
       const spine = page.getByRole('navigation', { name: 'Progress' });
 
       for (const label of STEPS) {
@@ -28,13 +28,13 @@ test.describe('responsive layout', () => {
 
   test('hero heading is visible on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/');
+    await page.goto('/party');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 
   test('the progress spine stays reachable on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/');
+    await page.goto('/party');
     const spine = page.getByRole('navigation', { name: 'Progress' });
     await expect(spine).toBeVisible();
     // The spine scrolls horizontally inside its own container rather than pushing

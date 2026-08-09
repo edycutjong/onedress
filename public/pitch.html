@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<!--
+  OneDress — pitch deck (single-file, self-contained)
+  ───────────────────────────────────────────────────
+  Navigation:  → / ↓ / Space / PgDn  next slide
+               ← / ↑ / PgUp          previous slide
+               Home / End            first / last
+               Click right half      next · click left edge  previous
+               P                     presenter notes on/off
+               O or Esc              slide overview grid
+  Print/PDF:   Cmd/Ctrl+P → Save as PDF → landscape → 10 clean pages
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneDress — pitch deck</title>
+<meta name="description" content="The OneDress pitch: one dress color, provably no one's worst option. A max-of-minimum fairness engine on 5 live YouCam API endpoints. 10 slides.">
+<link rel="canonical" href="https://onedress.edycu.dev/pitch">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon-512.png">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://onedress.edycu.dev/pitch">
+<meta property="og:title" content="OneDress — the pitch">
+<meta property="og:description" content="Six bridesmaids, six skin tones, one dress color — provably no one's worst option. Ten slides: the inversion, the maximin math, and the live-API receipts.">
+<meta property="og:image" content="https://onedress.edycu.dev/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OneDress — the pitch">
+<meta name="twitter:description" content="Six bridesmaids, six skin tones, one dress color — provably no one's worst option.">
+<meta name="twitter:image" content="https://onedress.edycu.dev/og-image.png">
+<meta name="theme-color" content="#140A11">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..640;1,9..144,300..640&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   Tokens — "bridal atelier after dark"
+   ============================================================ */
+:root {
+  --primary: #D98BA3;
+  --accent: #9CAF88;
+  --tertiary: #D9B98C;
+  --primary-glow: color-mix(in srgb, var(--primary) 35%, transparent);
+  --accent-glow: color-mix(in srgb, var(--accent) 35%, transparent);
+  --tertiary-glow: color-mix(in srgb, var(--tertiary) 28%, transparent);
+
+  --tone-0: #F9EADD; --tone-1: #F3DCC9; --tone-2: #E9BE9B;
+  --tone-3: #CE9268; --tone-4: #9A6844; --tone-5: #5F3B27;
+
+  --bg-base: #140A11;
+  --bg-card: #1A0E15;
+  --bg-raised: #1D1019;
+
+  --text-hi: #FAF5F7;
+  --text-mid: #AE9CA6;
+  --text-low: #93808A; /* AA (4.5:1+) on bg-base, bg-raised, AND bg-card at small sizes */
+
+  --border-subtle: rgba(255,255,255,0.08);
+  --border-default: rgba(255,255,255,0.15);
+  --hairline: color-mix(in srgb, var(--tertiary) 26%, transparent);
+
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: #0D060B; /* letterbox darker than stage */
+  color: var(--text-hi);
+  font-family: var(--font-ui);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+a { color: inherit; }
+
+/* ---------- Stage: fixed 1920×1080, scaled to viewport ---------- */
+.viewport {
+  position: fixed; inset: 0;
+}
+.stage {
+  width: 1920px; height: 1080px;
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center center;
+  background: var(--bg-base);
+  overflow: hidden;
+  box-shadow: 0 30px 120px rgba(0,0,0,0.6);
+}
+/* grain */
+.stage::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 60;
+}
+
+/* ---------- Slides ---------- */
+.slide {
+  position: absolute; inset: 0;
+  padding: 110px 130px 130px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 420ms var(--ease), visibility 0s linear 420ms;
+  display: flex; flex-direction: column;
+}
+.slide.active {
+  opacity: 1; visibility: visible;
+  transition: opacity 420ms var(--ease);
+  z-index: 10;
+}
+/* per-slide staged entrance */
+.fx { opacity: 0; transform: translateY(26px); transition: opacity 640ms var(--ease), transform 640ms var(--ease); }
+.slide.active .fx { opacity: 1; transform: none; }
+.slide.active .fx.d1 { transition-delay: 120ms; }
+.slide.active .fx.d2 { transition-delay: 240ms; }
+.slide.active .fx.d3 { transition-delay: 360ms; }
+.slide.active .fx.d4 { transition-delay: 480ms; }
+
+/* ---------- Shared type ---------- */
+.eyebrow {
+  font-size: 20px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--tertiary);
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: 36px;
+}
+.eyebrow::before { content: ""; width: 46px; height: 1px; background: var(--hairline); }
+h1, h2 { font-family: var(--font-display); font-weight: 380; letter-spacing: -0.015em; text-wrap: balance; }
+.slide h2 { font-size: 76px; line-height: 1.06; margin-bottom: 30px; max-width: 1350px; }
+.slide h2 em { font-style: italic; }
+.lede { font-size: 27px; line-height: 1.55; color: var(--text-mid); max-width: 1150px; }
+.lede strong { color: var(--text-hi); font-weight: 500; }
+.mono { font-family: var(--font-mono); }
+.num { font-variant-numeric: tabular-nums; }
+.rose { color: var(--primary); }
+.sage { color: var(--accent); }
+.gold { color: var(--tertiary); }
+
+/* ---------- Chrome ---------- */
+.progress {
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: rgba(255,255,255,0.06);
+  z-index: 70;
+}
+.progress .fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--tertiary), var(--accent));
+  transition: width 380ms var(--ease);
+}
+.counter {
+  position: absolute; bottom: 42px; right: 56px;
+  font-family: var(--font-mono); font-size: 19px;
+  color: var(--text-low);
+  z-index: 70;
+  font-variant-numeric: tabular-nums;
+}
+.deck-brand {
+  position: absolute; bottom: 38px; left: 56px;
+  display: flex; align-items: center; gap: 12px;
+  z-index: 70;
+  text-decoration: none;
+}
+.deck-brand img { width: 30px; height: 30px; border-radius: 8px; }
+.deck-brand span {
+  font-family: var(--font-display); font-weight: 460; font-size: 21px;
+  color: var(--text-mid);
+}
+.deck-brand span em { font-style: italic; color: var(--primary); }
+.hint {
+  position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%);
+  font-size: 16px; color: var(--text-low);
+  z-index: 70;
+  transition: opacity 600ms var(--ease);
+}
+.hint.hide { opacity: 0; }
+kbd {
+  font-family: var(--font-mono); font-size: 0.85em;
+  border: 1px solid var(--border-default);
+  border-radius: 5px; padding: 1px 7px;
+  background: var(--bg-raised);
+}
+
+/* click zones */
+.zone {
+  position: absolute; top: 4px; bottom: 0;
+  z-index: 50;
+  background: transparent; border: 0; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.zone:focus-visible { outline-offset: -4px; }
+.zone.prev { left: 0; width: 12%; }
+.zone.next { right: 0; width: 12%; }
+
+/* ---------- Presenter notes ---------- */
+.speaker-notes { display: none; }
+body.presenting .notes-panel { transform: translateY(0); }
+.notes-panel {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: rgba(10,5,9,0.94);
+  border-top: 1px solid var(--border-default);
+  backdrop-filter: blur(12px);
+  padding: 22px 40px 26px;
+  transform: translateY(110%);
+  transition: transform 320ms var(--ease);
+  z-index: 200;
+  font-size: 17px; line-height: 1.6; color: var(--text-mid);
+}
+.notes-panel .np-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--tertiary); margin-bottom: 8px;
+}
+
+/* ---------- Overview grid ---------- */
+.overview {
+  position: fixed; inset: 0;
+  background: rgba(10,5,9,0.96);
+  z-index: 300;
+  display: none;
+  padding: 5vh 6vw;
+  overflow-y: auto;
+}
+body.overview-open .overview { display: block; }
+.overview h2 {
+  font-family: var(--font-display); font-weight: 400; font-size: 28px;
+  margin-bottom: 26px; color: var(--text-mid);
+}
+.ov-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+@media (max-width: 900px) { .ov-grid { grid-template-columns: repeat(2, 1fr); } }
+.ov-item {
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--bg-card);
+  padding: 18px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-mid);
+  font-family: var(--font-ui); font-size: 14px;
+  transition: border-color 180ms var(--ease), transform 180ms var(--ease);
+}
+.ov-item:hover { border-color: var(--primary); transform: translateY(-3px); }
+.ov-item .n { font-family: var(--font-mono); font-size: 12px; color: var(--text-low); display: block; margin-bottom: 8px; }
+.ov-item .t { font-family: var(--font-display); font-size: 17px; color: var(--text-hi); }
+.ov-item.current { border-color: var(--tertiary); }
+
+/* ============================================================
+   Slide 1 — cover
+   ============================================================ */
+.s-cover { justify-content: center; padding-bottom: 170px; }
+.s-cover::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 48% 42% at 12% 10%, var(--primary-glow), transparent 65%),
+    radial-gradient(ellipse 46% 50% at 90% 88%, var(--accent-glow), transparent 62%),
+    radial-gradient(ellipse 36% 30% at 66% 16%, var(--tertiary-glow), transparent 70%);
+  opacity: 0.5;
+}
+.cover-badge {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 19px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--tertiary);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 12px 26px;
+  margin-bottom: 54px;
+  align-self: flex-start;
+  background: color-mix(in srgb, var(--tertiary) 6%, transparent);
+  position: relative;
+}
+.cover-badge .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.cover-mark { display: flex; align-items: center; gap: 26px; margin-bottom: 44px; position: relative; }
+.cover-mark img { width: 84px; height: 84px; border-radius: 22px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+.cover-mark .wordmark { font-family: var(--font-display); font-weight: 460; font-size: 56px; }
+.cover-mark .wordmark em { font-style: italic; color: var(--primary); }
+.s-cover h1 {
+  font-size: 118px; line-height: 1.02; max-width: 1500px;
+  margin-bottom: 42px; position: relative;
+}
+.s-cover h1 .proof {
+  font-style: italic; font-weight: 420;
+  color: var(--primary); /* fallback if background-clip:text is unsupported */
+  background: linear-gradient(92deg, var(--primary), var(--tertiary) 55%, var(--accent));
+  -webkit-background-clip: text; background-clip: text;
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .s-cover h1 .proof { color: transparent; }
+}
+.cover-tones { display: flex; align-items: center; gap: 16px; position: relative; }
+.cover-tones .t {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.22);
+}
+.cover-tones .lbl { font-size: 20px; color: var(--text-low); letter-spacing: 0.08em; margin: 0 10px; display: flex; align-items: center; gap: 14px; }
+.cover-tones .line { width: 60px; height: 1px; background: var(--hairline); }
+.cover-tones .one {
+  width: 52px; height: 52px; border-radius: 14px 14px 18px 18px;
+  background: linear-gradient(160deg, var(--primary), var(--accent));
+  border: 2px solid rgba(255,255,255,0.28);
+  box-shadow: 0 0 34px var(--accent-glow);
+  animation: breathe 4.5s var(--ease) infinite;
+}
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 22px var(--accent-glow); transform: scale(1); }
+  50% { box-shadow: 0 0 44px var(--accent-glow); transform: scale(1.04); }
+}
+
+/* ============================================================
+   Slide 2 — problem
+   ============================================================ */
+.fact-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 64px; }
+.fact {
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-card);
+  padding: 44px 42px;
+}
+.fact .roman {
+  font-family: var(--font-display); font-style: italic;
+  color: var(--tertiary); font-size: 24px; display: block; margin-bottom: 22px;
+}
+.fact h3 { font-family: var(--font-display); font-weight: 440; font-size: 33px; line-height: 1.2; margin-bottom: 16px; }
+.fact p { font-size: 21px; line-height: 1.5; color: var(--text-mid); }
+
+/* ============================================================
+   Slide 3 — inversion
+   ============================================================ */
+.inv-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 58px; }
+.inv-box { border-radius: 20px; padding: 48px 46px; border: 1px solid var(--border-subtle); background: var(--bg-card); }
+.inv-box.ours {
+  background: linear-gradient(150deg, color-mix(in srgb, var(--accent) 10%, var(--bg-card)), var(--bg-card) 70%);
+  border-color: color-mix(in srgb, var(--accent) 38%, transparent);
+}
+.inv-box .tag { font-size: 16px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; display: block; margin-bottom: 22px; }
+.inv-box.quiz .tag { color: var(--text-low); }
+.inv-box.ours .tag { color: var(--accent); }
+.inv-box h3 { font-family: var(--font-display); font-style: italic; font-weight: 410; font-size: 38px; line-height: 1.22; margin-bottom: 20px; }
+.inv-box p { font-size: 21px; line-height: 1.55; color: var(--text-mid); }
+.inv-box p strong { color: var(--text-hi); font-weight: 500; }
+.inv-footline {
+  margin-top: 46px;
+  font-family: var(--font-display); font-weight: 390; font-size: 34px; line-height: 1.4;
+  max-width: 1500px;
+}
+.inv-footline em { font-style: italic; color: var(--accent); }
+
+/* ============================================================
+   Slide 4 — how it works
+   ============================================================ */
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 60px; }
+.flow-step {
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-card);
+  padding: 38px 34px;
+  position: relative;
+}
+.flow-step .no {
+  font-family: var(--font-display); font-style: italic; font-weight: 380;
+  font-size: 44px; color: var(--text-low); display: block; margin-bottom: 18px;
+}
+.flow-step h3 { font-family: var(--font-display); font-weight: 440; font-size: 30px; margin-bottom: 14px; }
+.flow-step p { font-size: 19px; line-height: 1.5; color: var(--text-mid); margin-bottom: 22px; }
+.flow-step p strong { color: var(--text-hi); font-weight: 500; }
+.flow-step .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.flow-step .chip {
+  font-family: var(--font-mono); font-size: 15px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-raised);
+  border-radius: 999px; padding: 6px 14px;
+  color: var(--text-mid);
+  white-space: nowrap;
+}
+.flow-step .chip.live { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+.flow-step .chip.math { color: var(--tertiary); border-color: color-mix(in srgb, var(--tertiary) 30%, transparent); }
+.flow-step:not(:last-child)::after {
+  content: "→";
+  position: absolute; right: -22px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-low); font-size: 26px;
+  z-index: 5;
+}
+
+/* ============================================================
+   Slide 5 — the math
+   ============================================================ */
+#s5 h2 { font-size: 62px; margin-bottom: 20px; }
+.math-cols { display: grid; grid-template-columns: 46fr 54fr; gap: 24px; margin-top: 26px; align-items: start; }
+.deck-formula {
+  font-family: var(--font-mono); font-size: 19px; line-height: 1.75;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 32px 38px;
+  align-self: start;
+}
+.deck-formula .c { color: var(--text-low); }
+.deck-formula .k { color: var(--primary); }
+.deck-formula .g { color: var(--accent); }
+.duel { display: grid; gap: 16px; }
+.duel-panel {
+  border-radius: 18px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  padding: 22px 32px 20px;
+}
+.duel-panel.ours { border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.duel-panel .dp-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 13px; }
+.duel-panel .dp-head h3 { font-family: var(--font-display); font-weight: 440; font-size: 24px; }
+.duel-panel .dp-head .obj { font-family: var(--font-mono); font-size: 15px; color: var(--text-low); }
+.duel-bars { display: grid; gap: 8px; }
+.d-row { display: grid; grid-template-columns: 62px 1fr 52px; align-items: center; gap: 12px; }
+.d-id { display: flex; align-items: center; gap: 9px; }
+.d-id .face { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.22); }
+.d-id .f { font-family: var(--font-display); font-weight: 460; font-size: 16px; color: var(--text-mid); }
+.d-track { display: block; height: 11px; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 999px; overflow: hidden; }
+.d-fill { display: block; height: 100%; border-radius: 999px; width: 0%; transition: width 900ms var(--ease) 300ms; }
+.duel-panel.byeye .d-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--primary) 65%, transparent), var(--primary)); }
+.duel-panel.ours .d-fill { background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 65%, transparent), var(--accent)); }
+.d-score { font-family: var(--font-mono); font-size: 16px; text-align: right; color: var(--text-hi); }
+.d-row.worst .d-score { color: var(--tertiary); font-weight: 500; }
+.duel-panel .dp-sum { margin-top: 12px; font-size: 16px; color: var(--text-mid); }
+.duel-panel .dp-sum b { color: var(--text-hi); font-variant-numeric: tabular-nums; }
+.math-note { margin-top: 20px; font-size: 16px; color: var(--text-low); max-width: 1500px; }
+
+/* ============================================================
+   Slide 6 — verified live
+   ============================================================ */
+.deck-table { width: 100%; border-collapse: collapse; margin-top: 48px; font-size: 21px; }
+.deck-table th {
+  text-align: left; font-size: 16px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-low);
+  padding: 0 22px 16px;
+  border-bottom: 1px solid var(--border-default);
+}
+.deck-table td { padding: 21px 22px; border-bottom: 1px solid var(--border-subtle); color: var(--text-mid); vertical-align: top; }
+.deck-table td.ep { font-family: var(--font-mono); font-size: 19px; color: var(--text-hi); white-space: nowrap; }
+.deck-table td.res { color: var(--text-hi); }
+.deck-table .ok { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); margin-right: 12px; vertical-align: 2px; }
+.receipt-row { display: flex; gap: 44px; margin-top: 42px; flex-wrap: wrap; }
+.receipt { display: flex; align-items: baseline; gap: 12px; }
+.receipt b { font-family: var(--font-display); font-weight: 440; font-size: 40px; font-variant-numeric: tabular-nums; }
+.receipt span { font-size: 19px; color: var(--text-mid); max-width: 240px; line-height: 1.35; }
+
+/* ============================================================
+   Slide 7 — sponsor
+   ============================================================ */
+.sp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 56px; }
+.sp-card { border: 1px solid var(--border-subtle); border-radius: 18px; background: var(--bg-card); padding: 42px 44px; }
+.sp-card h3 { font-family: var(--font-display); font-weight: 440; font-size: 30px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; }
+.sp-card h3 .k { font-family: var(--font-ui); font-size: 15px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 999px; padding: 6px 15px; }
+.sp-card.skin h3 .k { background: color-mix(in srgb, var(--primary) 22%, transparent); color: var(--primary); }
+.sp-card.vto h3 .k { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); }
+.sp-card ul { list-style: none; display: grid; gap: 16px; }
+.sp-card li { position: relative; padding-left: 34px; font-size: 21px; color: var(--text-mid); }
+.sp-card li::before { content: "—"; color: var(--text-low); position: absolute; left: 0; }
+.sp-card li .mono { font-size: 18px; color: var(--text-hi); }
+.sp-anti {
+  margin-top: 44px;
+  border-left: 2px solid var(--tertiary);
+  padding-left: 30px;
+  font-size: 24px; line-height: 1.55; color: var(--text-mid);
+  max-width: 1450px;
+}
+.sp-anti strong { color: var(--text-hi); font-weight: 500; }
+
+/* ============================================================
+   Slide 8 — market
+   ============================================================ */
+.mk-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 60px; }
+.mk {
+  border-top: 1px solid var(--hairline);
+  padding-top: 30px;
+}
+.mk b { font-family: var(--font-display); font-weight: 420; font-size: 66px; display: block; line-height: 1; margin-bottom: 14px; font-variant-numeric: tabular-nums; }
+.mk span { font-size: 20px; color: var(--text-mid); line-height: 1.45; display: block; max-width: 34ch; }
+.mk-impact {
+  margin-top: 68px;
+  font-family: var(--font-display); font-weight: 390; font-size: 36px; line-height: 1.42;
+  max-width: 1500px;
+}
+.mk-impact em { font-style: italic; color: var(--accent); }
+.mk-src { margin-top: 30px; font-size: 16px; color: var(--text-low); }
+
+/* ============================================================
+   Slide 9 — roadmap / ask
+   ============================================================ */
+.rd-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 54px; }
+.rd { border: 1px solid var(--border-subtle); border-radius: 18px; background: var(--bg-card); padding: 40px 42px; }
+.rd h3 { font-size: 17px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 26px; }
+.rd.done h3 { color: var(--accent); }
+.rd.wip h3 { color: var(--tertiary); }
+.rd ul { list-style: none; display: grid; gap: 17px; }
+.rd li { position: relative; padding-left: 36px; font-size: 21px; color: var(--text-mid); }
+.rd li b { color: var(--text-hi); font-weight: 500; }
+.rd li::before { position: absolute; left: 0; }
+.rd.done li::before { content: "✓"; color: var(--accent); font-weight: 600; }
+.rd.wip li::before { content: "◌"; color: var(--tertiary); }
+.ask-line {
+  margin-top: 46px;
+  font-family: var(--font-display); font-weight: 390; font-size: 33px; line-height: 1.4;
+  max-width: 1500px;
+}
+.ask-line em { font-style: italic; color: var(--primary); }
+
+/* ============================================================
+   Slide 10 — close
+   ============================================================ */
+.s-close { justify-content: center; align-items: center; text-align: center; padding-bottom: 160px; }
+.s-close::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 50% at 50% 92%, var(--primary-glow), transparent 68%);
+  opacity: 0.5;
+}
+.s-close .tones { display: flex; gap: 18px; margin-bottom: 54px; position: relative; }
+.s-close .tones .t { width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.22); }
+.s-close h2 { font-size: 108px; line-height: 1.05; max-width: 1400px; margin-bottom: 34px; position: relative; }
+.s-close h2 em { color: var(--primary); }
+.s-close .sub { font-size: 26px; color: var(--text-mid); margin-bottom: 56px; position: relative; }
+.close-links { display: flex; gap: 22px; position: relative; z-index: 55; flex-wrap: wrap; justify-content: center; }
+.close-links a {
+  display: inline-flex; align-items: center; gap: 12px;
+  text-decoration: none; font-weight: 600; font-size: 22px;
+  padding: 18px 38px; border-radius: 999px;
+  transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+.close-links a:hover { transform: translateY(-3px); }
+.close-links .primary { background: var(--primary); color: #2A121C; box-shadow: 0 6px 34px var(--primary-glow); }
+.close-links .ghost { border: 1px solid var(--border-default); color: var(--text-hi); }
+.close-links .ghost:hover { border-color: var(--primary); }
+.close-url { margin-top: 44px; font-family: var(--font-mono); font-size: 20px; color: var(--text-low); position: relative; }
+
+/* ---------- Contrast debug (press C) ---------- */
+/* Press C to toggle contrast debug mode */
+body.debug-contrast .slide * { outline: 1px dashed rgba(217,185,140,0.35); }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition-duration: 0.01ms !important; transition-delay: 0ms !important; }
+  .fx { opacity: 1; transform: none; }
+  .d-fill { transition: none; }
+}
+
+/* ---------- Print to PDF ---------- */
+@page { size: 16in 9in landscape; margin: 0; }
+@media print {
+  html, body { overflow: visible; height: auto; background: var(--bg-base); }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .viewport { position: static; display: block; }
+  .stage {
+    position: static;
+    width: 100%; height: auto; transform: none !important;
+    box-shadow: none; overflow: visible; background: transparent;
+  }
+  .stage::after { display: none; }
+  .slide {
+    position: relative; inset: auto;
+    width: 16in; height: 9in;
+    padding: 0.9in 1.1in 1in;
+    opacity: 1 !important; visibility: visible !important;
+    page-break-after: always; break-after: page;
+    page-break-inside: avoid; break-inside: avoid;
+    background: var(--bg-base);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .fx { opacity: 1 !important; transform: none !important; }
+  .d-fill { width: var(--w, 0%) !important; transition: none; }
+  /* background-clip:text breaks in print — fall back to solid brand color */
+  .s-cover h1 .proof {
+    background: none !important;
+    -webkit-background-clip: initial !important; background-clip: initial !important;
+    color: var(--primary) !important; -webkit-text-fill-color: var(--primary);
+  }
+  .cover-tones .one { animation: none; box-shadow: none !important; }
+  .close-links .primary { box-shadow: none !important; }
+  .progress, .counter, .hint, .zone, .notes-panel, .overview, .deck-brand { display: none !important; }
+  .slide h2 { font-size: 54pt; }
+}
+</style>
+</head>
+<body>
+
+<div class="viewport">
+  <div class="stage" id="stage" role="group" aria-roledescription="slide deck" aria-label="OneDress pitch deck, 10 slides">
+
+    <div class="progress" aria-hidden="true"><div class="fill" id="progress-fill"></div></div>
+
+    <!-- ============ 1 · COVER ============ -->
+    <section class="slide s-cover active" id="s1" role="tabpanel" aria-label="Slide 1 of 10: OneDress">
+      <span class="cover-badge fx"><span class="dot"></span> YouCam API Hackathon · Topic C — Skin AI × Apparel VTO</span>
+      <div class="cover-mark fx d1">
+        <img src="/icon.svg" alt="OneDress icon: five skin-tone dots converging on one dress">
+        <span class="wordmark">One<em>Dress</em></span>
+      </div>
+      <h1 class="fx d2">Six bridesmaids. Six skin tones. One dress color — <span class="proof">provably no one's worst option.</span></h1>
+      <div class="cover-tones fx d3" role="img" aria-label="Six skin tones converging on one dress color">
+        <span class="t" style="background:var(--tone-0)"></span>
+        <span class="t" style="background:var(--tone-1)"></span>
+        <span class="t" style="background:var(--tone-2)"></span>
+        <span class="t" style="background:var(--tone-3)"></span>
+        <span class="t" style="background:var(--tone-4)"></span>
+        <span class="t" style="background:var(--tone-5)"></span>
+        <span class="lbl"><span class="line"></span>one color<span class="line"></span></span>
+        <span class="one"></span>
+      </div>
+      <aside class="speaker-notes">Open on the hook. One breath: every bridal party faces one irreversible color decision for N different complexions — we make it provable instead of guessed. Then advance.</aside>
+    </section>
+
+    <!-- ============ 2 · PROBLEM ============ -->
+    <section class="slide" id="s2" role="tabpanel" aria-label="Slide 2 of 10: the problem">
+      <p class="eyebrow fx">The problem</p>
+      <h2 class="fx d1">One color. Final sale.<br>Chosen by eyeballing a stranger.</h2>
+      <div class="fact-row">
+        <div class="fact fx d2">
+          <span class="roman">i.</span>
+          <h3>One color for every complexion</h3>
+          <p>4–8 women, often spanning Fitzpatrick I–VI, wear the same mandated colorway. The shade that flatters the bride can drain everyone else — in the photos that last forever.</p>
+        </div>
+        <div class="fact fx d3">
+          <span class="roman">ii.</span>
+          <h3>Usually non-refundable</h3>
+          <p>Ordered months out, frequently final-sale. The color decision is effectively irreversible — there is no "return it if it washes her out."</p>
+        </div>
+        <div class="fact fx d4">
+          <span class="roman">iii.</span>
+          <h3>Decided by guesswork</h3>
+          <p>Picked from one retailer model who matches nobody in the party. Mailed swatch kits and the "mismatched dresses" trend exist <em>because</em> one-color-for-all keeps failing.</p>
+        </div>
+      </div>
+      <aside class="speaker-notes">Stress irreversibility: final-sale means the mistake is permanent, and it lives in every wedding photo. Nobody measures anything today — that's the gap.</aside>
+    </section>
+
+    <!-- ============ 3 · THE INVERSION ============ -->
+    <section class="slide" id="s3" role="tabpanel" aria-label="Slide 3 of 10: the inversion insight">
+      <p class="eyebrow fx">The insight</p>
+      <h2 class="fx d1">We inverted the personal-color quiz.</h2>
+      <div class="inv-cols">
+        <div class="inv-box quiz fx d2">
+          <span class="tag">Everyone else asks</span>
+          <h3>"What are <strong>my</strong> best colors?"</h3>
+          <p>One selfie → one verdict. Run it for five bridesmaids, get <strong>five incompatible answers</strong> — which chooses zero dresses. Single-user verdicts don't compose into a group constraint.</p>
+        </div>
+        <div class="inv-box ours fx d3">
+          <span class="tag">OneDress asks</span>
+          <h3>"Given one garment all N must wear — which color harms the group <strong>least</strong>?"</h3>
+          <p>A fixed garment constraint × N measured complexions → <strong>one answer</strong>. A constrained group-optimization problem no single-user tool can express.</p>
+        </div>
+      </div>
+      <p class="inv-footline fx d4">It's a <em>max-of-minimum</em> — Rawlsian — fairness problem. The winner is never any individual's top pick, and by construction the deepest-skin bridesmaid is the <em>protected</em> one, not the sacrificed one.</p>
+      <aside class="speaker-notes">This is the load-bearing novelty. Perfect Corp's own personal-color product answers seasons for one person; ours answers the inverse question for N — you cannot get here by running theirs five times.</aside>
+    </section>
+
+    <!-- ============ 4 · HOW IT WORKS ============ -->
+    <section class="slide" id="s4" role="tabpanel" aria-label="Slide 4 of 10: how it works">
+      <p class="eyebrow fx">How it works</p>
+      <h2 class="fx d1">Measure. Score. Render. Finish.</h2>
+      <div class="flow">
+        <div class="flow-step fx d1">
+          <span class="no">01</span>
+          <h3>Measure</h3>
+          <p>Two photos per bridesmaid. Live analyses return her <strong>real skin hex</strong>, <strong>Fitzpatrick I–VI</strong>, and face shape.</p>
+          <div class="chips"><span class="chip live">skin-tone-analysis</span><span class="chip live">fitzpatrick-scale</span><span class="chip live">face-attr</span></div>
+        </div>
+        <div class="flow-step fx d2">
+          <span class="no">02</span>
+          <h3>Score</h3>
+          <p><strong>24 colorways × N profiles</strong>, scored by a published formula. Pure math on cached measurements — <strong>zero API units</strong> to re-score.</p>
+          <div class="chips"><span class="chip math">deterministic engine</span><span class="chip math">31 tests</span></div>
+        </div>
+        <div class="flow-step fx d3">
+          <span class="no">03</span>
+          <h3>Render</h3>
+          <p>The maximin winner rendered <strong>photorealistically on every bridesmaid's own photo</strong> — fidelity ΔE00 ≈ 7.7.</p>
+          <div class="chips"><span class="chip live">cloth-v3</span></div>
+        </div>
+        <div class="flow-step fx d4">
+          <span class="no">04</span>
+          <h3>Finish</h3>
+          <p>Face shape picks the earring silhouette; <strong>undertone picks the metal</strong> — gold warm, silver cool — chained onto the render.</p>
+          <div class="chips"><span class="chip live">2d-vto/earring</span></div>
+        </div>
+      </div>
+      <aside class="speaker-notes">Point at the chips: five endpoints, and the measured values drive the render — Skin AI feeds VTO. Note the economics: analysis is paid once and cached; every extra colorway costs almost nothing.</aside>
+    </section>
+
+    <!-- ============ 5 · THE MATH ============ -->
+    <section class="slide" id="s5" role="tabpanel" aria-label="Slide 5 of 10: the maximin math">
+      <p class="eyebrow fx">The math</p>
+      <h2 class="fx d1">Averages hide victims. <em>Minimums protect them.</em></h2>
+      <div class="math-cols">
+        <pre class="deck-formula fx d2" aria-label="Published scoring formula">flatter(p,c) = <span class="k">0.50</span>·U + <span class="k">0.30</span>·C + <span class="k">0.20</span>·S
+  <span class="c">U undertone harmony</span>
+  <span class="c">C value contrast</span>
+  <span class="c">S saturation harmony</span>
+
+groupScore(c) = <span class="g">min</span>ₚ flatter(p,c)
+winner  = <span class="g">argmax</span>_c groupScore(c)
+
+<span class="c">by-eye  = argmax_c mean flatter</span>
+<span class="c">          — how it's chosen today</span></pre>
+        <div class="duel fx d3">
+          <div class="duel-panel byeye">
+            <div class="dp-head"><h3>The by-eye pick</h3><span class="obj">maximize the average</span></div>
+            <div class="duel-bars" data-scores="90,85,78,66,52,39"></div>
+            <p class="dp-sum">average <b>68</b> · worst bridesmaid <b>39</b> — Type VI pays for the pretty average</p>
+          </div>
+          <div class="duel-panel ours">
+            <div class="dp-head"><h3>The OneDress pick</h3><span class="obj">maximize the minimum</span></div>
+            <div class="duel-bars" data-scores="63,70,74,68,64,58"></div>
+            <p class="dp-sum">average <b>66</b> · worst bridesmaid <b>58</b> — two average points traded for <b>+19</b> where it hurt most</p>
+          </div>
+        </div>
+      </div>
+      <p class="math-note fx d4">Illustrative scores, to show the mechanism. Run on synthetic Fitzpatrick I–VI profiles the engine picks marigold with nobody below 57.8, while the mean-maximizing pick (rust) drops the deepest-skin member to 38.8 — a 26.5-point swing on one person. Real measured profiles land with the demo party. Full derivation: lib/colorway/engine.ts.</p>
+      <aside class="speaker-notes">The one chart that matters: same six women, two objectives, different winners. The mean pick sacrifices Type VI; maximin lifts her for two average points. That trade IS the product — and it's why inclusivity here is math, not marketing.</aside>
+    </section>
+
+    <!-- ============ 6 · VERIFIED LIVE ============ -->
+    <section class="slide" id="s6" role="tabpanel" aria-label="Slide 6 of 10: verified live proof">
+      <p class="eyebrow fx">Verified live</p>
+      <h2 class="fx d1">Not a mock. Here's the receipt.</h2>
+      <table class="deck-table fx d2">
+        <thead><tr><th scope="col">Endpoint</th><th scope="col">Role</th><th scope="col">Verified live result</th></tr></thead>
+        <tbody>
+          <tr><td class="ep"><span class="ok"></span>skin-tone-analysis</td><td>measured skin hex — the scoring input</td><td class="res mono">#bb9982 → ITA° 43 · hue° 61</td></tr>
+          <tr><td class="ep"><span class="ok"></span>fitzpatrick-scale-analyzer</td><td>depth I–VI cross-check</td><td class="res">Type II returned</td></tr>
+          <tr><td class="ep"><span class="ok"></span>face-attr-analysis</td><td>face shape → earring silhouette</td><td class="res">"Heart" returned</td></tr>
+          <tr><td class="ep"><span class="ok"></span>cloth-v3</td><td>winner rendered on each bridesmaid</td><td class="res">photoreal · <span class="mono">ΔE00 ≈ 7.7</span></td></tr>
+          <tr><td class="ep"><span class="ok"></span>2d-vto/earring</td><td>chained finishing touch</td><td class="res">gold hoop landed on the render</td></tr>
+        </tbody>
+      </table>
+      <div class="receipt-row fx d3">
+        <div class="receipt"><b class="sage">5/5</b><span>endpoints proven end-to-end, one command: npm run spike</span></div>
+        <div class="receipt"><b>43</b><span>units — measured cost of a full single run</span></div>
+        <div class="receipt"><b>31</b><span>passing tests on the published engine</span></div>
+        <div class="receipt"><b class="gold">0</b><span>units to re-score all 24 colorways</span></div>
+      </div>
+      <aside class="speaker-notes">Honesty is the pitch here: the engine and all five integrations are live and reproducible today; the product UI ships in this same deploy at /party. Every number on this slide was measured, not estimated.</aside>
+    </section>
+
+    <!-- ============ 7 · WHY THIS SPONSOR ============ -->
+    <section class="slide" id="s7" role="tabpanel" aria-label="Slide 7 of 10: why YouCam">
+      <p class="eyebrow fx">Sponsor fit</p>
+      <h2 class="fx d1">Topic C, actually combined — Skin AI <em>drives</em> the VTO.</h2>
+      <div class="sp-cols">
+        <div class="sp-card skin fx d2">
+          <h3><span class="k">Skin AI</span> The measurement half</h3>
+          <ul>
+            <li><span class="mono">skin-tone-analysis</span> — the hex every score is computed from</li>
+            <li><span class="mono">fitzpatrick-scale-analyzer</span> — the inclusivity axis, I–VI</li>
+            <li><span class="mono">face-attr-analysis</span> — face shape steers the finish</li>
+          </ul>
+        </div>
+        <div class="sp-card vto fx d3">
+          <h3><span class="k">Apparel VTO</span> The proof half</h3>
+          <ul>
+            <li><span class="mono">cloth-v3</span> — the winner on every real bridesmaid</li>
+            <li><span class="mono">2d-vto/earring</span> — chained; undertone picks the metal</li>
+          </ul>
+        </div>
+      </div>
+      <p class="sp-anti fx d4"><strong>Deliberately beyond the sponsor's own surface:</strong> Perfect Corp ships personal-color analysis — "what's my season?" for one user. OneDress answers the strictly harder inverse for N people at once. Remove any one endpoint and the flow visibly breaks — <strong>the API is the engine, not decoration.</strong></p>
+      <aside class="speaker-notes">Three Skin AI endpoints feed the math, two VTO endpoints make it visible — that's Topic C fused, not stacked. And it's a use case the sponsor's consumer line doesn't cover, which is exactly the blog-featurable story a sponsor rewards.</aside>
+    </section>
+
+    <!-- ============ 8 · MARKET & IMPACT ============ -->
+    <section class="slide" id="s8" role="tabpanel" aria-label="Slide 8 of 10: market and impact">
+      <p class="eyebrow fx">Market &amp; impact</p>
+      <h2 class="fx d1">A billion-dollar decision, made by eyeballing one photo.</h2>
+      <div class="mk-row">
+        <div class="mk fx d2"><b>~2M+</b><span>US weddings a year — nearly all facing exactly one group color decision</span></div>
+        <div class="mk fx d3"><b>4–5</b><span>bridesmaids per wedding on average, at ~$100–250 per dress, frequently final-sale</span></div>
+        <div class="mk fx d4"><b>24×N</b><span>colorway-by-complexion combinations no human can eyeball — and today, nobody measures any of them</span></div>
+      </div>
+      <p class="mk-impact fx d4">And the beachhead generalizes: prom groups, quinceañera courts, uniforms, ensembles — every "one garment, many bodies" decision. The maximin objective means <em>the darkest-skin member is protected by construction</em> — inclusivity as an algorithm, not a tagline.</p>
+      <p class="mk-src fx d4">Figures are industry estimates (The Knot Real Weddings Study, retailer pricing); swatch-kit sales and the mismatched-dress trend are the revealed-preference proof the pain is real.</p>
+      <aside class="speaker-notes">Don't oversell TAM — the point is the wedge: highest pain (final-sale + group + photographed forever), then the same engine serves every one-garment-many-bodies decision, including retail product pages for Perfect Corp's brand partners.</aside>
+    </section>
+
+    <!-- ============ 9 · ROADMAP & ASK ============ -->
+    <section class="slide" id="s9" role="tabpanel" aria-label="Slide 9 of 10: roadmap and ask">
+      <p class="eyebrow fx">Roadmap</p>
+      <h2 class="fx d1">Engine proven. Product shipped.</h2>
+      <div class="rd-cols">
+        <div class="rd done fx d2">
+          <h3>Done &amp; reproducible</h3>
+          <ul>
+            <li><b>Live 5-endpoint integration</b> — npm run spike</li>
+            <li><b>Typed, Zod-validated client</b> — rate-limited, retrying</li>
+            <li><b>Published scoring engine</b> — 77 passing tests</li>
+            <li><b>Full CI harness</b> — lint, tests, CodeQL, secret scan</li>
+            <li><b>7-step product UI</b> — Create → Verdict, live at /party</li>
+            <li><b>Cached zero-unit demo party</b> — instant for judges</li>
+            <li><b>Counterfactual Compare screen</b> — by-eye vs maximin</li>
+          </ul>
+        </div>
+        <div class="rd wip fx d3">
+          <h3>In build → Aug 17</h3>
+          <ul>
+            <li><b>≤3-min demo video</b> — live browser, real calls</li>
+            <li><b>Live-run polish</b> — bring-your-own-key, metered end to end</li>
+          </ul>
+        </div>
+      </div>
+      <p class="ask-line fx d4">The ask: judge the <em>mechanism</em> on today's receipts — the inversion, the published math, the five live endpoints. The interactive party lands before the deadline, on this same engine.</p>
+      <aside class="speaker-notes">Set expectations precisely: what exists is verified and reproducible; what's coming is UI over a proven engine, not new risk. Submission deadline Aug 17, judging through Aug 31 on a cached zero-unit demo.</aside>
+    </section>
+
+    <!-- ============ 10 · CLOSE ============ -->
+    <section class="slide s-close" id="s10" role="tabpanel" aria-label="Slide 10 of 10: close">
+      <div class="tones fx" role="img" aria-label="Six skin tones">
+        <span class="t" style="background:var(--tone-0)"></span>
+        <span class="t" style="background:var(--tone-1)"></span>
+        <span class="t" style="background:var(--tone-2)"></span>
+        <span class="t" style="background:var(--tone-3)"></span>
+        <span class="t" style="background:var(--tone-4)"></span>
+        <span class="t" style="background:var(--tone-5)"></span>
+      </div>
+      <h2 class="fx d1">Six bridesmaids. One color. <em>Zero arguments.</em></h2>
+      <p class="sub fx d2">OneDress — the max-of-minimum dress-color engine, built on the YouCam API.</p>
+      <div class="close-links fx d3">
+        <a class="primary" href="/party">Open the live app →</a>
+        <a class="ghost" href="/">Back to the site</a>
+        <a class="ghost" href="https://github.com/edycutjong/onedress" rel="noopener" aria-label="View source on GitHub">View source</a>
+      </div>
+      <p class="close-url fx d4">onedress.edycu.dev · YouCam API Hackathon (Devpost) · Topic C</p>
+      <aside class="speaker-notes">Close on the tagline, then stop talking. If asked "what's real today," the answer is one command: npm run spike — five green endpoints and a unit-cost printout.</aside>
+    </section>
+
+    <!-- click zones -->
+    <button class="zone prev" id="zone-prev" aria-label="Previous slide"></button>
+    <button class="zone next" id="zone-next" aria-label="Next slide"></button>
+
+    <a class="deck-brand" href="/" aria-label="OneDress — back to landing page">
+      <img src="/icon.svg" alt="">
+      <span>One<em>Dress</em></span>
+    </a>
+    <p class="hint" id="hint"><kbd>←</kbd> <kbd>→</kbd> to navigate · <kbd>P</kbd> notes · <kbd>O</kbd> overview</p>
+    <div class="counter num" id="counter" aria-live="polite">01 / 10</div>
+  </div>
+</div>
+
+<!-- presenter notes panel -->
+<div class="notes-panel" id="notes-panel" aria-hidden="true">
+  <div class="np-label">Speaker notes — press P to hide</div>
+  <div id="notes-text"></div>
+</div>
+
+<!-- overview grid -->
+<div class="overview" id="overview" role="dialog" aria-modal="true" aria-label="Slide overview">
+  <h2>Slides — click to jump, Esc to close</h2>
+  <div class="ov-grid" id="ov-grid"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total = slides.length;
+  var current = 0;
+  var counter = document.getElementById("counter");
+  var fill = document.getElementById("progress-fill");
+  var hint = document.getElementById("hint");
+  var notesPanel = document.getElementById("notes-panel");
+  var notesText = document.getElementById("notes-text");
+  var overview = document.getElementById("overview");
+  var ovGrid = document.getElementById("ov-grid");
+  var interacted = false;
+
+  var titles = [
+    "OneDress — cover", "The problem", "The inversion", "How it works",
+    "The maximin math", "Verified live", "Sponsor fit", "Market & impact",
+    "Roadmap & ask", "Close"
+  ];
+
+  /* ---------- duel bar charts (slide 5) ---------- */
+  var TONES = ["#F9EADD", "#F3DCC9", "#E9BE9B", "#CE9268", "#9A6844", "#5F3B27"];
+  var FITZ = ["I", "II", "III", "IV", "V", "VI"];
+  document.querySelectorAll(".duel-bars").forEach(function (wrap) {
+    var scores = wrap.getAttribute("data-scores").split(",").map(Number);
+    var min = Math.min.apply(null, scores);
+    scores.forEach(function (s, i) {
+      var row = document.createElement("div");
+      row.className = "d-row" + (s === min ? " worst" : "");
+      row.setAttribute("aria-label", "Fitzpatrick " + FITZ[i] + ": score " + s + " of 100" + (s === min ? " — worst" : ""));
+      row.innerHTML =
+        '<span class="d-id"><span class="face" style="background:' + TONES[i] + '"></span><span class="f">' + FITZ[i] + "</span></span>" +
+        '<span class="d-track"><span class="d-fill" style="--w:' + s + '%"></span></span>' +
+        '<span class="d-score num">' + s + "</span>";
+      wrap.appendChild(row);
+    });
+  });
+  function animateDuel(slide) {
+    slide.querySelectorAll(".d-fill").forEach(function (f) {
+      f.style.width = f.style.getPropertyValue("--w");
+    });
+  }
+  function resetDuel(slide) {
+    slide.querySelectorAll(".d-fill").forEach(function (f) { f.style.width = "0%"; });
+  }
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduced) { slides.forEach(animateDuel); }
+
+  /* ---------- overview grid ---------- */
+  titles.forEach(function (t, i) {
+    var b = document.createElement("button");
+    b.className = "ov-item";
+    b.type = "button";
+    b.innerHTML = '<span class="n num">' + String(i + 1).padStart(2, "0") + " / " + total + '</span><span class="t">' + t + "</span>";
+    b.addEventListener("click", function () { closeOverview(); go(i); });
+    ovGrid.appendChild(b);
+  });
+  var ovItems = Array.prototype.slice.call(ovGrid.children);
+
+  function openOverview() {
+    document.body.classList.add("overview-open");
+    ovItems.forEach(function (el, i) { el.classList.toggle("current", i === current); });
+    ovItems[current].focus();
+  }
+  function closeOverview() { document.body.classList.remove("overview-open"); }
+
+  /* ---------- navigation ---------- */
+  function go(n, fromHash) {
+    n = Math.max(0, Math.min(total - 1, n));
+    if (n === current && !fromHash) return;
+    slides[current].classList.remove("active");
+    if (!reduced) resetDuel(slides[current]);
+    current = n;
+    var s = slides[current];
+    s.classList.add("active");
+    if (!reduced) requestAnimationFrame(function () { requestAnimationFrame(function () { animateDuel(s); }); });
+    else animateDuel(s);
+    counter.textContent = String(current + 1).padStart(2, "0") + " / " + total;
+    fill.style.width = ((current + 1) / total * 100) + "%";
+    var notes = s.querySelector(".speaker-notes");
+    notesText.textContent = notes ? notes.textContent : "";
+    if (history.replaceState) history.replaceState(null, "", "#" + (current + 1));
+    if (interacted) { hint.classList.add("hide"); }
+  }
+  function next() { interacted = true; go(current + 1); }
+  function prev() { interacted = true; go(current - 1); }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (document.body.classList.contains("overview-open")) {
+      if (k === "Escape" || k === "o" || k === "O") { closeOverview(); e.preventDefault(); }
+      return;
+    }
+    if (k === "ArrowRight" || k === "ArrowDown" || k === " " || k === "PageDown") { next(); e.preventDefault(); }
+    else if (k === "ArrowLeft" || k === "ArrowUp" || k === "PageUp") { prev(); e.preventDefault(); }
+    else if (k === "Home") { interacted = true; go(0); e.preventDefault(); }
+    else if (k === "End") { interacted = true; go(total - 1); e.preventDefault(); }
+    else if (k === "p" || k === "P") {
+      var on = document.body.classList.toggle("presenting");
+      notesPanel.setAttribute("aria-hidden", String(!on));
+      e.preventDefault();
+    }
+    else if (k === "o" || k === "O" || k === "Escape") { openOverview(); e.preventDefault(); }
+    else if (k === "c" || k === "C") { document.body.classList.toggle("debug-contrast"); }
+  });
+
+  document.getElementById("zone-next").addEventListener("click", next);
+  document.getElementById("zone-prev").addEventListener("click", prev);
+
+  /* clicks anywhere on the slide body advance too — links stay clickable */
+  document.getElementById("stage").addEventListener("click", function (e) {
+    if (e.target.closest("a, button, .notes-panel")) return;
+    if (e.clientX < window.innerWidth * 0.25) prev(); else next();
+  });
+
+  /* touch swipe */
+  var touchX = null;
+  document.addEventListener("touchstart", function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 48) { if (dx < 0) next(); else prev(); }
+    touchX = null;
+  }, { passive: true });
+
+  /* ---------- scale stage to viewport ---------- */
+  var stage = document.getElementById("stage");
+  function fit() {
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stage.style.transform = "translate(-50%, -50%) scale(" + s + ")";
+  }
+  window.addEventListener("resize", fit);
+  fit();
+
+  /* ---------- init from hash ---------- */
+  var h = parseInt((location.hash || "").replace("#", ""), 10);
+  if (h >= 1 && h <= total) { slides[0].classList.remove("active"); slides[h - 1].classList.add("active"); current = h - 1; }
+  go(current, true);
+
+  /* fade the hint after 7s regardless */
+  setTimeout(function () { hint.classList.add("hide"); }, 7000);
+})();
+</script>
+</body>
+</html>

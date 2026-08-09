@@ -52,14 +52,20 @@ export function AppShell({
       <header className="sticky top-0 z-[var(--z-sticky)] border-b border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--bg-base)_88%,transparent)] backdrop-blur-md">
         <div className="mx-auto w-full max-w-[1240px] px-4 py-3 sm:px-6">
           <div className="flex items-center gap-x-6 gap-y-2">
-            <p className="flex items-baseline gap-2">
+            {/* The wordmark is the way back out to the landing page — the app and
+                the brochure are one deploy, so the round trip must be one click. */}
+            <a
+              href="/"
+              aria-label="OneDress — back to the landing page"
+              className="flex items-baseline gap-2 no-underline"
+            >
               <span className="font-display text-lg font-semibold tracking-tight text-text-hi">
                 OneDress
               </span>
               <span className="hidden font-mono text-[0.625rem] uppercase tracking-[0.16em] text-text-low sm:inline">
                 one color · every complexion
               </span>
-            </p>
+            </a>
             <div className="ml-auto shrink-0">
               <UnitMeter credit={credit} spent={spent} estimated={estimated} />
             </div>
@@ -79,12 +85,29 @@ export function AppShell({
       </main>
 
       <footer className="border-t border-[var(--border-subtle)] px-4 py-6 sm:px-6">
-        <p className="mx-auto max-w-[1240px] text-xs leading-relaxed text-text-low">
-          Scores are computed locally by the published colorway engine (CIELAB undertone,
-          value-contrast and saturation terms, combined max-of-minimum). Measurement and rendering
-          run on the YouCam / Perfect Corp API. No photograph in this app is generated or invented —
-          where an image is missing, the card says so.
-        </p>
+        <div className="mx-auto max-w-[1240px]">
+          <p className="text-xs leading-relaxed text-text-low">
+            Scores are computed locally by the published colorway engine (CIELAB undertone,
+            value-contrast and saturation terms, combined max-of-minimum). Measurement and rendering
+            run on the YouCam / Perfect Corp API. No photograph in this app is generated or invented
+            — where an image is missing, the card says so.
+          </p>
+          <nav aria-label="Site" className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs">
+            <a href="/" className="text-text-mid underline-offset-4 hover:underline">
+              Landing page
+            </a>
+            <a href="/pitch" className="text-text-mid underline-offset-4 hover:underline">
+              Pitch deck
+            </a>
+            <a
+              href="https://github.com/edycutjong/onedress"
+              rel="noopener"
+              className="text-text-mid underline-offset-4 hover:underline"
+            >
+              Source
+            </a>
+          </nav>
+        </div>
       </footer>
     </div>
   );

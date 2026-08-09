@@ -12,7 +12,7 @@ test.describe('demo mode — zero config', () => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
     });
 
-    await page.goto('/');
+    await page.goto('/party');
 
     // Brand, the persistent spine, and the honesty banner.
     await expect(page.getByText('OneDress').first()).toBeVisible();
@@ -30,7 +30,7 @@ test.describe('demo mode — zero config', () => {
   });
 
   test('the seven-step spine is present and every step is reachable', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/party');
     const spine = page.getByRole('navigation', { name: 'Progress' });
     const steps = ['Create', 'Measure', 'Score', 'Compare', 'Render', 'Finish', 'Verdict'];
 
@@ -46,7 +46,7 @@ test.describe('demo mode — zero config', () => {
   });
 
   test('has correct document title and description meta', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/party');
     await expect(page).toHaveTitle(/OneDress/i);
     const desc = page.locator('meta[name="description"]');
     await expect(desc).toHaveAttribute('content', /skin tone|dress color/i);

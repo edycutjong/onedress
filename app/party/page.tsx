@@ -16,16 +16,18 @@ import { accentHex, stepStatuses } from '@/lib/demo/select';
 import { stepById } from '@/lib/demo/steps';
 
 /**
- * The product. It opens on the **cached demo party's verdict** — no API key, no
- * units, no upload — because that is the frame that shows what OneDress is in one
- * look, and every earlier step is one click back along the spine.
+ * The product, served at `/party` (the landing page owns `/`, the deck owns
+ * `/pitch` — all three come out of this one deploy). It opens on the **cached demo
+ * party's verdict** — no API key, no units, no upload — because that is the frame
+ * that shows what OneDress is in one look, and every earlier step is one click back
+ * along the spine.
  *
  * All seven steps read the same `PartyRun` object, which is exactly the shape
  * `/api/party/[id]` and the SSE stream emit. A live run therefore drops straight in
  * with no second code path.
  */
 
-export default function Home() {
+export default function PartyPage() {
   const [party, setParty] = useState<PartyRun>(DEMO_PARTY);
   const [activeStepId, setActiveStepId] = useState('verdict');
   const credit = useCredit();

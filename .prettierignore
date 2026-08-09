@@ -6,3 +6,7 @@ test-results/
 scripts/fixtures/
 package-lock.json
 *.md
+
+# Hand-authored single-file HTML surfaces (landing + pitch deck). Prettier would
+# reflow 60KB of deliberately hand-tuned markup, inline CSS and inline JS.
+public/*.html

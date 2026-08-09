@@ -19,6 +19,9 @@ next-env.d.ts
 # Lighthouse
 .lighthouseci/
 
+# Vercel CLI link + pulled env
+.vercel/
+
 # Phase-0 spike scratch: throwaway stock test images + raw API dumps.
 # The shipped demo uses properly-consented models; these never enter history.
 scripts/fixtures/
