@@ -73,7 +73,7 @@ export function RenderTile({
 
       <CardHeader
         title={name}
-        eyebrow={mode === 'render' ? `slot ${index + 1} of 6` : colorway.name}
+        eyebrow={mode === 'render' ? `slot ${index + 1}` : undefined}
         trailing={<FitzBadge numeral={measurement?.fitzpatrick} skinHex={measurement?.skinHex} />}
         className="pt-3"
       />
@@ -95,9 +95,13 @@ export function RenderTile({
         </div>
         {flatter === undefined ? null : <ScoreBar value={flatter} className="mt-2.5" />}
         {measurement && !measurement.faceShape ? (
-          <p className="mt-2 text-[0.6875rem] leading-snug text-text-low">
-            Face shape unavailable — earring silhouette falls back to a hoop. Scoring is unaffected.
-          </p>
+          <Chip
+            tone="warning"
+            className="mt-2.5"
+            title="face-attr-analysis returned no face shape for her, so the earring silhouette falls back to a hoop. Skin hex, Fitzpatrick and every score are unaffected."
+          >
+            hoop fallback
+          </Chip>
         ) : null}
       </CardBody>
 

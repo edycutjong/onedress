@@ -24,6 +24,7 @@ export function Portrait({
   dressName,
   photoUrl = null,
   className = '',
+  showTag = true,
 }: {
   /** stable id — namespaces the SVG defs so two portraits never collide */
   id: string;
@@ -33,6 +34,9 @@ export function Portrait({
   dressName: string;
   photoUrl?: string | null;
   className?: string;
+  /** thumbnails too small to carry the corner tag legibly turn it off; the hatch,
+   *  the flat shapes and the aria-label still say what this is */
+  showTag?: boolean;
 }) {
   if (photoUrl) {
     return (
@@ -73,21 +77,27 @@ export function Portrait({
         <rect width="120" height="160" fill="#1b0f18" />
         <rect width="120" height="160" fill={`url(#${hatchId})`} />
 
-        {/* the dress — the colorway under test */}
-        <path d="M16 160 C18 118 38 100 60 100 C82 100 102 118 104 160 Z" fill={dressHex} />
-        {/* neck + head — her measured skin hex */}
-        <rect x="52" y="72" width="16" height="34" rx="7" fill={skinHex} />
-        <ellipse cx="60" cy="50" rx="24" ry="29" fill={skinHex} />
+        {/* neck first, so the bodice overlaps it the way a neckline does */}
+        <path d="M52 68 h16 v26 q-8 4 -16 0 Z" fill={skinHex} />
+        {/* the dress — the colorway under test: shoulder line into a floor-length skirt */}
+        <path
+          d="M34 100 C38 89 48 86 60 86 C72 86 82 89 86 100 L96 160 L24 160 Z"
+          fill={dressHex}
+        />
+        {/* head — her measured skin hex */}
+        <ellipse cx="60" cy="52" rx="19" ry="24" fill={skinHex} />
         {/* one soft form pass so the shapes read as a figure, not a logo */}
         <rect width="120" height="160" fill={`url(#${shadeId})`} />
       </svg>
 
-      <span
-        aria-hidden="true"
-        className="absolute left-2 top-2 rounded-[var(--radius-4)] bg-black/55 px-1.5 py-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-text-mid backdrop-blur-sm"
-      >
-        illustration
-      </span>
+      {showTag ? (
+        <span
+          aria-hidden="true"
+          className="absolute left-2 top-2 rounded-[var(--radius-4)] bg-black/55 px-1.5 py-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-text-mid backdrop-blur-sm"
+        >
+          illustration
+        </span>
+      ) : null}
     </div>
   );
 }

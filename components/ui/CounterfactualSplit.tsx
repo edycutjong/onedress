@@ -72,7 +72,7 @@ function Side({
             </>
           ) : (
             <>
-              OneDress maximises the <em>minimum</em>. The same woman, the same photo, scores{' '}
+              OneDress maximises the <em>minimum</em>. The same woman, the same measurement, scores{' '}
               <span className="tabular font-mono text-text-hi">{fmtScore(value)}</span> — and nobody
               else drops below the floor to pay for it.
             </>
@@ -147,13 +147,14 @@ export function CounterfactualRecap(props: CounterfactualProps) {
         ] as const
       ).map(([label, colorway, value]) => (
         <div key={label} className="flex items-center gap-3">
-          <div className="h-16 w-12 shrink-0 overflow-hidden rounded-[var(--radius-8)]">
+          <div className="h-[4.5rem] w-14 shrink-0 overflow-hidden rounded-[var(--radius-8)]">
             <Portrait
               id={`recap-${label.replace(/\s/g, '')}-${props.subjectId}`}
               name={props.subjectName}
               skinHex={props.subjectSkinHex}
               dressHex={colorway.hex}
               dressName={colorway.name}
+              showTag={false}
             />
           </div>
           <div>
@@ -166,7 +167,7 @@ export function CounterfactualRecap(props: CounterfactualProps) {
         </div>
       ))}
       <p className="max-w-xs text-sm leading-snug text-text-mid">
-        Same woman, same photo, two colours:{' '}
+        Same woman, same measured skin tone, two colours:{' '}
         <span className="tabular font-mono text-text-hi">{signed(lift)}</span> flatter under the
         max-of-minimum pick.
       </p>

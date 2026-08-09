@@ -50,22 +50,25 @@ export function AppShell({
       </a>
 
       <header className="sticky top-0 z-[var(--z-sticky)] border-b border-[var(--border-subtle)] bg-[color-mix(in_srgb,var(--bg-base)_88%,transparent)] backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-[1240px] flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6">
-          <p className="flex items-baseline gap-2">
-            <span className="font-display text-lg font-semibold tracking-tight text-text-hi">
-              OneDress
-            </span>
-            <span className="hidden font-mono text-[0.625rem] uppercase tracking-[0.16em] text-text-low sm:inline">
-              one color · every complexion
-            </span>
-          </p>
-
-          <div className="order-3 w-full min-w-0 sm:order-none sm:w-auto sm:flex-1">
-            <ProgressSpine activeStepId={activeStepId} statuses={statuses} onSelect={onSelect} />
+        <div className="mx-auto w-full max-w-[1240px] px-4 py-3 sm:px-6">
+          <div className="flex items-center gap-x-6 gap-y-2">
+            <p className="flex items-baseline gap-2">
+              <span className="font-display text-lg font-semibold tracking-tight text-text-hi">
+                OneDress
+              </span>
+              <span className="hidden font-mono text-[0.625rem] uppercase tracking-[0.16em] text-text-low sm:inline">
+                one color · every complexion
+              </span>
+            </p>
+            <div className="ml-auto shrink-0">
+              <UnitMeter credit={credit} spent={spent} estimated={estimated} />
+            </div>
           </div>
 
-          <div className="ml-auto shrink-0">
-            <UnitMeter credit={credit} spent={spent} estimated={estimated} />
+          {/* The spine gets its own full-width row so no label can ever be clipped
+              by the meter — it is the one element that must stay legible at 375px. */}
+          <div className="mt-2 min-w-0">
+            <ProgressSpine activeStepId={activeStepId} statuses={statuses} onSelect={onSelect} />
           </div>
         </div>
         {banner}

@@ -108,7 +108,7 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
         <SectionHeading
           id="lineup-heading"
           title="The lineup"
-          note="One colour on every complexion — identical crop, shared baseline, one photograph of one wedding."
+          note="One colour on every complexion — identical crop, shared baseline, one frame. Six people, one decision."
           trailing={
             <Chip>
               <Swatch color={winner.colorway.hex} label={winner.colorway.name} />
