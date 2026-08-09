@@ -143,14 +143,14 @@ function buildScoring(): ScoringSummary {
   };
 }
 
-function buildBridesmaids(measuredAt: number): BridesmaidState[] {
+function buildBridesmaids(): BridesmaidState[] {
   return DEMO_BRIDESMAIDS.map((b) => ({
     id: b.id,
     name: b.name,
     measure: {
+      // no startedAt/endedAt: these measurements were never timed, and inventing a
+      // duration to decorate the card would be a fabricated number like any other
       status: 'done',
-      startedAt: measuredAt,
-      endedAt: measuredAt + 2_400,
       result: {
         skinHex: b.skinHex,
         fitzpatrick: b.fitzpatrick,
@@ -190,7 +190,7 @@ export function buildDemoParty(): PartyRun {
     createdAt,
     status: 'done',
     stage: 'done',
-    bridesmaids: buildBridesmaids(createdAt),
+    bridesmaids: buildBridesmaids(),
     scoring,
     counterfactual: buildCounterfactual(scoring),
     units: { estimated: DEMO_ESTIMATED_UNITS, spent: 0 },

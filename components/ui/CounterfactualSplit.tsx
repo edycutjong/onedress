@@ -28,7 +28,6 @@ function Side({
   value,
   dialLabel,
   props,
-  dialColor,
   photo,
 }: {
   side: 'by-eye' | 'winner';
@@ -37,7 +36,6 @@ function Side({
   value: number;
   dialLabel: string;
   props: CounterfactualProps;
-  dialColor: string;
   photo?: string | null;
 }) {
   return (
@@ -62,7 +60,7 @@ function Side({
         }
       />
       <CardBody className="flex items-center gap-4">
-        <ScoreDial value={value} label={dialLabel} size="lg" color={dialColor} />
+        <ScoreDial value={value} label={dialLabel} size="lg" color={colorway.hex} />
         <p className="text-sm leading-snug text-text-mid">
           {side === 'by-eye' ? (
             <>
@@ -103,14 +101,13 @@ export function CounterfactualSplit(props: CounterfactualProps) {
         </Chip>
       </div>
 
-      <div className="flex flex-col gap-4 md:flex-row">
+      <div className="flex max-w-3xl flex-col gap-4 md:flex-row">
         <Side
           side="by-eye"
           eyebrow="Picked by eye · best on average"
           colorway={props.byEyeColorway}
           value={props.byEyeScore}
           dialLabel="her flatter score"
-          dialColor="var(--color-warning)"
           props={props}
           photo={props.photoByEye}
         />
@@ -126,7 +123,6 @@ export function CounterfactualSplit(props: CounterfactualProps) {
           colorway={props.winnerColorway}
           value={props.winnerScore}
           dialLabel="her flatter score"
-          dialColor="var(--winner)"
           props={props}
           photo={props.photoWinner}
         />
