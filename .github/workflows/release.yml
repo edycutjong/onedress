@@ -33,8 +33,11 @@ jobs:
   release:
     name: Semantic release
     runs-on: ubuntu-latest
-    # Don't re-trigger on semantic-release's own version-bump commit.
-    if: "!contains(github.event.head_commit.message, 'chore(release):')"
+    # No `if:` guard here on purpose. An earlier version matched the release
+    # commit by substring, and any commit whose BODY merely mentioned that
+    # string skipped itself — including the commit that introduced the guard.
+    # semantic-release already appends [skip ci] to its own version commit,
+    # which GitHub honours natively, so the loop is prevented at the source.
     steps:
       - name: Checkout
         uses: actions/checkout@v4
