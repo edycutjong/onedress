@@ -9,7 +9,9 @@
   [![Live Demo](https://img.shields.io/badge/🚀_Live-App-06b6d4?style=for-the-badge)](https://onedress.edycu.dev/party)
   [![Demo Video](https://img.shields.io/badge/🎬_Demo-Video-ef4444?style=for-the-badge)](https://youtu.be/8iKm7LpjUEA)
   [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://onedress.edycu.dev/pitch)
-  [![Devpost](https://img.shields.io/badge/Devpost-YouCam_API_Hackathon-8b5cf6?style=for-the-badge)](https://youcam-api.devpost.com/)
+  [![Devpost](https://img.shields.io/badge/Devpost-Submission-8b5cf6?style=for-the-badge)](https://devpost.com/software/onedress)
+
+  <sub>Submitted to the <a href="https://youcam-api.devpost.com/">YouCam API Hackathon</a> — Topic C, Skin AI + Apparel VTO.</sub>
 
   <br/>
 
