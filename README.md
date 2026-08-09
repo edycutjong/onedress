@@ -237,8 +237,6 @@ extension, not to the flow we built.
 
 ### Installation
 ```bash
-# Repo is private during the build window — judges have access via the
-# email shared on the Devpost submission. Public at submission.
 git clone https://github.com/edycutjong/onedress.git
 cd onedress
 npm install
