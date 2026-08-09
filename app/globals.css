@@ -214,3 +214,20 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Layout resilience ────────────────────────────────────────────────
+   A CI runner resolves webfonts differently from a dev machine, so the
+   same string can lay out wider there and push the page into horizontal
+   scroll (the e2e overflow assertion caught exactly this on Create).
+   Rather than tune for one environment's metrics, let long unbreakable
+   tokens (hex codes, colorway names) break, and let flex/grid children
+   shrink below their content width — which is what they should have been
+   allowed to do anyway. Zero-specificity :where() so components can still
+   opt out. */
+:where(body) {
+  overflow-wrap: break-word;
+}
+
+:where(main, section, header, footer, div, li, p) {
+  min-width: 0;
+}
