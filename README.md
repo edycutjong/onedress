@@ -21,7 +21,7 @@
   ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat&logo=vitest&logoColor=white)
   ![YouCam API](https://img.shields.io/badge/YouCam_API-Perfect_Corp-8b5cf6?style=flat)
   [![CI](https://github.com/edycutjong/onedress/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/onedress/actions/workflows/ci.yml)
-  [![Release](https://img.shields.io/badge/release-v1.0.0-8b5cf6?style=flat)](https://github.com/edycutjong/onedress/releases)
+  [![Release](https://img.shields.io/github/v/release/edycutjong/onedress?style=flat&color=8b5cf6&label=release)](https://github.com/edycutjong/onedress/releases)
   ![Tests](https://img.shields.io/badge/tests-77_passing-22C55E?style=flat)
   ![Coverage](https://img.shields.io/badge/coverage-100%25-22C55E?style=flat)
   ![License](https://img.shields.io/badge/license-MIT-blue?style=flat)

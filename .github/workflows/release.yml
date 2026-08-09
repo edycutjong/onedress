@@ -1,0 +1,60 @@
+name: Release
+
+# Automatic semantic versioning from the conventional-commit history.
+#
+# On every push to main, semantic-release reads the commits since the last tag,
+# decides the next version, then — with no human step — writes CHANGELOG.md, bumps
+# package.json, creates the git tag, and publishes a GitHub Release with generated
+# notes at https://github.com/edycutjong/onedress/releases
+#
+#   feat:                    -> minor   (1.0.0 -> 1.1.0)
+#   fix: / perf:             -> patch   (1.0.0 -> 1.0.1)
+#   feat!: / BREAKING CHANGE -> major   (1.0.0 -> 2.0.0)
+#   docs: chore: test: ci: style: refactor:  -> no release on their own
+#
+# Nothing is published to npm — this is an application, not a package — so the npm
+# plugin runs with npmPublish:false purely to keep package.json's version in step.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # tags, CHANGELOG commit, GitHub Release
+  issues: write # release comments on closed issues
+  pull-requests: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Semantic release
+    runs-on: ubuntu-latest
+    # Don't re-trigger on semantic-release's own version-bump commit.
+    if: "!contains(github.event.head_commit.message, 'chore(release):')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history — semantic-release needs every tag
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Semantic release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx --yes
+          semantic-release@24
+          @semantic-release/changelog@6
+          @semantic-release/git@10
