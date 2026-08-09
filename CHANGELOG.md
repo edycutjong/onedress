@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/edycutjong/onedress/compare/v1.1.0...v1.1.1) (2026-08-09)
+
+### Bug Fixes
+
+* **ci:** pin Node 22 for Vercel builds ([932b3aa](https://github.com/edycutjong/onedress/commit/932b3aac0ad588fc0961fa2db40119d2c1cfeed4))
+
 ## [1.1.0](https://github.com/edycutjong/onedress/compare/v1.0.0...v1.1.0) (2026-08-09)
 
 ### Features
