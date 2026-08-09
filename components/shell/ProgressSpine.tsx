@@ -35,14 +35,19 @@ export function ProgressSpine({
 }) {
   return (
     <nav aria-label="Progress" className="min-w-0">
-      <ol className="flex items-center gap-0.5 overflow-x-auto pb-0.5 sm:gap-1">
+      {/* Wraps on mobile rather than scrolling: a spine you have to discover by
+          swiping is not a spine. From sm up it is a single row. */}
+      <ol className="flex flex-wrap items-center gap-1 sm:flex-nowrap sm:gap-0.5 sm:overflow-x-auto sm:pb-0.5">
         {STEPS.map((step, i) => {
           const active = step.id === activeStepId;
           const status = statuses[step.id] ?? 'todo';
           return (
             <li key={step.id} className="flex shrink-0 items-center">
               {i > 0 ? (
-                <span aria-hidden="true" className="mx-0.5 h-px w-3 bg-[var(--border-default)]" />
+                <span
+                  aria-hidden="true"
+                  className="mx-0.5 hidden h-px w-3 bg-[var(--border-default)] sm:inline-block"
+                />
               ) : null}
               <button
                 type="button"
