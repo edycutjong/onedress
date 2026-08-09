@@ -1,3 +1,14 @@
+## [1.3.0](https://github.com/edycutjong/onedress/compare/v1.2.0...v1.3.0) (2026-08-09)
+
+### Features
+
+* **ui:** animate the step-to-step transition ([6f07979](https://github.com/edycutjong/onedress/commit/6f079798942c4b4b1ce8c8271101f57367fe9f50))
+
+### Bug Fixes
+
+* **css:** let a chip wrap instead of pushing the whole page wide ([b020791](https://github.com/edycutjong/onedress/commit/b02079135625a3df8fb335e95225257b61de93ef))
+* **deploy:** declare the Next.js framework so the domain serves the app ([ced5106](https://github.com/edycutjong/onedress/commit/ced5106daebbf6787b6f2ee02d16a69ac1a752a9))
+
 ## [1.2.0](https://github.com/edycutjong/onedress/compare/v1.1.1...v1.2.0) (2026-08-09)
 
 ### Features
