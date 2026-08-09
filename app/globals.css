@@ -1,0 +1,21 @@
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-hi);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Tabular figures everywhere numbers tick (hex, scores, ΔE, units). */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}

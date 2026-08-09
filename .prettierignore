@@ -1,0 +1,8 @@
+.next/
+node_modules/
+coverage/
+playwright-report/
+test-results/
+scripts/fixtures/
+package-lock.json
+*.md

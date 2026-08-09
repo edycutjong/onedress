@@ -1,0 +1,52 @@
+{
+  "name": "onedress",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One dress color, provably flattering for every skin tone in the party.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "lighthouse": "lhci autorun",
+    "audit": "npm audit --audit-level=high",
+    "ci": "npm run format:check && npm run lint && npm run typecheck && npm run test:coverage",
+    "ci:full": "npm run ci && npm run build && npm run e2e",
+    "spike": "tsx scripts/spike.ts",
+    "bench": "tsx bench/run-bench.ts"
+  },
+  "dependencies": {
+    "next": "15.5.22",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "sharp": "0.33.5",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.14.0",
+    "@playwright/test": "1.55.0",
+    "@types/node": "22.10.7",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "@vitest/coverage-istanbul": "^3.0.4",
+    "@vitest/coverage-v8": "3.0.4",
+    "autoprefixer": "10.4.20",
+    "eslint": "8.57.1",
+    "eslint-config-next": "15.5.22",
+    "postcss": "8.5.1",
+    "prettier": "3.4.2",
+    "tailwindcss": "3.4.17",
+    "tsx": "4.19.2",
+    "typescript": "5.7.3",
+    "vitest": "3.0.4"
+  }
+}

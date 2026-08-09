@@ -1,0 +1,341 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320" role="img"
+     aria-label="OneDress — six bridesmaids, six skin tones, one dress color, zero arguments. Five selfies are measured, 120 colorway combinations are scored, Dusty Sage wins with a worst-case flatter score of 81/100, and the winning color is rendered on the whole party.">
+  <defs>
+    <linearGradient id="plateGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1B0F17"/>
+      <stop offset="100%" stop-color="#110810"/>
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D98BA3" stop-opacity="0.45"/>
+      <stop offset="50%" stop-color="#D9B98C" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#9CAF88" stop-opacity="0.42"/>
+    </linearGradient>
+    <linearGradient id="wordGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="171" y2="0">
+      <stop offset="0%" stop-color="#D98BA3"/>
+      <stop offset="100%" stop-color="#9CAF88"/>
+    </linearGradient>
+    <linearGradient id="gownGrad" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#D98BA3"/>
+      <stop offset="100%" stop-color="#9CAF88"/>
+    </linearGradient>
+    <linearGradient id="nodeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D98BA3"/>
+      <stop offset="100%" stop-color="#9CAF88"/>
+    </linearGradient>
+    <linearGradient id="shimmerGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFF0F6" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#FFF0F6" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FFF0F6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="scanGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#D98BA3" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#D98BA3"/>
+      <stop offset="100%" stop-color="#D98BA3" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="gridPat" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="rgba(255,255,255,0.032)" stroke-width="1"/>
+    </pattern>
+    <filter id="fAurora" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="42"/>
+    </filter>
+    <filter id="fComet" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+    <filter id="fGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <clipPath id="plateClip">
+      <rect x="8" y="8" width="1264" height="304" rx="20"/>
+    </clipPath>
+    <!-- Comet motion paths -->
+    <path id="mc1" d="M688,64 C770,72 812,132 862,150"/>
+    <path id="mc2" d="M688,112 C766,118 810,144 860,154"/>
+    <path id="mc3" d="M688,160 L858,160"/>
+    <path id="mc4" d="M688,208 C766,202 810,176 860,166"/>
+    <path id="mc5" d="M688,256 C770,248 812,188 862,170"/>
+    <style>
+      text { user-select: none; }
+      .aur1 { animation: aur1 16s ease-in-out infinite alternate; }
+      .aur2 { animation: aur2 19s ease-in-out infinite alternate; }
+      @keyframes aur1 { from { transform: translate(0, 0); } to { transform: translate(44px, 26px); } }
+      @keyframes aur2 { from { transform: translate(0, 0); } to { transform: translate(-48px, -22px); } }
+
+      .mark-breath {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: markBreath 8s ease-in-out infinite;
+      }
+      @keyframes markBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+
+      .metric-pulse { animation: metricPulse 8s ease-in-out infinite; }
+      @keyframes metricPulse { 0%, 90%, 100% { opacity: 1; } 45% { opacity: 0.66; } }
+
+      .story-dot {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: 8s cubic-bezier(.2,1.4,.4,1) infinite;
+      }
+      .sd1 { animation-name: sdPop1; }
+      .sd2 { animation-name: sdPop2; }
+      .sd3 { animation-name: sdPop3; }
+      .sd4 { animation-name: sdPop4; }
+      .sd5 { animation-name: sdPop5; }
+      @keyframes sdPop1 { 0%,2%  { transform: scale(0); } 4.5%  { transform: scale(1.2); } 6%,100%    { transform: scale(1); } }
+      @keyframes sdPop2 { 0%,4%  { transform: scale(0); } 6.5%  { transform: scale(1.2); } 8%,100%    { transform: scale(1); } }
+      @keyframes sdPop3 { 0%,6%  { transform: scale(0); } 8.5%  { transform: scale(1.2); } 10%,100%   { transform: scale(1); } }
+      @keyframes sdPop4 { 0%,8%  { transform: scale(0); } 10.5% { transform: scale(1.2); } 12%,100%   { transform: scale(1); } }
+      @keyframes sdPop5 { 0%,10% { transform: scale(0); } 12.5% { transform: scale(1.2); } 14%,100%   { transform: scale(1); } }
+
+      .node-bump {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: nodeBump 8s ease-in-out infinite;
+      }
+      @keyframes nodeBump { 0%, 37%, 43%, 100% { transform: scale(1); } 40% { transform: scale(1.06); } }
+
+      .badge-pop {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: badgePop 8s cubic-bezier(.2,1.4,.4,1) infinite;
+      }
+      @keyframes badgePop {
+        0%, 52%       { transform: scale(0) rotate(-3deg); }
+        55.5%         { transform: scale(1.1) rotate(1.5deg); }
+        57.5%, 100%   { transform: scale(1) rotate(0deg); }
+      }
+
+      .spark-pop {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: sparkPop 8s cubic-bezier(.2,1.4,.4,1) infinite;
+      }
+      @keyframes sparkPop { 0%,83% { transform: scale(0) rotate(-40deg); } 87% { transform: scale(1.25) rotate(8deg); } 89.5%,100% { transform: scale(1) rotate(0deg); } }
+
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+    </style>
+  </defs>
+
+  <!-- ===== Backdrop ===== -->
+  <rect x="8" y="8" width="1264" height="304" rx="20" fill="url(#plateGrad)"/>
+  <g clip-path="url(#plateClip)">
+    <rect x="8" y="8" width="1264" height="304" fill="url(#gridPat)"/>
+    <circle class="aur1" cx="230" cy="58" r="175" fill="#D98BA3" opacity="0.13" filter="url(#fAurora)"/>
+    <circle class="aur2" cx="1070" cy="272" r="185" fill="#9CAF88" opacity="0.12" filter="url(#fAurora)"/>
+    <g transform="skewX(-14)">
+      <rect x="0" y="8" width="120" height="304" fill="url(#beamGrad)" opacity="0.5">
+        <animateTransform attributeName="transform" type="translate" additive="sum" dur="8s" repeatCount="indefinite"
+                          values="-380 0;-380 0;1640 0;1640 0" keyTimes="0;0.55;0.80;1"/>
+      </rect>
+    </g>
+  </g>
+  <rect x="9" y="9" width="1262" height="302" rx="19" fill="none" stroke="url(#rimGrad)" stroke-width="1.5"/>
+
+  <!-- ===== Brand block (persistent, left of x=520) ===== -->
+  <g transform="translate(48,62) scale(0.15) translate(-101,-48)">
+    <g class="mark-breath">
+      <g stroke="rgba(255,255,255,0.25)" stroke-width="6">
+        <circle cx="127" cy="135" r="26" fill="#F3DCC9"/>
+        <circle cx="188" cy="90" r="26" fill="#E9BE9B"/>
+        <circle cx="256" cy="74" r="26" fill="#CE9268"/>
+        <circle cx="324" cy="90" r="26" fill="#9A6844"/>
+        <circle cx="385" cy="135" r="26" fill="#5F3B27"/>
+      </g>
+      <path d="M222,172 C244,163 268,163 290,172 C288,200 286,228 282,254 C306,300 342,352 358,406 Q256,438 154,406 C170,352 206,300 230,254 C226,228 224,200 222,172 Z" fill="url(#gownGrad)"/>
+      <path d="M228,251 Q256,263 284,251" fill="none" stroke="#D9B98C" stroke-width="8" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- Outlined wordmark: One (near-white) + Dress (gradient) — Space Grotesk 700, outlined via opentype.js -->
+  <g transform="translate(106,110)">
+    <path fill="#FAF5F7" d="M21.6 0.9Q13.2 0.9 8.2-3.7Q3.2-8.4 3.2-17L3.2-27.8Q3.2-36.4 8.2-41.1Q13.2-45.7 21.6-45.7Q30.1-45.7 35.1-41.1Q40.1-36.4 40.1-27.8L40.1-17Q40.1-8.4 35.1-3.7Q30.1 0.9 21.6 0.9M21.6-6.7Q26.4-6.7 29-9.4Q31.6-12.2 31.6-16.8L31.6-28Q31.6-32.6 29-35.4Q26.4-38.1 21.6-38.1Q17-38.1 14.3-35.4Q11.6-32.6 11.6-28L11.6-16.8Q11.6-12.2 14.3-9.4Q17-6.7 21.6-6.7M55.8 0L47.7 0L47.7-31.7L55.7-31.7L55.7-27.6L56.8-27.6Q57.6-29.2 59.7-30.8Q61.8-32.3 66.1-32.3Q69.8-32.3 72.6-30.6Q75.4-28.9 76.9-25.9Q78.5-22.9 78.5-18.9L78.5 0L70.4 0L70.4-18.3Q70.4-21.9 68.6-23.7Q66.9-25.5 63.6-25.5Q59.9-25.5 57.9-23Q55.8-20.5 55.8-16.1L55.8 0M101.6 0.9Q96.9 0.9 93.3-1.1Q89.7-3.1 87.6-6.8Q85.6-10.5 85.6-15.5L85.6-16.3Q85.6-21.2 87.6-24.9Q89.6-28.6 93.2-30.6Q96.8-32.6 101.5-32.6Q106.2-32.6 109.6-30.6Q113.1-28.5 115-24.8Q116.9-21.1 116.9-16.3L116.9-13.5L93.8-13.5Q94-10.2 96.3-8.2Q98.6-6.1 101.9-6.1Q105.3-6.1 106.9-7.6Q108.5-9.1 109.3-10.9L115.9-7.4Q115-5.8 113.3-3.8Q111.6-1.9 108.8-0.5Q106 0.9 101.6 0.9M93.9-19.5L108.7-19.5Q108.5-22.3 106.5-23.9Q104.6-25.6 101.4-25.6Q98.2-25.6 96.3-23.9Q94.3-22.3 93.9-19.5"/>
+    <g transform="translate(126,0)">
+      <path fill="url(#wordGrad)" d="M21.4 0L2.9 0L2.9-7.4L8.8-7.4L8.8-37.4L2.9-37.4L2.9-44.8L21.4-44.8Q30.4-44.8 35.1-40.2Q39.8-35.6 39.8-26.6L39.8-18.2Q39.8-9.2 35.1-4.6Q30.4 0 21.4 0M17.3-37.1L17.3-7.7L21.5-7.7Q26.6-7.7 29-10.4Q31.4-13.1 31.4-17.9L31.4-26.9Q31.4-31.8 29-34.5Q26.6-37.1 21.5-37.1L17.3-37.1M55.2 0L47.1 0L47.1-31.7L55-31.7L55-28.2L56.2-28.2Q56.9-30.1 58.5-31Q60.2-31.9 62.3-31.9L66.2-31.9L66.2-24.7L62.2-24.7Q59.1-24.7 57.2-23.1Q55.2-21.4 55.2-18L55.2 0M85.8 0.9Q81 0.9 77.4-1.1Q73.8-3.1 71.8-6.8Q69.8-10.5 69.8-15.5L69.8-16.3Q69.8-21.2 71.7-24.9Q73.7-28.6 77.3-30.6Q80.9-32.6 85.6-32.6Q90.3-32.6 93.8-30.6Q97.2-28.5 99.1-24.8Q101.1-21.1 101.1-16.3L101.1-13.5L78-13.5Q78.1-10.2 80.4-8.2Q82.7-6.1 86-6.1Q89.4-6.1 91-7.6Q92.6-9.1 93.4-10.9L100-7.4Q99.1-5.8 97.4-3.8Q95.7-1.9 92.9-0.5Q90.1 0.9 85.8 0.9M78-19.5L92.9-19.5Q92.6-22.3 90.7-23.9Q88.7-25.6 85.6-25.6Q82.3-25.6 80.4-23.9Q78.5-22.3 78-19.5M121.4 0.9Q115.2 0.9 111.2-1.8Q107.3-4.5 106.4-9.5L113.9-11.4Q114.3-9.2 115.4-7.9Q116.4-6.6 118-6Q119.6-5.5 121.4-5.5Q124.2-5.5 125.6-6.5Q126.9-7.5 126.9-9Q126.9-10.4 125.6-11.2Q124.4-12 121.5-12.5L119.7-12.9Q116.4-13.5 113.7-14.6Q110.9-15.7 109.2-17.7Q107.6-19.7 107.6-22.8Q107.6-27.6 111-30.1Q114.5-32.6 120.1-32.6Q125.4-32.6 129-30.3Q132.5-27.9 133.6-24.1L126.1-21.8Q125.6-24.2 124-25.2Q122.4-26.2 120.1-26.2Q117.8-26.2 116.6-25.4Q115.4-24.6 115.4-23.2Q115.4-21.7 116.7-21Q118-20.2 120.1-19.8L121.9-19.5Q125.5-18.9 128.4-17.8Q131.3-16.8 133-14.8Q134.7-12.9 134.7-9.5Q134.7-4.5 131.1-1.8Q127.5 0.9 121.4 0.9M154.9 0.9Q148.7 0.9 144.8-1.8Q140.8-4.5 140-9.5L147.4-11.4Q147.8-9.2 148.9-7.9Q150-6.6 151.5-6Q153.1-5.5 154.9-5.5Q157.8-5.5 159.1-6.5Q160.4-7.5 160.4-9Q160.4-10.4 159.2-11.2Q157.9-12 155.1-12.5L153.3-12.9Q150-13.5 147.2-14.6Q144.4-15.7 142.8-17.7Q141.1-19.7 141.1-22.8Q141.1-27.6 144.6-30.1Q148-32.6 153.7-32.6Q159-32.6 162.5-30.3Q166-27.9 167.1-24.1L159.6-21.8Q159.1-24.2 157.5-25.2Q156-26.2 153.7-26.2Q151.4-26.2 150.1-25.4Q148.9-24.6 148.9-23.2Q148.9-21.7 150.2-21Q151.5-20.2 153.7-19.8L155.5-19.5Q159-18.9 162-17.8Q164.9-16.8 166.6-14.8Q168.3-12.9 168.3-9.5Q168.3-4.5 164.6-1.8Q161 0.9 154.9 0.9"/>
+      <g clip-path="url(#dressClip)">
+        <rect x="-60" y="-54" width="46" height="64" fill="url(#shimmerGrad)" opacity="0.55" transform="skewX(-18)">
+          <animateTransform attributeName="transform" type="translate" additive="sum" dur="8s" repeatCount="indefinite"
+                            values="0 0;0 0;290 0;290 0" keyTimes="0;0.30;0.50;1"/>
+        </rect>
+      </g>
+    </g>
+  </g>
+
+  <!-- Tagline / metric / stack (system stacks only, all inside x<520) -->
+  <g font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+    <text x="48" y="170" font-size="17" fill="#B9A8B1">Six bridesmaids, six skin tones, one dress color,</text>
+    <text x="48" y="194" font-size="17" fill="#B9A8B1">zero arguments.</text>
+  </g>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text class="metric-pulse" x="48" y="232" font-size="14" fill="#9CAF88">▸ 120 combinations scored → 1 provably fair colorway</text>
+    <text x="48" y="260" font-size="11.5" fill="#6E5B65">skin-tone-analysis · fitzpatrick · face-attr · cloth-v3 · 2d-vto</text>
+    <text x="48" y="288" font-size="10.5" fill="#55444E">github.com/edycutjong · YouCam API Hackathon 2026</text>
+  </g>
+
+  <!-- ===== Product story (loop-fades; right of x=590) ===== -->
+  <g>
+    <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;0.02;0.96;1"/>
+
+    <!-- Five selfies pop in -->
+    <g stroke="rgba(255,255,255,0.22)" stroke-width="2">
+      <circle class="story-dot sd1" cx="612" cy="64"  r="13" fill="#F3DCC9"/>
+      <circle class="story-dot sd2" cx="612" cy="112" r="13" fill="#E9BE9B"/>
+      <circle class="story-dot sd3" cx="612" cy="160" r="13" fill="#CE9268"/>
+      <circle class="story-dot sd4" cx="612" cy="208" r="13" fill="#9A6844"/>
+      <circle class="story-dot sd5" cx="612" cy="256" r="13" fill="#5F3B27"/>
+    </g>
+
+    <!-- Scan beam measures the party -->
+    <rect x="560" y="52" width="110" height="3" rx="1.5" fill="url(#scanGrad)" opacity="0">
+      <animate attributeName="y" dur="8s" repeatCount="indefinite" values="52;52;266;266" keyTimes="0;0.08;0.22;1"/>
+      <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;0.85;0;0" keyTimes="0;0.08;0.20;0.24;1"/>
+    </rect>
+
+    <!-- Measured hex labels reveal as the beam passes -->
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#AE9CA6">
+      <text x="634" y="68" opacity="0">#F3DCC9<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.10;0.13;1"/></text>
+      <text x="634" y="116" opacity="0">#E9BE9B<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.12;0.15;1"/></text>
+      <text x="634" y="164" opacity="0">#CE9268<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.14;0.17;1"/></text>
+      <text x="634" y="212" opacity="0">#9A6844<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.16;0.19;1"/></text>
+      <text x="634" y="260" opacity="0">#5F3B27<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.18;0.21;1"/></text>
+    </g>
+
+    <!-- Comets: five measured profiles fly into the scoring engine -->
+    <g fill="#D98BA3" filter="url(#fComet)">
+      <circle r="3.5" opacity="0">
+        <animateMotion dur="8s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.24;0.34;1"><mpath href="#mc1"/></animateMotion>
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.24;0.245;0.34;0.35;1"/>
+      </circle>
+      <circle r="3.5" opacity="0">
+        <animateMotion dur="8s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.255;0.355;1"><mpath href="#mc2"/></animateMotion>
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.255;0.26;0.355;0.365;1"/>
+      </circle>
+      <circle r="3.5" opacity="0">
+        <animateMotion dur="8s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.27;0.37;1"><mpath href="#mc3"/></animateMotion>
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.27;0.275;0.37;0.38;1"/>
+      </circle>
+      <circle r="3.5" opacity="0">
+        <animateMotion dur="8s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.285;0.385;1"><mpath href="#mc4"/></animateMotion>
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.285;0.29;0.385;0.395;1"/>
+      </circle>
+      <circle r="3.5" opacity="0">
+        <animateMotion dur="8s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.30;0.40;1"><mpath href="#mc5"/></animateMotion>
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.30;0.305;0.40;0.41;1"/>
+      </circle>
+    </g>
+
+    <!-- Scoring engine node -->
+    <g transform="translate(880,160)">
+      <g class="node-bump">
+        <rect x="-45" y="-45" width="90" height="90" rx="12" transform="rotate(45)" fill="rgba(20,10,17,0.78)" opacity="0">
+          <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;0.92;0.92" keyTimes="0;0.20;0.32;1"/>
+        </rect>
+        <rect x="-45" y="-45" width="90" height="90" rx="12" transform="rotate(45)" fill="none" stroke="url(#nodeGrad)" stroke-width="2"
+              pathLength="100" stroke-dasharray="100" stroke-dashoffset="100">
+          <animate attributeName="stroke-dashoffset" dur="8s" repeatCount="indefinite" values="100;100;0;0" keyTimes="0;0.16;0.30;1"/>
+        </rect>
+        <g opacity="0">
+          <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.30;0.36;1"/>
+          <text x="0" y="-2" text-anchor="middle" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-weight="700" font-size="20" fill="#FAF5F7">ΔE00</text>
+          <text x="0" y="17" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="9" fill="#9CAF88">argmax·min</text>
+        </g>
+      </g>
+      <!-- Ripple burst when scores land -->
+      <circle cx="0" cy="0" r="12" fill="none" stroke="#9CAF88" stroke-width="2" opacity="0">
+        <animate attributeName="r" dur="8s" repeatCount="indefinite" values="12;12;50;50" keyTimes="0;0.38;0.46;1"/>
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;0.7;0;0" keyTimes="0;0.38;0.39;0.46;1"/>
+      </circle>
+    </g>
+    <text x="880" y="246" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#AE9CA6" opacity="0">colorway engine — CIEDE2000 + undertone<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.34;0.40;1"/></text>
+
+    <!-- Connector to the winner -->
+    <path d="M946,158 C972,150 982,128 1006,121" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"
+          pathLength="100" stroke-dasharray="100" stroke-dashoffset="100">
+      <animate attributeName="stroke-dashoffset" dur="8s" repeatCount="indefinite" values="100;100;0;0" keyTimes="0;0.44;0.52;1"/>
+    </path>
+
+    <!-- Winner badge seals in -->
+    <g transform="translate(1010,84)">
+      <rect x="8" y="10" width="200" height="56" rx="14" fill="#9CAF88" filter="url(#fGlow)" opacity="0">
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;0.3;0.3" keyTimes="0;0.52;0.57;1"/>
+      </rect>
+      <g class="badge-pop">
+        <rect x="0" y="0" width="216" height="72" rx="14" fill="rgba(20,10,17,0.85)" stroke="rgba(156,175,136,0.55)" stroke-width="1.5"/>
+        <rect x="16" y="16" width="40" height="40" rx="9" fill="#9CAF88"/>
+        <text x="70" y="34" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-weight="700" font-size="13.5" letter-spacing="0.5" fill="#FAF5F7">DUSTY SAGE</text>
+        <text x="70" y="56" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#9CAF88">worst-case 81/100</text>
+      </g>
+    </g>
+
+    <!-- Cascade: the winning colorway rendered on all five -->
+    <text x="1116" y="186" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="9.5" fill="#6E5B65" opacity="0">cloth-v3 ×5<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.58;0.62;1"/></text>
+    <g stroke="rgba(255,255,255,0.18)" fill="none" stroke-width="1.2">
+      <path transform="translate(1004,196) scale(0.8)" d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z" vector-effect="non-scaling-stroke"/>
+      <path transform="translate(1052,196) scale(0.8)" d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z" vector-effect="non-scaling-stroke"/>
+      <path transform="translate(1100,196) scale(0.8)" d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z" vector-effect="non-scaling-stroke"/>
+      <path transform="translate(1148,196) scale(0.8)" d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z" vector-effect="non-scaling-stroke"/>
+      <path transform="translate(1196,196) scale(0.8)" d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z" vector-effect="non-scaling-stroke"/>
+    </g>
+    <g fill="#9CAF88">
+      <g opacity="0">
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.60;0.64;1"/>
+        <g transform="translate(1004,196) scale(0.8)">
+          <path d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z"/>
+          <path d="M12,19.5 Q20,23 28,19.5" fill="none" stroke="#D9B98C" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+        </g>
+      </g>
+      <g opacity="0">
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.65;0.69;1"/>
+        <g transform="translate(1052,196) scale(0.8)">
+          <path d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z"/>
+          <path d="M12,19.5 Q20,23 28,19.5" fill="none" stroke="#D9B98C" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+        </g>
+      </g>
+      <g opacity="0">
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.70;0.74;1"/>
+        <g transform="translate(1100,196) scale(0.8)">
+          <path d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z"/>
+          <path d="M12,19.5 Q20,23 28,19.5" fill="none" stroke="#D9B98C" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+        </g>
+      </g>
+      <g opacity="0">
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.75;0.79;1"/>
+        <g transform="translate(1148,196) scale(0.8)">
+          <path d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z"/>
+          <path d="M12,19.5 Q20,23 28,19.5" fill="none" stroke="#D9B98C" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+        </g>
+      </g>
+      <g opacity="0">
+        <animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.80;0.84;1"/>
+        <g transform="translate(1196,196) scale(0.8)">
+          <path d="M8,0 Q20,-2 32,0 C31,8 30,14 28,19 C33,27 38,37 39,50 Q20,56 1,50 C2,37 7,27 12,19 C10,14 9,8 8,0 Z"/>
+          <path d="M12,19.5 Q20,23 28,19.5" fill="none" stroke="#D9B98C" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+        </g>
+      </g>
+    </g>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="9.5" fill="#AE9CA6" text-anchor="middle">
+      <text x="1020" y="252" opacity="0">84<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.60;0.64;1"/></text>
+      <text x="1068" y="252" opacity="0">81<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.65;0.69;1"/></text>
+      <text x="1116" y="252" opacity="0">88<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.70;0.74;1"/></text>
+      <text x="1164" y="252" opacity="0">83<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.75;0.79;1"/></text>
+      <text x="1212" y="252" opacity="0">86<animate attributeName="opacity" dur="8s" repeatCount="indefinite" values="0;0;1;1" keyTimes="0;0.80;0.84;1"/></text>
+    </g>
+
+    <!-- Finishing sparkle -->
+    <g transform="translate(1240,196) scale(0.8)">
+      <path class="spark-pop" d="M0,-12 C1.5,-3 3,-1.5 12,0 C3,1.5 1.5,3 0,12 C-1.5,3 -3,1.5 -12,0 C-3,-1.5 -1.5,-3 0,-12 Z" fill="#D9B98C" opacity="0.9"/>
+    </g>
+  </g>
+
+  <!-- clipPath for the shimmer must live after use in some parsers? No — defs above; declared here for clarity -->
+  <clipPath id="dressClip">
+    <path d="M21.4 0L2.9 0L2.9-7.4L8.8-7.4L8.8-37.4L2.9-37.4L2.9-44.8L21.4-44.8Q30.4-44.8 35.1-40.2Q39.8-35.6 39.8-26.6L39.8-18.2Q39.8-9.2 35.1-4.6Q30.4 0 21.4 0M17.3-37.1L17.3-7.7L21.5-7.7Q26.6-7.7 29-10.4Q31.4-13.1 31.4-17.9L31.4-26.9Q31.4-31.8 29-34.5Q26.6-37.1 21.5-37.1L17.3-37.1"/>
+    <path d="M55.2 0L47.1 0L47.1-31.7L55-31.7L55-28.2L56.2-28.2Q56.9-30.1 58.5-31Q60.2-31.9 62.3-31.9L66.2-31.9L66.2-24.7L62.2-24.7Q59.1-24.7 57.2-23.1Q55.2-21.4 55.2-18L55.2 0"/>
+    <path d="M85.8 0.9Q81 0.9 77.4-1.1Q73.8-3.1 71.8-6.8Q69.8-10.5 69.8-15.5L69.8-16.3Q69.8-21.2 71.7-24.9Q73.7-28.6 77.3-30.6Q80.9-32.6 85.6-32.6Q90.3-32.6 93.8-30.6Q97.2-28.5 99.1-24.8Q101.1-21.1 101.1-16.3L101.1-13.5L78-13.5Q78.1-10.2 80.4-8.2Q82.7-6.1 86-6.1Q89.4-6.1 91-7.6Q92.6-9.1 93.4-10.9L100-7.4Q99.1-5.8 97.4-3.8Q95.7-1.9 92.9-0.5Q90.1 0.9 85.8 0.9M78-19.5L92.9-19.5Q92.6-22.3 90.7-23.9Q88.7-25.6 85.6-25.6Q82.3-25.6 80.4-23.9Q78.5-22.3 78-19.5"/>
+    <path d="M121.4 0.9Q115.2 0.9 111.2-1.8Q107.3-4.5 106.4-9.5L113.9-11.4Q114.3-9.2 115.4-7.9Q116.4-6.6 118-6Q119.6-5.5 121.4-5.5Q124.2-5.5 125.6-6.5Q126.9-7.5 126.9-9Q126.9-10.4 125.6-11.2Q124.4-12 121.5-12.5L119.7-12.9Q116.4-13.5 113.7-14.6Q110.9-15.7 109.2-17.7Q107.6-19.7 107.6-22.8Q107.6-27.6 111-30.1Q114.5-32.6 120.1-32.6Q125.4-32.6 129-30.3Q132.5-27.9 133.6-24.1L126.1-21.8Q125.6-24.2 124-25.2Q122.4-26.2 120.1-26.2Q117.8-26.2 116.6-25.4Q115.4-24.6 115.4-23.2Q115.4-21.7 116.7-21Q118-20.2 120.1-19.8L121.9-19.5Q125.5-18.9 128.4-17.8Q131.3-16.8 133-14.8Q134.7-12.9 134.7-9.5Q134.7-4.5 131.1-1.8Q127.5 0.9 121.4 0.9"/>
+    <path d="M154.9 0.9Q148.7 0.9 144.8-1.8Q140.8-4.5 140-9.5L147.4-11.4Q147.8-9.2 148.9-7.9Q150-6.6 151.5-6Q153.1-5.5 154.9-5.5Q157.8-5.5 159.1-6.5Q160.4-7.5 160.4-9Q160.4-10.4 159.2-11.2Q157.9-12 155.1-12.5L153.3-12.9Q150-13.5 147.2-14.6Q144.4-15.7 142.8-17.7Q141.1-19.7 141.1-22.8Q141.1-27.6 144.6-30.1Q148-32.6 153.7-32.6Q159-32.6 162.5-30.3Q166-27.9 167.1-24.1L159.6-21.8Q159.1-24.2 157.5-25.2Q156-26.2 153.7-26.2Q151.4-26.2 150.1-25.4Q148.9-24.6 148.9-23.2Q148.9-21.7 150.2-21Q151.5-20.2 153.7-19.8L155.5-19.5Q159-18.9 162-17.8Q164.9-16.8 166.6-14.8Q168.3-12.9 168.3-9.5Q168.3-4.5 164.6-1.8Q161 0.9 154.9 0.9"/>
+  </clipPath>
+</svg>

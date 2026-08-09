@@ -1,0 +1,4 @@
+{
+  "extends": "next/core-web-vitals",
+  "ignorePatterns": ["scripts/**", "bench/**", "e2e/**", "coverage/**", ".next/**"]
+}

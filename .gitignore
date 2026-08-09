@@ -1,0 +1,26 @@
+.env
+.env.*
+!.env.example
+node_modules/
+__pycache__/
+.next/
+dist/
+coverage/
+.DS_Store
+next-env.d.ts
+*.tsbuildinfo
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Lighthouse
+.lighthouseci/
+
+# Phase-0 spike scratch: throwaway stock test images + raw API dumps.
+# The shipped demo uses properly-consented models; these never enter history.
+scripts/fixtures/
+scripts/raw-*.json
+scripts/spike-results.json
