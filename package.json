@@ -32,7 +32,7 @@
     "zod": "3.24.1"
   },
   "devDependencies": {
-    "@lhci/cli": "0.14.0",
+    "@lhci/cli": "0.15.1",
     "@playwright/test": "1.55.0",
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
