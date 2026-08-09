@@ -112,17 +112,19 @@ so they get their own rules and their own open item.
 | p3 | III | `#b38b72` | 29.8 | `faces/p3.jpg` | [pexels 36652029](https://www.pexels.com/photo/36652029/) — Pexels License |
 | p4 | III | `#ad896d` | 25.8 | `faces/p4.jpg` | [pexels 4584095](https://www.pexels.com/photo/4584095/) — Pexels License |
 | p5 | II | `#a3836b` | 22.1 | *(not committed)* | measured only; `cloth-v3` rejected the frame with `error_pose`, and the source was not retained |
-| p6 | IV | `#a68062` | 16.6 | `faces/p6.jpg` | source id `GFaV9CoTyceqKFxRAYz_6` — free-stock (CC0 / Unsplash pool); **platform and photographer not recorded at capture time** |
-| p7 | V | `#886246` | −13.3 | `faces/p7.jpg` | source id `7YSBCzpMzgvfeids7Ww--` — free-stock (CC0 / Unsplash pool); **platform and photographer not recorded at capture time** |
+| p6 | IV | `#a68062` | 16.6 | `faces/p6.jpg` | [nappy.co](https://images.nappy.co/photo/GFaV9CoTyceqKFxRAYz_6.jpg) — **CC0** (Nappy licence) |
+| p7 | V | `#886246` | −13.3 | `faces/p7.jpg` | [nappy.co](https://images.nappy.co/photo/7YSBCzpMzgvfeids7Ww--.jpg) — **CC0** (Nappy licence) |
 
 Every `wine/pN.jpg` derives from the `faces/pN.jpg` in the same row.
 
 ### Open items — resolve before relying on these files
 
-1. **Two rows have unverified provenance.** `p6` and `p7` were pulled from a free-stock
-   pool during the measurement run and only their CDN ids were kept. The licence is
-   believed to permit redistribution, but that has not been re-confirmed against a
-   source page. Until it is, treat those two files as provisional.
+1. ~~Two rows have unverified provenance.~~ **Resolved 2026-08-09.** `p6` and `p7` came
+   from [nappy.co](https://nappy.co), whose entire library is
+   [Creative Commons Zero](https://nappy.co/license) — redistribution, modification and
+   commercial use all explicitly permitted, attribution encouraged but not required.
+   Both source ids were re-confirmed live against the Nappy CDN. Nothing here is
+   provisional.
 2. **Publicity rights are a separate question from copyright.** The stock licences
    permit redistribution and modification of the images. None of them grants the
    multi-year publicity right that a sponsor submission agreement typically requires
