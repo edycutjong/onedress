@@ -56,12 +56,14 @@ proven end-to-end by a live spike (`scripts/spike.ts`, `npm run spike`):
 | 1 | `skin-tone-analysis` | measured skin hex — the scoring input | e.g. `#bb9982` → ITA° 43, hue° 61 |
 | 2 | `fitzpatrick-scale-analyzer` | Type I–VI depth cross-check | e.g. `Type II` |
 | 3 | `face-attr-analysis` | `faceShape` → earring silhouette | e.g. `Heart` |
-| 4 | `cloth-v3` | render the winning color on each bridesmaid | render-fidelity **ΔE00 ≈ 7.7** |
+| 4 | `cloth-v3` | render the winning color on each bridesmaid | render-fidelity **ΔE00 median 7.8** (5.5–11.2) |
 | 5 | `2d-vto/earring` | chained onto the render (undertone → metal) | gold hoop landed on the render |
 
 **Measured cost:** a full one-person run is **43 units** (skin-tone 20 + fitzpatrick 10 +
-face-attr 10 + cloth-v3 2 + earring 1). Analysis is the cost center — so we *measure once,
-cache, and re-score for free* (re-scoring all 24 colorways is pure math, zero API cost).
+face-attr 10 + cloth-v3 2 + earring 1) — independently confirmed by the credit-balance
+delta in `npm run bench`. Analysis is the cost center, so each bridesmaid is measured
+**once per run** and every re-score after that is free (ranking all 24 colorways is pure
+local math, zero API cost).
 
 ## 🎨 The scoring engine (published, not a black box)
 
@@ -179,10 +181,12 @@ tests and coverage run with no key and no network.
 | Coverage | **100%** — statements, branches, functions, lines | `npm run test:coverage` |
 | E2E tests | **16 passing** (desktop + mobile) | `npm run e2e` |
 | CI pipeline | **6 stages**, parallel, concurrency-guarded | `.github/workflows/ci.yml` |
-| Render fidelity | **ΔE00 ≈ 7.7** vs the intended hex (n=1, one garment) | `npm run spike` |
+| Render fidelity | **ΔE00 median 7.8**, range **5.5–11.2** (n=1 subject, 9 patches) | `npm run bench --yes` |
 | API cost | **43 units** per bridesmaid, measured | `npm run spike` |
 | Live endpoints proven | **5 / 5 green** | `npm run spike` |
-| p50 / p95 end-to-end | *pending* — `npm run bench` publishes it | not guessed until measured |
+| End-to-end latency | **33.4s** for one subject; per-stage medians in [DEMO.md](DEMO.md) | `npm run bench --yes` |
+| HTTP requests | **47** for one subject (5 uploads · 5 PUTs · 5 creates · 26 polls · 4 credit · 2 downloads) | `npm run bench --yes` |
+| True p50 / p95 | *not measured* — needs ~20 runs (≈860 units, more than the grant) | stated, not guessed |
 
 ## 🏆 Sponsor Track
 
@@ -201,8 +205,9 @@ solved for and the color you see on her are the same pipeline, and we can measur
 (ΔE) between them.
 
 **One honest limitation.** `cloth-v3` is a generative try-on, so the rendered fabric does
-not land exactly on the intended hex — we measure **ΔE00 ≈ 7.7**, a visible-but-small
-shift. We publish that number and put the reference swatch beside every render rather than
+not land exactly on the intended hex. Measured across 9 patches of one render: **median
+ΔE00 7.8, ranging 5.5 to 11.2**. The median is a modest shift; the top of that range is
+not — at ΔE00 11 the fabric reads as a neighbouring colour. We publish that number and put the reference swatch beside every render rather than
 hide it. The *decision* is made on measured skin values and fixed color math, not on the
 render; the render is how you check the decision.
 
@@ -281,6 +286,7 @@ onedress/
 │   └── earring/       # faceShape + undertone → silhouette + metal
 ├── __tests__/         # 77 unit tests, 100% coverage
 ├── e2e/               # Playwright specs
+├── bench/             # reproducible benchmark (dry run by default, zero cost)
 ├── scripts/spike.ts   # live 5-endpoint proof
 ├── docs/              # README assets
 └── .github/           # CI/CD, CodeQL, Dependabot, community health
@@ -300,7 +306,7 @@ Pre-submission (deadline 2026-08-17).
 - [x] Full harness: 6-stage CI, CodeQL, Dependabot, Playwright, Lighthouse
 - [ ] 7-step interactive UI (Create · Measure · Score · Compare · Render · Finish · Verdict)
 - [ ] Cached zero-unit demo party — the live URL's default, no key required
-- [ ] `npm run bench` — published p50/p95 and exact call counts
+- [x] `npm run bench` — call counts, per-stage latency and ΔE distribution, published in DEMO.md
 - [ ] Post-hackathon: real garment catalogue integration, shareable party links
 
 ## 📄 License
