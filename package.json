@@ -39,7 +39,7 @@
     "@types/react-dom": "19.0.3",
     "@vitest/coverage-istanbul": "^3.2.7",
     "@vitest/coverage-v8": "^3.2.7",
-    "autoprefixer": "10.4.20",
+    "autoprefixer": "10.5.4",
     "eslint": "8.57.1",
     "eslint-config-next": "15.5.22",
     "postcss": "^8.5.26",
