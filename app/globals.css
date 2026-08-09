@@ -4,12 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --------------------------------------------------------------------------
+   Font wiring. tokens.css stays portable (it names the families literally);
+   next/font hands us hashed, self-hosted family names, so we prepend those and
+   keep the literal name + serif fallbacks behind them. Unlayered on purpose:
+   an @layer block would lose to tokens.css.
+   -------------------------------------------------------------------------- */
+:root {
+  --font-display: var(--font-fraunces), 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-ui: var(--font-inter), 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  /* The app accent IS the currently-winning colorway (design.md §Design language).
+     Screens that know a winner re-point this; the fallback is the brand rose. */
+  --winner: var(--primary);
+  --winner-soft: color-mix(in srgb, var(--winner) 18%, transparent);
+}
+
 @layer base {
   html {
     color-scheme: dark;
   }
   body {
     background-color: var(--bg-base);
+    background-image: var(--gradient-mesh);
+    background-attachment: fixed;
     color: var(--text-hi);
     font-family: var(--font-ui);
     -webkit-font-smoothing: antialiased;
@@ -17,5 +37,180 @@
   /* Tabular figures everywhere numbers tick (hex, scores, ΔE, units). */
   .tabular {
     font-variant-numeric: tabular-nums;
+  }
+  /* One visible focus treatment for every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--winner);
+    outline-offset: 2px;
+    border-radius: var(--radius-4);
+  }
+}
+
+@layer components {
+  /* Card tones. Written as CSS rather than Tailwind opacity modifiers because the
+     palette is CSS custom properties — Tailwind v3 cannot alpha-blend a var(). Tone
+     changes colour only; the geometry is identical across all four so a card that
+     flips state never moves a pixel. */
+  .surface {
+    background: rgba(255, 255, 255, 0.035);
+    border-color: var(--border-subtle);
+  }
+  .surface--winner {
+    background: var(--winner-soft);
+    border-color: color-mix(in srgb, var(--winner) 55%, transparent);
+  }
+  .surface--muted {
+    background: rgba(255, 255, 255, 0.015);
+    border-color: var(--border-default);
+    border-style: dashed;
+  }
+  .surface--warning {
+    background: color-mix(in srgb, var(--color-warning) 9%, transparent);
+    border-color: color-mix(in srgb, var(--color-warning) 45%, transparent);
+  }
+
+  /* The one chip. Hex chips, Fitzpatrick badges, ΔE badges and status pills are all
+     this shape at different tones. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    color: var(--text-mid);
+    white-space: nowrap;
+  }
+  .chip--winner {
+    border-color: color-mix(in srgb, var(--winner) 55%, transparent);
+    background: var(--winner-soft);
+    color: var(--text-hi);
+  }
+  .chip--warning {
+    border-color: color-mix(in srgb, var(--color-warning) 50%, transparent);
+    color: #f7cd7c;
+  }
+  .chip--ok {
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    color: var(--accent);
+  }
+
+  /* Primary / secondary action. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-default);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-hi);
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+  .btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--winner);
+  }
+  .btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn--primary {
+    background: var(--winner);
+    border-color: var(--winner);
+    color: #1b1016;
+    font-weight: 600;
+  }
+  .btn--primary:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--winner) 85%, white);
+    border-color: color-mix(in srgb, var(--winner) 85%, white);
+  }
+
+  /* The skip link — present on every screen, only visible when focused. */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: var(--z-toast);
+  }
+  .skip-link:focus {
+    left: var(--spacing-16);
+    top: var(--spacing-16);
+    padding: 8px 14px;
+    border-radius: var(--radius-8);
+    background: var(--bg-base);
+    border: 1px solid var(--border-default);
+  }
+}
+
+@layer utilities {
+  /* Staggered entrance. Cheap: opacity + a 6px lift, one keyframe, no JS.
+     Callers set `--stagger` per item; nothing is delayed past ~360ms. */
+  .rise {
+    animation: rise 420ms cubic-bezier(0.22, 0.8, 0.3, 1) both;
+    animation-delay: var(--stagger, 0ms);
+  }
+
+  /* Skeletons sit in FINAL position and shimmer in place — zero reflow when the
+     real image lands (design.md §Cascade choreography). */
+  .shimmer {
+    background-image: linear-gradient(
+      100deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.07) 50%,
+      transparent 70%
+    );
+    background-size: 220% 100%;
+    animation: shimmer 1.8s linear infinite;
+  }
+
+  .hairline {
+    border: 1px solid var(--border-subtle);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 160% 0;
+  }
+  to {
+    background-position: -60% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+  .shimmer {
+    animation: none;
+    background-image: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
   }
 }

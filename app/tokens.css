@@ -38,8 +38,8 @@
 
   /* === Text === */
   --text-hi: #faf5f7; /* warm near-white */
-  --text-mid: #ae9ca6; /* mauve gray */
-  --text-low: #64525c; /* plum slate */
+  --text-mid: #ae9ca6; /* mauve gray — 7.4:1 on --bg-base */
+  --text-low: #94808a; /* plum slate — 5.2:1 on --bg-base (WCAG AA for body text) */
 
   /* === Borders === */
   --border-subtle: rgba(255, 255, 255, 0.08);
@@ -76,8 +76,11 @@
     );
   --gradient-text: linear-gradient(to right, #ffffff, #c9b4be);
 
-  /* === Typography === */
-  --font-display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  /* === Typography ===
+     Display is a high-contrast serif (design.md §Type). Fraunces is what every
+     shipped surface already uses — icon, OG image, hero, landing page — so the app
+     must match it or the product reads as two different products. */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --font-ui: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
