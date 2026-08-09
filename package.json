@@ -1,6 +1,9 @@
 {
   "name": "onedress",
   "version": "1.1.0",
+  "engines": {
+    "node": "22.x"
+  },
   "private": true,
   "description": "One dress color, provably flattering for every skin tone in the party.",
   "scripts": {
