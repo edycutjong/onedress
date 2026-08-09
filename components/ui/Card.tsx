@@ -57,11 +57,14 @@ export function CardHeader({
   title,
   trailing,
   className = '',
+  titleClassName = 'text-lg',
 }: {
   eyebrow?: ReactNode;
   title: ReactNode;
   trailing?: ReactNode;
   className?: string;
+  /** dense grids drop the title a step so long colorway names still fit */
+  titleClassName?: string;
 }) {
   return (
     <div className={`flex items-start justify-between gap-3 px-5 pt-4 ${className}`}>
@@ -71,7 +74,9 @@ export function CardHeader({
             {eyebrow}
           </p>
         ) : null}
-        <div className="truncate font-display text-lg leading-tight text-text-hi">{title}</div>
+        <div className={`truncate font-display leading-tight text-text-hi ${titleClassName}`}>
+          {title}
+        </div>
       </div>
       {trailing ? <div className="shrink-0">{trailing}</div> : null}
     </div>
