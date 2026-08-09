@@ -1,3 +1,5 @@
+import { hexToLab, ita } from '@/lib/color/lab';
+import { legibleAccent } from '@/lib/demo/format';
 import type { Colorway } from '@/lib/colorway/data';
 import type { BridesmaidState, ColorwaySummary, PartyRun } from '@/lib/pipeline/types';
 import type { StepStatus } from '@/components/shell/ProgressSpine';
@@ -52,9 +54,66 @@ export function counterfactualView(run: PartyRun): CounterfactualView | null {
   };
 }
 
-/** The colorway the whole app is currently accented with. */
+export interface ItaSpan {
+  /** the lightest measured member, in ITA° */
+  max: number;
+  /** the deepest measured member, in ITA° */
+  min: number;
+  /** max − min: how far this party actually spreads */
+  span: number;
+}
+
+/**
+ * How wide this party is, in ITA° — computed here from the measured hexes with the
+ * same `lib/color` primitives the engine uses, never read off a stored field.
+ *
+ * This is the number that decides whether the two objectives can disagree at all. A
+ * party clustered inside a narrow band has no colorway that can single one member
+ * out, so maximin and mean land on the same colour; a party that spreads has one.
+ * Compare shows it because "they agree" is only a finding if you can see why.
+ */
+export function itaSpan(run: PartyRun): ItaSpan | null {
+  const values = run.bridesmaids
+    .map((b) => b.measure.result?.skinHex)
+    .filter((h): h is string => Boolean(h))
+    .map((h) => ita(hexToLab(h)));
+  if (values.length === 0) return null;
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  return { max, min, span: max - min };
+}
+
+/**
+ * The colorway the whole app is currently accented with, lifted to a legible value.
+ *
+ * Several of the 24 colorways are darker than the page background — Wine, the
+ * measured party's winner, is one — so the raw hex would render the eyebrows and
+ * borders invisible. `legibleAccent` only touches the chrome; every swatch, bar and
+ * printed hex in the app still uses `colorway.hex` directly and is never adjusted.
+ */
 export function accentHex(run: PartyRun): string {
-  return run.scoring?.winner.colorway.hex ?? '#D98BA3';
+  return legibleAccent(run.scoring?.winner.colorway.hex ?? '#D98BA3');
+}
+
+/**
+ * The lineup grid, sized to the party.
+ *
+ * Six was hard-coded when six was the only party that existed; a seventh member then
+ * wrapped onto a row of her own, which on the verdict screen is the opposite of the
+ * point — the lineup is meant to read as one photograph of one group. The classes are
+ * written out in full because Tailwind scans source text and never sees an
+ * interpolated class name.
+ */
+export function lineupGridClass(size: number): string {
+  const wide =
+    size >= 7
+      ? 'lg:grid-cols-7'
+      : size === 5
+        ? 'lg:grid-cols-5'
+        : size <= 4
+          ? 'lg:grid-cols-4'
+          : 'lg:grid-cols-6';
+  return `grid grid-cols-2 gap-4 sm:grid-cols-3 ${wide}`;
 }
 
 const STAGE_DONE = (bs: BridesmaidState[], key: 'measure' | 'render' | 'earring'): boolean =>

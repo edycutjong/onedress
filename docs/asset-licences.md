@@ -1,9 +1,10 @@
-# Asset licences — `public/refs/`
+# Asset licences — `public/refs/` and `public/party/`
 
 Every image committed to this repository must be licensed for **redistribution**, not
 merely for use inside the app, because this repository is public. This file is the
 record for the 30 garment/jewellery reference images that the render pipeline uploads
-as `ref_file_id` (see `lib/pipeline/asset-refs.ts`).
+as `ref_file_id` (see `lib/pipeline/asset-refs.ts`), and for the 12 party photographs
+in `public/party/` that back the measured demo party (`lib/demo/measured-party.ts`).
 
 **Rule:** a file with no row in this table must not be committed.
 
@@ -90,6 +91,48 @@ re-encoded as JPEG, with no colour alteration whatsoever.
 | `earrings/drop-gold.jpg` | [pexels 19869443](https://www.pexels.com/photo/display-of-gold-earrings-19869443/) | Atul Mohan | Pexels License | natural photo — cropped only |
 | `earrings/drop-silver.jpg` | [pexels 14558499](https://www.pexels.com/photo/earrings-on-white-surface-14558499/) | Eugenia Remark | Pexels License | natural photo — cropped only |
 
+## Party photographs — `public/party/faces/` and `public/party/wine/`
+
+These are the only images in this repository that show **identifiable real people**,
+so they get their own rules and their own open item.
+
+- `faces/pN.jpg` is the licensed stock frame the three Skin AI analyzers ran on,
+  resized to 480 px wide and re-encoded. No colour alteration.
+- `wine/pN.jpg` is `cloth-v3` output: the same frame with the Wine reference garment
+  applied. It is a **generated derivative** and the app labels every one of them
+  `cloth-v3 render` on the tile itself.
+- The people are anonymised in the product as "Person 1"–"Person 7". No name, role or
+  relationship is asserted anywhere in the UI, and the shell banner states in full
+  that they are licensed stock photographs, not bridesmaids, clients or customers.
+
+| id | Fitzpatrick (API) | measured hex | ITA° | source frame | provenance |
+|---|---|---|---|---|---|
+| p1 | I | `#be9e87` | 46.6 | `faces/p1.jpg` | [pexels 6774274](https://www.pexels.com/photo/6774274/) — Pexels License |
+| p2 | II | `#b9957b` | 37.3 | `faces/p2.jpg` | [pexels 16970467](https://www.pexels.com/photo/16970467/) — Pexels License |
+| p3 | III | `#b38b72` | 29.8 | `faces/p3.jpg` | [pexels 36652029](https://www.pexels.com/photo/36652029/) — Pexels License |
+| p4 | III | `#ad896d` | 25.8 | `faces/p4.jpg` | [pexels 4584095](https://www.pexels.com/photo/4584095/) — Pexels License |
+| p5 | II | `#a3836b` | 22.1 | *(not committed)* | measured only; `cloth-v3` rejected the frame with `error_pose`, and the source was not retained |
+| p6 | IV | `#a68062` | 16.6 | `faces/p6.jpg` | source id `GFaV9CoTyceqKFxRAYz_6` — free-stock (CC0 / Unsplash pool); **platform and photographer not recorded at capture time** |
+| p7 | V | `#886246` | −13.3 | `faces/p7.jpg` | source id `7YSBCzpMzgvfeids7Ww--` — free-stock (CC0 / Unsplash pool); **platform and photographer not recorded at capture time** |
+
+Every `wine/pN.jpg` derives from the `faces/pN.jpg` in the same row.
+
+### Open items — resolve before relying on these files
+
+1. **Two rows have unverified provenance.** `p6` and `p7` were pulled from a free-stock
+   pool during the measurement run and only their CDN ids were kept. The licence is
+   believed to permit redistribution, but that has not been re-confirmed against a
+   source page. Until it is, treat those two files as provisional.
+2. **Publicity rights are a separate question from copyright.** The stock licences
+   permit redistribution and modification of the images. None of them grants the
+   multi-year publicity right that a sponsor submission agreement typically requires
+   for an identifiable person's likeness, and `cloth-v3` output additionally shows a
+   real person wearing a garment they never wore. That is a decision to make
+   deliberately before these faces appear in any submission, not a detail to inherit.
+3. The `cloth-v3` renders read as a **top rather than a gown** because every source is
+   a chest-up frame. The app says so on the render screen. It is a limitation of the
+   source photography, not of the pipeline.
+
 ## Compliance checks performed
 
 - **Redistribution.** Every source is Pexels, whose licence permits redistribution and
@@ -102,6 +145,10 @@ re-encoded as JPEG, with no colour alteration whatsoever.
   any frame.
 - **Format.** JPEG, longest side ≤ 1611 px (limit 4096), largest file 216 KB
   (limit 10 MB; internal budget 400 KB). 30 files, 3,206,605 bytes (3.06 MB) total.
+- **Party photographs.** JPEG, 480 px wide (faces) / 560 px wide (renders), quality 74,
+  metadata stripped. 12 files, 279,606 bytes (273 KB) total — largest file 35 KB.
+  Every one carries a row in the party table above; the two flagged rows are the only
+  images in the repository whose source page has not been re-verified.
 
 ## Render-fidelity check (target hex vs. the committed file)
 

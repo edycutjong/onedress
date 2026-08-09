@@ -8,8 +8,15 @@ import { CounterfactualRecap } from '@/components/ui/CounterfactualSplit';
 import { RenderTile } from '@/components/ui/RenderTile';
 import { ScoreDial } from '@/components/ui/Score';
 import { ScreenHeading, SectionHeading } from '@/components/ui/ScreenHeading';
-import { hex as fmtHex, score as fmtScore, signed } from '@/lib/demo/format';
-import { counterfactualView, flatterOf } from '@/lib/demo/select';
+import {
+  count as fmtCount,
+  countCap as fmtCountCap,
+  hex as fmtHex,
+  score as fmtScore,
+  signed,
+} from '@/lib/demo/format';
+import { nounsOf } from '@/lib/demo/parties';
+import { counterfactualView, flatterOf, itaSpan, lineupGridClass } from '@/lib/demo/select';
 
 /**
  * The verdict — the composed payoff, and the one screen that alone reads as a
@@ -36,6 +43,14 @@ function verdictSummary(run: PartyRun): string {
         `${fmtScore(cf.byEyeScore)} on ${cf.subjectName}. Under ${cf.winnerColorway.name} she scores ` +
         `${fmtScore(cf.winnerScore)} — ${signed(cf.winnerScore - cf.byEyeScore)}.`,
     );
+  } else {
+    // The agreement is part of the verdict, not an omission from it — a summary that
+    // silently dropped this line would read as though a counterfactual were pending.
+    lines.push(
+      '',
+      `Picked by eye (best on average) it would have been ${s.winner.colorway.name} too: on this ` +
+        `party the two objectives agree, so there is no counterfactual and no lift to claim.`,
+    );
   }
   lines.push('', 'Scored across all 24 colorways by max-of-minimum. onedress.edycu.dev');
   return lines.join('\n');
@@ -58,6 +73,9 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
 
   const winner = scoring.winner;
   const lift = cf ? cf.winnerScore - cf.byEyeScore : 0;
+  const n = run.bridesmaids.length;
+  const { noun, nounPlural } = nounsOf(run);
+  const span = itaSpan(run);
 
   const copy = async () => {
     try {
@@ -72,7 +90,7 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
   return (
     <div className="flex flex-col gap-12">
       <ScreenHeading
-        eyebrow={`Verdict · ${run.bridesmaids.length} bridesmaids · ${scoring.ranked.length} colorways`}
+        eyebrow={`Verdict · ${n} ${nounPlural} · ${scoring.ranked.length} colorways`}
         title={
           <span className="flex flex-wrap items-center gap-4">
             <span
@@ -88,7 +106,7 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
         }
         lead={
           <>
-            Six bridesmaids, six skin tones, one dress color.{' '}
+            {fmtCountCap(n)} {nounPlural}, {fmtCount(n)} skin tones, one dress color.{' '}
             <strong className="font-semibold text-text-hi">
               Nobody below {fmtScore(winner.groupScore)}.
             </strong>{' '}
@@ -108,14 +126,14 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
         <SectionHeading
           id="lineup-heading"
           title="The lineup"
-          note="One colour on every complexion — identical crop, shared baseline, one frame. Six people, one decision."
+          note={`One colour on every complexion — identical crop, shared baseline, one frame. ${fmtCountCap(n)} people, one decision.`}
           trailing={
             <Chip>
               <Swatch color={winner.colorway.hex} label={winner.colorway.name} />
             </Chip>
           }
         />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className={lineupGridClass(run.bridesmaids.length)}>
           {run.bridesmaids.map((b, i) => (
             <RenderTile
               key={b.id}
@@ -132,7 +150,11 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
         <SectionHeading
           id="proof-heading"
           title="Why this colour and not the obvious one"
-          note="The by-eye method maximises the average, which is exactly how one person ends up carrying the cost."
+          note={
+            cf
+              ? 'The by-eye method maximises the average, which is exactly how one person ends up carrying the cost.'
+              : 'The by-eye method maximises the average — which is how one person ends up carrying the cost, on a party wide enough for that to happen. This one is not.'
+          }
         />
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
           <Card>
@@ -159,10 +181,25 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
                   </p>
                 </>
               ) : (
-                <p className="text-sm leading-relaxed text-text-mid">
-                  For this party the fair pick and the by-eye pick agree — there is no
-                  counterfactual to show, and inventing one would be the dishonest option.
-                </p>
+                <>
+                  <p className="font-display text-4xl leading-none text-text-low">
+                    <span className="tabular">+0.0</span>
+                  </p>
+                  <p className="text-sm leading-relaxed text-text-mid">
+                    On this party the max-of-minimum pick and the best-on-average pick are the same
+                    colour, so there is no lift to claim.{' '}
+                    {span ? (
+                      <>
+                        These {noun === 'person' ? 'people' : nounPlural} span{' '}
+                        <span className="tabular font-mono text-text-hi">
+                          {span.span.toFixed(1)}°
+                        </span>{' '}
+                        of ITA — not wide enough for any colorway to single one of them out.{' '}
+                      </>
+                    ) : null}
+                    Compare says so in full rather than manufacturing a delta.
+                  </p>
+                </>
               )}
             </CardBody>
           </Card>
@@ -172,7 +209,30 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
               {cf ? (
                 <CounterfactualRecap {...cf} />
               ) : (
-                <p className="text-sm text-text-mid">No counterfactual for this party.</p>
+                <div className="flex flex-col gap-3">
+                  <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-text-low">
+                    Both objectives
+                  </p>
+                  <p className="flex items-center gap-3 font-display text-xl text-text-hi">
+                    <span
+                      aria-hidden="true"
+                      className="inline-block h-8 w-8 shrink-0 rounded-[var(--radius-8)] ring-1 ring-inset ring-white/25"
+                      style={{ background: winner.colorway.hex }}
+                    />
+                    {winner.colorway.name}
+                  </p>
+                  <p className="text-sm leading-relaxed text-text-mid">
+                    Ranking by the worst score and ranking by the average both put{' '}
+                    {winner.colorway.name} first — floor{' '}
+                    <span className="tabular font-mono text-text-hi">
+                      {fmtScore(winner.groupScore)}
+                    </span>
+                    , mean{' '}
+                    <span className="tabular font-mono text-text-hi">{fmtScore(winner.mean)}</span>.
+                    A tool that tells you the choice does not matter on your party is worth more
+                    than one that finds a dramatic difference every time.
+                  </p>
+                </div>
               )}
             </CardBody>
           </Card>
@@ -188,9 +248,9 @@ export function VerdictScreen({ run }: { run: PartyRun }) {
         <Card>
           <CardBody className="flex flex-wrap items-center justify-between gap-4 py-5">
             <p className="max-w-lg text-sm leading-relaxed text-text-mid">
-              Copies the winning colorway, its hex, every bridesmaid’s flatter score and the
-              counterfactual as plain text. Image export of the six-up lineup lands with the first
-              real renders — it is not built yet, and this card will not pretend otherwise.
+              Copies the winning colorway, its hex, every {noun}’s flatter score and the
+              counterfactual as plain text. Image export of the lineup as one frame is not built
+              yet, and this card will not pretend otherwise.
             </p>
             <button type="button" onClick={copy} className="btn btn--primary">
               {copied ? 'Copied to clipboard' : 'Copy the verdict'}

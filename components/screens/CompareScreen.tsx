@@ -4,45 +4,49 @@ import { Chip, FitzBadge, Swatch } from '@/components/ui/Chips';
 import { CounterfactualSplit } from '@/components/ui/CounterfactualSplit';
 import { ScoreBar } from '@/components/ui/Score';
 import { ScreenHeading, SectionHeading } from '@/components/ui/ScreenHeading';
-import { score as fmtScore } from '@/lib/demo/format';
-import { counterfactualView, displayName, flatterOf } from '@/lib/demo/select';
+import { count as fmtCount, degrees as fmtDeg, score as fmtScore } from '@/lib/demo/format';
+import { datasetOf, nounsOf, partyDataset } from '@/lib/demo/parties';
+import { counterfactualView, displayName, flatterOf, itaSpan } from '@/lib/demo/select';
 
 /**
  * Compare — the counterfactual, standing on its own before the render cascade.
  *
- * This is the screen that converts "trust the maths" into "see the difference", so
- * it does two things and nothing else: the split (one woman, two colours, two
- * numbers), then the spread — where each pick lands on all six, which is the whole
- * argument in one table. The by-eye pick wins on average and ruins one person; the
- * fair pick gives up 0.9 of a point of average to lift the floor by 19.
+ * There are two honest outcomes here and the screen commits to both.
+ *
+ * **They diverge.** The by-eye pick wins on average and ruins one person, so the
+ * screen does two things and nothing else: the split (one woman, two colours, two
+ * numbers), then the spread — where each pick lands on everyone.
+ *
+ * **They agree.** On a party whose skin tones sit close together, no colorway can
+ * serve one member materially worse than the rest, so the colour that lifts the mean
+ * is already the colour that protects the floor. That is a *finding*, not a failure,
+ * and it is reported as one: the screen states it, shows the measured spread that
+ * causes it, and points at the party where the divergence does appear. Nothing here
+ * apologises, and nothing manufactures a delta to fill the space.
  */
 
-function Spread({
-  byEye,
-  winner,
-  run,
-}: {
-  byEye: ColorwaySummary;
-  winner: ColorwaySummary;
-  run: PartyRun;
-}) {
-  const columns = [
-    { key: 'byEye', summary: byEye, label: 'Picked by eye' },
-    { key: 'winner', summary: winner, label: 'Picked by OneDress' },
-  ] as const;
+interface SpreadColumn {
+  key: string;
+  summary: ColorwaySummary;
+  label: string;
+}
+
+function Spread({ columns, run }: { columns: readonly SpreadColumn[]; run: PartyRun }) {
+  const { noun } = nounsOf(run);
+  const heading = noun.charAt(0).toUpperCase() + noun.slice(1);
 
   return (
     <Card>
       <CardBody className="overflow-x-auto">
         <table className="w-full min-w-[34rem] border-collapse text-sm">
           <caption className="sr-only">
-            Flatter score for every bridesmaid under the by-eye pick ({byEye.colorway.name}) and the
-            OneDress pick ({winner.colorway.name}).
+            Flatter score for every {noun} in the party under{' '}
+            {columns.map((c) => `${c.label} (${c.summary.colorway.name})`).join(' and ')}.
           </caption>
           <thead>
             <tr className="border-b border-[var(--border-subtle)]">
               <th scope="col" className="w-40 py-2 pr-4 text-left font-medium text-text-mid">
-                Bridesmaid
+                {heading}
               </th>
               {columns.map((c) => (
                 <th key={c.key} scope="col" className="py-2 pl-4 text-left">
@@ -130,20 +134,175 @@ function Spread({
   );
 }
 
+/**
+ * The no-divergence screen. Everything on it is computed from this run and the other
+ * cached party — the ITA° spans, the runner-up gap, the lift over there. There is no
+ * hard-coded number and no hedging.
+ */
+function Agreement({ run }: { run: PartyRun }) {
+  const scoring = run.scoring!;
+  const winner = scoring.winner;
+  const { noun } = nounsOf(run);
+  const n = run.bridesmaids.length;
+
+  const here = itaSpan(run);
+  const other = datasetOf(run) ? partyDataset(datasetOf(run)!.otherId) : null;
+  const otherSpan = other ? itaSpan(other.party) : null;
+  const otherScoring = other?.party.scoring;
+  const otherLift =
+    otherScoring && otherScoring.differsFromByEye
+      ? (otherScoring.winner.perPerson.find((p) => p.id === otherScoring.mostHurt.id)?.flatter ??
+          0) - otherScoring.mostHurt.flatter
+      : 0;
+
+  const runnerUp = scoring.ranked[1];
+
+  return (
+    <div className="flex flex-col gap-12">
+      <ScreenHeading
+        eyebrow="Compare · the two objectives agree"
+        title="Both objectives picked the same colour"
+        lead={
+          <>
+            On this party, maximising the <em>worst</em> score and maximising the <em>average</em>{' '}
+            land on the same colorway — {winner.colorway.name}. There is no counterfactual here,
+            because there is genuinely nothing to counter. This screen shows why rather than staging
+            a comparison with itself.
+          </>
+        }
+        trailing={
+          <Chip tone="ok" className="justify-end">
+            <Swatch color={winner.colorway.hex} label={winner.colorway.name} />
+            <span className="text-text-mid">both picks</span>
+          </Chip>
+        }
+      />
+
+      <section aria-labelledby="why-heading">
+        <SectionHeading
+          id="why-heading"
+          title="Why there is nothing to compare"
+          note="The objective only bites when the palette genuinely serves someone worse than everyone else. Whether any colorway can is a property of the party, not of the maths."
+        />
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+          <Card>
+            <CardBody className="flex flex-col gap-4 py-6">
+              <p className="text-sm leading-relaxed text-text-mid">
+                {here ? (
+                  <>
+                    These {fmtCount(n)} measured skin tones span ITA{' '}
+                    <span className="tabular font-mono text-text-hi">{fmtDeg(here.max)}</span> down
+                    to <span className="tabular font-mono text-text-hi">{fmtDeg(here.min)}</span> —
+                    a range of{' '}
+                    <span className="tabular font-mono text-text-hi">{fmtDeg(here.span)}</span>.
+                    That is too narrow for any of the {scoring.ranked.length} colorways to single
+                    one {noun} out.{' '}
+                  </>
+                ) : null}
+                The colour that lifts the average is already the colour that protects the floor, so
+                the two objectives cannot disagree — and OneDress says so instead of inventing a
+                disagreement.
+              </p>
+              {other && otherSpan && otherLift > 0 ? (
+                <p className="text-sm leading-relaxed text-text-mid">
+                  The divergence appears when a party spans wider. Switch to{' '}
+                  <strong className="font-semibold text-text-hi">{other.label}</strong> — ITA{' '}
+                  <span className="tabular font-mono text-text-hi">{fmtDeg(otherSpan.max)}</span> to{' '}
+                  <span className="tabular font-mono text-text-hi">{fmtDeg(otherSpan.min)}</span>,{' '}
+                  <span className="tabular font-mono text-text-hi">{fmtDeg(otherSpan.span)}</span>{' '}
+                  wide, more than double this one — and the same engine, unchanged, splits:{' '}
+                  {otherScoring!.winner.colorway.name} by max-of-minimum,{' '}
+                  {otherScoring!.byEye.colorway.name} by average, and{' '}
+                  <span className="tabular font-mono text-text-hi">+{otherLift.toFixed(1)}</span>{' '}
+                  for the one the average was quietly sacrificing.
+                </p>
+              ) : null}
+              <p className="text-sm leading-relaxed text-text-mid">
+                A tool that reports “your party is close enough that this does not matter” is worth
+                more than one that manufactures a dramatic delta every time. The honest claim was
+                never “max-of-minimum always beats the average” — it is that when a party spreads
+                far enough that no single colour suits everyone, the two diverge, and the difference
+                lands on the person the average was sacrificing.
+              </p>
+            </CardBody>
+          </Card>
+
+          <Card>
+            <CardBody className="flex h-full flex-col justify-center gap-5 py-6">
+              <div>
+                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-text-low">
+                  The agreed pick
+                </p>
+                <p className="mt-2 flex items-center gap-3 font-display text-2xl text-text-hi">
+                  <span
+                    aria-hidden="true"
+                    className="inline-block h-8 w-8 shrink-0 rounded-[var(--radius-8)] ring-1 ring-inset ring-white/25"
+                    style={{ background: winner.colorway.hex }}
+                  />
+                  {winner.colorway.name}
+                </p>
+                <p className="tabular mt-2 font-mono text-xs text-text-mid">
+                  floor {fmtScore(winner.groupScore)} · mean {fmtScore(winner.mean)} — the top of
+                  both rankings.
+                </p>
+              </div>
+              {runnerUp ? (
+                <div className="border-t border-[var(--border-subtle)] pt-4">
+                  <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-text-low">
+                    Next best floor
+                  </p>
+                  <p className="mt-2 font-display text-lg text-text-hi">{runnerUp.colorway.name}</p>
+                  <p className="tabular mt-1 font-mono text-xs text-text-mid">
+                    floor {fmtScore(runnerUp.groupScore)} —{' '}
+                    {fmtScore(winner.groupScore - runnerUp.groupScore)} below the pick. Agreement is
+                    not a tie: the winner leads on both numbers.
+                  </p>
+                </div>
+              ) : null}
+            </CardBody>
+          </Card>
+        </div>
+      </section>
+
+      <section aria-labelledby="spread-heading">
+        <SectionHeading
+          id="spread-heading"
+          title="Where the pick lands on everyone"
+          note={`One column, not two, because there is only one pick. ${winner.colorway.name} is both the max-of-minimum and the best-on-average choice for this party.`}
+        />
+        <Spread
+          columns={[{ key: 'winner', summary: winner, label: 'Picked by OneDress · and by eye' }]}
+          run={run}
+        />
+      </section>
+    </div>
+  );
+}
+
 export function CompareScreen({ run }: { run: PartyRun }) {
   const cf = counterfactualView(run);
   const scoring = run.scoring;
 
-  if (!scoring || !cf) {
+  if (!scoring) {
     return (
       <ScreenHeading
         eyebrow="Compare"
         title="Nothing to compare"
-        lead={
-          scoring
-            ? 'For this party the max-of-minimum pick and the best-on-average pick are the same colour. There is no counterfactual, and manufacturing one would be dishonest.'
-            : 'This party has not been scored yet.'
-        }
+        lead="This party has not been scored yet."
+      />
+    );
+  }
+
+  // Two different things can leave us without a counterfactual view, and conflating
+  // them would be exactly the dishonesty this screen exists to avoid: the objectives
+  // genuinely agreeing, or the subject having dropped out of the run.
+  if (!cf) {
+    if (!scoring.differsFromByEye) return <Agreement run={run} />;
+    return (
+      <ScreenHeading
+        eyebrow="Compare"
+        title="The counterfactual subject is missing"
+        lead={`The two objectives disagree on this party — ${scoring.byEye.colorway.name} by average, ${scoring.winner.colorway.name} by max-of-minimum — but the person the average hurts most is no longer in the run, so there is nothing to draw.`}
       />
     );
   }
@@ -203,7 +362,13 @@ export function CompareScreen({ run }: { run: PartyRun }) {
           title="Where each pick lands on everyone"
           note={`${scoring.byEye.colorway.name} wins the average by ${meanCost.toFixed(1)} and loses the floor by ${floorGain.toFixed(1)}. That trade is the entire product.`}
         />
-        <Spread byEye={scoring.byEye} winner={scoring.winner} run={run} />
+        <Spread
+          columns={[
+            { key: 'byEye', summary: scoring.byEye, label: 'Picked by eye' },
+            { key: 'winner', summary: scoring.winner, label: 'Picked by OneDress' },
+          ]}
+          run={run}
+        />
       </section>
     </div>
   );

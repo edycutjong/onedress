@@ -3,19 +3,20 @@ import { Card, CardBody } from '@/components/ui/Card';
 import { Chip, Swatch } from '@/components/ui/Chips';
 import { RenderTile } from '@/components/ui/RenderTile';
 import { ScreenHeading, SectionHeading } from '@/components/ui/ScreenHeading';
-import { hex as fmtHex } from '@/lib/demo/format';
-import { DEMO_RENDER_NOTE } from '@/lib/demo/demo-party';
-import { flatterOf } from '@/lib/demo/select';
+import { countCap as fmtCountCap, hex as fmtHex } from '@/lib/demo/format';
+import { nounsOf, renderNoteOf } from '@/lib/demo/parties';
+import { flatterOf, lineupGridClass } from '@/lib/demo/select';
 
 /**
  * Render — six cards that exist as **skeletons in their final position** before a
  * single image arrives, so when one lands it fills in place and nothing on the page
  * moves. That zero-reflow property is the whole design of this screen.
  *
- * The cached demo party has no renders, and this screen says so plainly rather than
- * dressing up an illustration as a result: the cards sit in the `skipped` state with
- * the reference swatch pinned and the ΔE badge empty until there is a real render to
- * measure against.
+ * The synthetic demo party has no renders, and this screen says so plainly rather
+ * than dressing up an illustration as a result: those cards sit in the `skipped`
+ * state with the reference swatch pinned and the ΔE badge empty. The measured party
+ * does have real `cloth-v3` output, and one card in it is `failed` with the API's own
+ * `error_pose` — that card stays in the cascade rather than being quietly dropped.
  */
 
 const STATUS_COPY: Partial<Record<StageStatus, string>> = {
@@ -40,22 +41,23 @@ export function RenderScreen({ run, onRetry }: { run: PartyRun; onRetry?: (id: s
   }
 
   const winner = scoring.winner;
+  const { noun } = nounsOf(run);
   const counts = run.bridesmaids.reduce<Record<string, number>>((acc, b) => {
     acc[b.render.status] = (acc[b.render.status] ?? 0) + 1;
     return acc;
   }, {});
+  const delivered = counts.done ?? 0;
 
   return (
     <div className="flex flex-col gap-12">
       <ScreenHeading
         eyebrow="Render · the winning colour on everyone"
-        title={`Six try-ons in ${winner.colorway.name}`}
+        title={`${fmtCountCap(run.bridesmaids.length)} try-ons in ${winner.colorway.name}`}
         lead={
           <>
-            Each bridesmaid’s full-length photo goes to{' '}
-            <code className="font-mono text-text-hi">cloth-v3</code> against the same reference
-            garment, so every frame in the lineup is the same colour by construction — not the same
-            colour by eye.
+            Each {noun}’s photo goes to <code className="font-mono text-text-hi">cloth-v3</code>{' '}
+            against the same reference garment, so every frame in the lineup is the same colour by
+            construction — not the same colour by eye.
           </>
         }
         trailing={
@@ -74,7 +76,7 @@ export function RenderScreen({ run, onRetry }: { run: PartyRun; onRetry?: (id: s
         <SectionHeading
           id="cascade-heading"
           title="The cascade"
-          note={run.cached ? DEMO_RENDER_NOTE : 'Cards fill as each task lands — no reordering.'}
+          note={renderNoteOf(run)}
           trailing={
             <Chip tone="winner">
               <Swatch
@@ -84,7 +86,7 @@ export function RenderScreen({ run, onRetry }: { run: PartyRun; onRetry?: (id: s
             </Chip>
           }
         />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className={lineupGridClass(run.bridesmaids.length)}>
           {run.bridesmaids.map((b, i) => (
             <RenderTile
               key={b.id}
@@ -120,18 +122,21 @@ export function RenderScreen({ run, onRetry }: { run: PartyRun; onRetry?: (id: s
                 {winner.colorway.name}
               </p>
               <p className="tabular mt-1 font-mono text-xs text-text-mid">
-                {fmtHex(winner.colorway.hex)} — the same garment file for all six, uploaded once and
-                reused by file id.
+                {fmtHex(winner.colorway.hex)} — the same garment file for all{' '}
+                {run.bridesmaids.length}, uploaded once and reused by file id.
               </p>
             </div>
             <div>
               <p className="font-mono text-[0.625rem] uppercase tracking-[0.16em] text-text-low">
                 Delivered
               </p>
-              <p className="mt-2 font-display text-lg text-text-hi">Awaiting a live run</p>
+              <p className="mt-2 font-display text-lg text-text-hi">
+                {delivered > 0 ? `${delivered} real renders` : 'Awaiting a live run'}
+              </p>
               <p className="mt-1 text-xs leading-relaxed text-text-mid">
-                Each card carries a ΔE badge that stays empty until there is a real render to
-                sample. No render, no number — the badge is never filled with an estimate.
+                {delivered > 0
+                  ? 'These frames came back from cloth-v3, but the ΔE badge is still empty: sampling the delivered garment colour is not wired into the app yet, and an estimate would be worse than a blank.'
+                  : 'Each card carries a ΔE badge that stays empty until there is a real render to sample. No render, no number — the badge is never filled with an estimate.'}
               </p>
             </div>
             <div>
@@ -141,7 +146,7 @@ export function RenderScreen({ run, onRetry }: { run: PartyRun; onRetry?: (id: s
               <p className="mt-2 font-display text-lg text-text-hi">A second, optional pass</p>
               <p className="mt-1 text-xs leading-relaxed text-text-mid">
                 Metal comes from the measured undertone, silhouette from the face shape. If the
-                chain fails, the dress render stands as her final image and the verdict is
+                chain fails, the dress render stands as the final image and the verdict is
                 unaffected — earrings are the finishing touch, not the deliverable.
               </p>
             </div>

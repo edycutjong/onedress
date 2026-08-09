@@ -56,6 +56,13 @@ export interface EarringResult {
 export interface BridesmaidState {
   id: string;
   name?: string;
+  /**
+   * The source frame the analyzers actually ran on, where it is ours to show. A live
+   * run leaves this unset — the uploaded selfie stays with the uploader and is never
+   * committed anywhere. Only the measured cached party fills it, from the licensed
+   * stock photographs in `public/party/`.
+   */
+  photoUrl?: string;
   measure: Stage<Measurement>;
   render: Stage<RenderResult>;
   earring: Stage<EarringResult>;

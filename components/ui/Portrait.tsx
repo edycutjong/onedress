@@ -4,16 +4,21 @@
 import { hex as fmtHex } from '@/lib/demo/format';
 
 /**
- * Where a bridesmaid's picture goes.
+ * Where a party member's picture goes — and, more importantly, the one place that
+ * decides what an image on this screen is allowed to claim to be.
  *
- * There are no bridesmaid photographs yet, and this app will never invent one. So
- * when `photoUrl` is null it draws an unmistakably diagrammatic bust — a shape
- * filled with her **measured** skin hex, wearing a shape filled with the colorway
- * hex — hatched, and tagged "illustration". It is a picture of the two numbers, not
- * a picture of a person.
+ * Every frame carries a corner tag naming what it actually is, and the tag is not
+ * optional decoration:
  *
- * Passing a real `photoUrl` swaps the whole thing for the photo. That is the only
- * change needed when renders exist: one field in lib/demo/demo-party.ts.
+ *   no photoUrl   an unmistakably diagrammatic bust — a shape filled with the
+ *                 **measured** skin hex wearing a shape filled with the colorway hex,
+ *                 hatched and tagged "illustration". A picture of two numbers, not
+ *                 of a person. The synthetic demo party is entirely this, because
+ *                 those six are reference profiles rather than people.
+ *   photoUrl      a real photograph, tagged with what it is via `photoTag` — a
+ *                 measured source frame, or a cloth-v3 render of one. Callers must
+ *                 pass a truthful `photoAlt`: this component cannot know whether it
+ *                 was handed a render or the frame the analyzers ran on.
  */
 
 export function Portrait({
@@ -23,6 +28,8 @@ export function Portrait({
   dressHex,
   dressName,
   photoUrl = null,
+  photoAlt,
+  photoTag = 'photograph',
   className = '',
   showTag = true,
   crop = 'figure',
@@ -34,6 +41,11 @@ export function Portrait({
   dressHex: string;
   dressName: string;
   photoUrl?: string | null;
+  /** what the photograph actually shows — required reading for a screen reader, and
+   *  the reason this component never guesses on the caller's behalf */
+  photoAlt?: string;
+  /** the corner tag on a real photograph, e.g. "cloth-v3 render" or "source frame" */
+  photoTag?: string;
   className?: string;
   /** thumbnails too small to carry the corner tag legibly turn it off; the hatch,
    *  the flat shapes and the aria-label still say what this is */
@@ -44,11 +56,21 @@ export function Portrait({
 }) {
   if (photoUrl) {
     return (
-      <img
-        src={photoUrl}
-        alt={`${name} wearing the ${dressName} colorway, rendered from her full-length photo.`}
-        className={`h-full w-full object-cover ${className}`}
-      />
+      <div className={`relative h-full w-full ${className}`}>
+        <img
+          src={photoUrl}
+          alt={photoAlt ?? `${name} wearing the ${dressName} colorway, rendered from a real photo.`}
+          className="h-full w-full object-cover"
+        />
+        {showTag ? (
+          <span
+            aria-hidden="true"
+            className="absolute left-2 top-2 rounded-[var(--radius-4)] bg-black/55 px-1.5 py-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-text-mid backdrop-blur-sm"
+          >
+            {photoTag}
+          </span>
+        ) : null}
+      </div>
     );
   }
 

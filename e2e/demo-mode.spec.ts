@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * The app must open on the cached demo party with NO API key and NO units spent —
- * that is the judged path, so it is the one asserted hardest. Everything here has to
- * hold on a deployment where `getClient()` returns null.
+ * The app must open on the cached SYNTHETIC demo party with NO API key and NO units
+ * spent — that is the judged path, so it is the one asserted hardest. Everything here
+ * has to hold on a deployment where `getClient()` returns null. (The second dataset,
+ * the measured party, has its own spec.)
  */
 test.describe('demo mode — zero config', () => {
   test('opens on the verdict with no API key and no errors', async ({ page }) => {
@@ -17,7 +18,16 @@ test.describe('demo mode — zero config', () => {
     // Brand, the persistent spine, and the honesty banner.
     await expect(page.getByText('OneDress').first()).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Progress' })).toBeVisible();
-    await expect(page.getByText('cached demo party')).toBeVisible();
+    await expect(page.getByText(/illustrations, no photographs/).first()).toBeVisible();
+
+    // The synthetic party is the default, and the switch says so unambiguously.
+    await expect(page.getByRole('button', { name: 'Demo party (synthetic I–VI)' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await expect(
+      page.getByRole('button', { name: 'Measured party (real photos)' }),
+    ).toHaveAttribute('aria-pressed', 'false');
 
     // The verdict is the landing screen, and it leads with the winning colorway.
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Marigold');

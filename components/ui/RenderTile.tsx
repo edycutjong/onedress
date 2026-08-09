@@ -45,7 +45,10 @@ export function RenderTile({
     <Card tone={failed ? 'warning' : 'default'} stagger={index}>
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-black/25">
         {measurement ? (
-          <div className={mode === 'render' && pending ? 'opacity-45' : undefined}>
+          // h-full is load-bearing: without it a landscape source frame sizes to its
+          // own aspect ratio and leaves a dead band under the picture instead of
+          // filling the 3:4 slot.
+          <div className={`h-full w-full ${mode === 'render' && pending ? 'opacity-45' : ''}`}>
             <Portrait
               id={`${mode}-${bridesmaid.id}`}
               name={name}
@@ -53,6 +56,8 @@ export function RenderTile({
               dressHex={colorway.hex}
               dressName={colorway.name}
               photoUrl={rendered ?? null}
+              photoTag="cloth-v3 render"
+              photoAlt={`${name}, photographed and then rendered by cloth-v3 wearing the ${colorway.name} colorway.`}
             />
           </div>
         ) : (
@@ -75,6 +80,9 @@ export function RenderTile({
         title={name}
         eyebrow={mode === 'render' ? `slot ${index + 1}` : undefined}
         trailing={<FitzBadge numeral={measurement?.fitzpatrick} skinHex={measurement?.skinHex} />}
+        // A seven-up lineup leaves each tile ~150px wide; at text-lg the name and the
+        // Fitzpatrick badge cannot both fit and the name truncates to "Perso…".
+        titleClassName="text-base"
         className="pt-3"
       />
 
@@ -98,16 +106,32 @@ export function RenderTile({
           <Chip
             tone="warning"
             className="mt-2.5"
-            title="face-attr-analysis returned no face shape for her, so the earring silhouette falls back to a hoop. Skin hex, Fitzpatrick and every score are unaffected."
+            title="No face shape on record, so the earring silhouette falls back to a hoop. Skin hex, Fitzpatrick and every score are unaffected."
           >
             hoop fallback
           </Chip>
         ) : null}
       </CardBody>
 
+      {/* The render screen is where a failure is actionable, so it gets the full note
+          with its re-shoot guidance. The verdict lineup is a composed six-up frame:
+          the same failure there is still stated, but as a chip, because a card that
+          grows three times taller than its neighbours wrecks the one image the whole
+          flow is building towards. */}
       {failed ? (
         <CardBody className="pt-0">
-          <ErrorNote error={stage.error!} onAction={onRetry && (() => onRetry(bridesmaid.id))} />
+          {mode === 'render' ? (
+            <ErrorNote error={stage.error!} onAction={onRetry && (() => onRetry(bridesmaid.id))} />
+          ) : (
+            <div>
+              <Chip tone="warning" title={stage.error!.guidance}>
+                no render
+              </Chip>
+              {/* The raw code on its own line: a chip wide enough to hold both would
+                  overflow a lineup tile, and the code is the part a judge can check. */}
+              <p className="mt-1.5 font-mono text-[0.625rem] text-text-low">{stage.error!.code}</p>
+            </div>
+          )}
         </CardBody>
       ) : null}
 
@@ -119,7 +143,11 @@ export function RenderTile({
           <Chip title="CIE2000 distance between the reference garment colour and the delivered render">
             <span className="tabular font-mono">ΔE —</span>
             <span className="text-text-low">
-              {rendered ? 'not measured in-app' : 'awaiting render'}
+              {rendered
+                ? 'not measured in-app'
+                : failed
+                  ? 'no render to sample'
+                  : 'awaiting render'}
             </span>
           </Chip>
         </CardFooter>

@@ -136,6 +136,12 @@
     background: color-mix(in srgb, var(--winner) 85%, white);
     border-color: color-mix(in srgb, var(--winner) 85%, white);
   }
+  /* Chrome-sized action — the dataset switch lives in the sticky header, where a
+     full-height button would push the spine off a 375px screen. */
+  .btn--sm {
+    padding: 5px 12px;
+    font-size: 0.75rem;
+  }
 
   /* The skip link — present on every screen, only visible when focused. */
   .skip-link {

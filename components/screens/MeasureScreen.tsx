@@ -5,8 +5,9 @@ import { Chip, FitzBadge, Swatch } from '@/components/ui/Chips';
 import { ErrorNote } from '@/components/ui/ErrorNote';
 import { Portrait } from '@/components/ui/Portrait';
 import { ScreenHeading, SectionHeading } from '@/components/ui/ScreenHeading';
-import { hex as fmtHex } from '@/lib/demo/format';
-import { displayName } from '@/lib/demo/select';
+import { count as fmtCount, countCap as fmtCountCap, hex as fmtHex } from '@/lib/demo/format';
+import { nounsOf } from '@/lib/demo/parties';
+import { displayName, lineupGridClass } from '@/lib/demo/select';
 
 /**
  * Measure — the screen where the product stops guessing.
@@ -56,6 +57,12 @@ function FaceCard({
             dressHex="#2a1a24"
             dressName="none"
             crop="face"
+            // The frame the three analyzers actually ran on, where it is ours to
+            // show. A live run never sets this — an uploaded selfie belongs to the
+            // person who uploaded it and is not kept.
+            photoUrl={bridesmaid.photoUrl ?? null}
+            photoTag="source frame"
+            photoAlt={`The photograph ${name} was measured from — skin tone ${fmtHex(m.skinHex)}, Fitzpatrick ${m.fitzpatrick ?? 'not returned'}.`}
           />
         ) : (
           <span
@@ -108,7 +115,7 @@ function FaceCard({
         <CardFooter>
           <Chip
             tone="warning"
-            title="face-attr-analysis returned no face shape, so the earring silhouette falls back to a hoop. Only the skin hex is load-bearing — she is still fully scored."
+            title="No face shape on record, so the earring silhouette falls back to a hoop. Only the skin hex is load-bearing — this person is still fully scored."
           >
             hoop fallback
           </Chip>
@@ -120,15 +127,17 @@ function FaceCard({
 
 export function MeasureScreen({ run }: { run: PartyRun }) {
   const measured = run.bridesmaids.filter((b) => b.measure.status === 'done');
+  const n = run.bridesmaids.length;
+  const { noun } = nounsOf(run);
 
   return (
     <div className="flex flex-col gap-12">
       <ScreenHeading
         eyebrow="Measure · real skin hex + Fitzpatrick I–VI"
-        title="Six measurements, not six opinions"
+        title={`${fmtCountCap(n)} measurements, not ${fmtCount(n)} opinions`}
         lead={
           <>
-            One face selfie each, three analyzers per person:{' '}
+            One face photo each, three analyzers per person:{' '}
             <code className="font-mono text-text-hi">skin-tone-analysis</code> for the hex that
             drives every score,{' '}
             <code className="font-mono text-text-hi">fitzpatrick-scale-analyzer</code> as an
@@ -185,10 +194,10 @@ export function MeasureScreen({ run }: { run: PartyRun }) {
       <section aria-labelledby="cards-heading">
         <SectionHeading
           id="cards-heading"
-          title="Every reading, per bridesmaid"
+          title={`Every reading, per ${noun}`}
           note="Nothing here is rounded, averaged or prettified — it is what the API returned."
         />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className={lineupGridClass(run.bridesmaids.length)}>
           {run.bridesmaids.map((b, i) => (
             <FaceCard key={b.id} bridesmaid={b} index={i} />
           ))}

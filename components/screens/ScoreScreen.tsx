@@ -138,7 +138,7 @@ function ColorwayCard({
         </p>
       </CardBody>
       <CardFooter>
-        <Chip title="the bridesmaid this colour serves worst">
+        <Chip title="the person this colour serves worst">
           worst: {summary.worst.name ?? summary.worst.id}
           <span className="tabular font-mono text-text-hi">{fmtScore(summary.worst.flatter)}</span>
         </Chip>
@@ -191,7 +191,7 @@ export function ScoreScreen({ run }: { run: PartyRun }) {
           note={
             changesWinner
               ? 'For this party the two objectives disagree — which is the normal case, not a contrived one.'
-              : 'For this party the two objectives happen to agree.'
+              : 'For this party the two objectives agree: its skin tones sit close enough together that no colorway can serve one person materially worse than the rest. Compare says why in full.'
           }
         />
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
