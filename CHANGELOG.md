@@ -1,3 +1,13 @@
+## [1.1.0](https://github.com/edycutjong/onedress/compare/v1.0.0...v1.1.0) (2026-08-09)
+
+### Features
+
+* fold the landing page and pitch deck into the app — one deploy, one CTA ([d7b17cd](https://github.com/edycutjong/onedress/commit/d7b17cda15f5548a69175dc943f04e751ba108e2))
+
+### Build & CI
+
+* deploy to Vercel from Actions, and skip legibly when the secrets are absent ([7d35e7f](https://github.com/edycutjong/onedress/commit/7d35e7ff5f74730605ddeb89bdb7a32cc20e1ecb))
+
 ## 1.0.0 (2026-08-09)
 
 ### Features
