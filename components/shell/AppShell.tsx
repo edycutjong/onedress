@@ -66,7 +66,11 @@ export function AppShell({
                 one color · every complexion
               </span>
             </a>
-            <div className="ml-auto shrink-0">
+            {/* `min-w-0` rather than `shrink-0`: the meter is the widest thing in the
+                header and its text length is not ours to control — "checking balance…"
+                is longer than "demo mode". Refusing to shrink made it push the page
+                wide on narrow viewports; letting it shrink lets the chip wrap instead. */}
+            <div className="ml-auto min-w-0">
               <UnitMeter credit={credit} spent={spent} estimated={estimated} />
             </div>
           </div>

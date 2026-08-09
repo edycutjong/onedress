@@ -82,7 +82,21 @@
     font-size: 0.6875rem;
     line-height: 1.4;
     color: var(--text-mid);
+    /* `nowrap` keeps a data token intact — a hex or a ΔE broken across two lines is
+       unreadable. But it also means a chip can never shrink, so a long one pushes
+       the whole page wide: at 375px with Linux font metrics (wider than macOS, which
+       is why this only ever failed in CI) the unit meter and the dataset banner both
+       overflowed. `max-width` bounds the box against its container, and `flex-wrap`
+       lets a multi-span chip break BETWEEN its tokens instead of past the viewport. */
     white-space: nowrap;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  /* Chips carrying a sentence rather than a data token — these wrap like prose,
+     since there is no atomic value to protect. */
+  .chip--prose {
+    white-space: normal;
   }
   .chip--winner {
     border-color: color-mix(in srgb, var(--winner) 55%, transparent);
@@ -236,4 +250,29 @@
 
 :where(main, section, header, footer, div, li, p) {
   min-width: 0;
+}
+
+/* Screen-to-screen navigation.
+   Short and shallow on purpose: long enough that a cut reads as a move rather
+   than a glitch on camera, short enough that clicking through seven steps never
+   feels like waiting. Matches the .rise easing so the app has one motion voice. */
+.screen-enter {
+  animation: screen-in 240ms cubic-bezier(0.22, 0.8, 0.3, 1) both;
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-enter {
+    animation: none;
+  }
 }

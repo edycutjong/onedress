@@ -33,7 +33,7 @@ export function DemoBanner({
   return (
     <div className="border-t border-[var(--border-subtle)] bg-white/[0.02]">
       <p className="mx-auto flex w-full max-w-[1240px] flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2 text-xs leading-relaxed text-text-mid sm:px-6">
-        <span className="chip chip--winner">cached · {dataset.sublabel}</span>
+        <span className="chip chip--winner chip--prose">cached · {dataset.sublabel}</span>
         <span>
           {dataset.imageryNote}
           {live
