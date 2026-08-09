@@ -204,12 +204,30 @@ is defensible. Then the same vendor renders the result on the real person — so
 solved for and the color you see on her are the same pipeline, and we can measure the drift
 (ΔE) between them.
 
-**One honest limitation.** `cloth-v3` is a generative try-on, so the rendered fabric does
-not land exactly on the intended hex. Measured across 9 patches of one render: **median
-ΔE00 7.8, ranging 5.5 to 11.2**. The median is a modest shift; the top of that range is
-not — at ΔE00 11 the fabric reads as a neighbouring colour. We publish that number and put the reference swatch beside every render rather than
-hide it. The *decision* is made on measured skin values and fixed color math, not on the
+**Honest limitations.** Three, stated here rather than left to be discovered:
+
+**1. The render drifts from the intended hex.** `cloth-v3` is a generative try-on, so the
+rendered fabric does not land exactly on the target. Measured across 9 patches of one
+render: **median ΔE00 7.8, ranging 5.5 to 11.2**. The median is a modest shift; the top of
+that range is not — at ΔE00 11 the fabric reads as a neighbouring colour. We publish the
+range rather than the flattering point estimate, and put the reference swatch beside every
+render. The *decision* is made on measured skin values and fixed colour math, not on the
 render; the render is how you check the decision.
+
+**2. The 24 colorway references are recoloured derivatives of one garment.** Openly-licensed
+stock has almost no plain single-garment product shots outside a handful of common colours,
+so all 24 references in `public/refs/colorways/` are one CC-licensed hanging dress remapped
+in Lab space to each target hex (full provenance in [`docs/asset-licences.md`](docs/asset-licences.md)).
+Holding the garment constant is arguably the right control for a colour reference set — only
+the colour varies — but it does mean the **ΔE00 of 0.51 between target and reference is
+calibration, not luck.** It proves the swatches aren't mislabelled and that the Lab→sRGB→JPEG
+round trip didn't drift them. It is *not* evidence that a photograph happened to match.
+
+**3. The fairness objective only bites when a party spans widely.** On a party reaching
+Fitzpatrick VI, maximin and mean choose different colorways and the gap is 26.5 points. On a
+narrower real party we measured (ITA 46.6 → −13.3), **both objectives chose the same colour**
+and the counterfactual lift was zero. That is the honest behaviour: when no colorway
+disadvantages anyone, OneDress says so instead of manufacturing a difference.
 
 ## 🛍️ Why a retailer wants this
 
