@@ -19,13 +19,19 @@ const CHIP_TONE: Record<ChipTone, string> = {
 export function Chip({
   tone = 'default',
   className = '',
+  title,
   children,
 }: {
   tone?: ChipTone;
   className?: string;
+  title?: string;
   children: ReactNode;
 }) {
-  return <span className={`${CHIP_TONE[tone]} ${className}`}>{children}</span>;
+  return (
+    <span className={`${CHIP_TONE[tone]} ${className}`} title={title}>
+      {children}
+    </span>
+  );
 }
 
 /** A colour square with its hex printed beside it. */

@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { ProgressSpine, type StepStatus } from '@/components/shell/ProgressSpine';
 import { UnitMeter } from '@/components/shell/UnitMeter';
+import type { CreditState } from '@/components/shell/useCredit';
 
 /**
  * The persistent chrome: wordmark, the 7-step spine, the unit meter. Present on 100%
@@ -19,6 +20,7 @@ export function AppShell({
   statuses,
   onSelect,
   accent,
+  credit,
   spent,
   estimated,
   banner,
@@ -28,6 +30,7 @@ export function AppShell({
   statuses: Record<string, StepStatus>;
   onSelect: (stepId: string) => void;
   accent: string;
+  credit: CreditState;
   spent: number;
   estimated: number;
   banner?: ReactNode;
@@ -62,7 +65,7 @@ export function AppShell({
           </div>
 
           <div className="ml-auto shrink-0">
-            <UnitMeter spent={spent} estimated={estimated} />
+            <UnitMeter credit={credit} spent={spent} estimated={estimated} />
           </div>
         </div>
         {banner}
