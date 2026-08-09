@@ -6,6 +6,7 @@ import { AppShell } from '@/components/shell/AppShell';
 import { DemoBanner } from '@/components/shell/DemoBanner';
 import { useCredit } from '@/components/shell/useCredit';
 import { CompareScreen } from '@/components/screens/CompareScreen';
+import { MeasureScreen } from '@/components/screens/MeasureScreen';
 import { VerdictScreen } from '@/components/screens/VerdictScreen';
 import { Card, CardBody } from '@/components/ui/Card';
 import { ScreenHeading } from '@/components/ui/ScreenHeading';
@@ -46,6 +47,8 @@ export default function Home() {
         <VerdictScreen run={party} />
       ) : step.screen === 'compare' ? (
         <CompareScreen run={party} />
+      ) : step.screen === 'measure' ? (
+        <MeasureScreen run={party} />
       ) : (
         <>
           <ScreenHeading

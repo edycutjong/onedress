@@ -25,6 +25,7 @@ export function Portrait({
   photoUrl = null,
   className = '',
   showTag = true,
+  crop = 'figure',
 }: {
   /** stable id — namespaces the SVG defs so two portraits never collide */
   id: string;
@@ -37,6 +38,9 @@ export function Portrait({
   /** thumbnails too small to carry the corner tag legibly turn it off; the hatch,
    *  the flat shapes and the aria-label still say what this is */
   showTag?: boolean;
+  /** 'face' zooms the same drawing onto the head — the measure cards are about the
+   *  skin reading, not the dress, so they crop to it rather than use a second asset */
+  crop?: 'figure' | 'face';
 }) {
   if (photoUrl) {
     return (
@@ -51,13 +55,15 @@ export function Portrait({
   const hatchId = `hatch-${id}`;
   const shadeId = `shade-${id}`;
   const description =
-    `Illustration, not a photograph: ${name}’s measured skin tone ${fmtHex(skinHex)} ` +
-    `with the ${dressName} colorway ${fmtHex(dressHex)}.`;
+    crop === 'face'
+      ? `Illustration, not a photograph: ${name}’s measured skin tone ${fmtHex(skinHex)}.`
+      : `Illustration, not a photograph: ${name}’s measured skin tone ${fmtHex(skinHex)} ` +
+        `with the ${dressName} colorway ${fmtHex(dressHex)}.`;
 
   return (
     <div className={`relative h-full w-full ${className}`}>
       <svg
-        viewBox="0 0 120 160"
+        viewBox={crop === 'face' ? '22 16 76 76' : '0 0 120 160'}
         preserveAspectRatio="xMidYMid slice"
         className="h-full w-full"
         role="img"
