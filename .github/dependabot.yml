@@ -4,10 +4,20 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
-    open-pull-requests-limit: 10
-    # Submission freeze: security patches yes, framework migrations no.
-    # Majors (next 16, vitest 4, @types/node 26, …) land after judging, not days
-    # before it — a broken build costs more than a stale major gains.
+    # ── Submission freeze, until judging closes (2026-08-17) ──────────────
+    # 0 disables *version* updates only. Dependabot security updates are a
+    # separate feature and keep flowing, so real advisories still open PRs —
+    # we just stop the weekly churn of bumps that fix nothing. Restore to 10
+    # after judging.
+    #
+    # Earned the hard way: with version updates on, Dependabot offered
+    # typescript 5.9.3 and prettier 3.9.6. `npm run ci` gates on `tsc --noEmit`
+    # and `prettier --check`, so both turn the pipeline red for zero security
+    # gain — typescript 5.9.3 did exactly that on run 31309800557.
+    open-pull-requests-limit: 0
+    # Majors stay out even when an advisory suggests one. `npm audit` wanted
+    # next 16 for the postcss chain; that chain is instead pinned via
+    # `overrides` in package.json, which fixes it without the migration.
     ignore:
       - dependency-name: '*'
         update-types: ['version-update:semver-major']
