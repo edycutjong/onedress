@@ -7,6 +7,7 @@ import { DemoBanner } from '@/components/shell/DemoBanner';
 import { useCredit } from '@/components/shell/useCredit';
 import { CompareScreen } from '@/components/screens/CompareScreen';
 import { MeasureScreen } from '@/components/screens/MeasureScreen';
+import { RenderScreen } from '@/components/screens/RenderScreen';
 import { ScoreScreen } from '@/components/screens/ScoreScreen';
 import { VerdictScreen } from '@/components/screens/VerdictScreen';
 import { Card, CardBody } from '@/components/ui/Card';
@@ -52,6 +53,8 @@ export default function Home() {
         <MeasureScreen run={party} />
       ) : step.screen === 'score' ? (
         <ScoreScreen run={party} />
+      ) : step.screen === 'render' ? (
+        <RenderScreen run={party} />
       ) : (
         <>
           <ScreenHeading
