@@ -1,0 +1,170 @@
+name: Deploy (Vercel)
+
+# One deploy serves all three surfaces: `/` (landing), `/pitch` (deck) and
+# `/party` (the product). Push to main ships production; a pull request ships a
+# preview URL.
+#
+# ── Required repository secrets ────────────────────────────────────────────────
+#   VERCEL_TOKEN       Vercel dashboard → Account Settings → Tokens → Create
+#   VERCEL_ORG_ID      `vercel link` then read `.vercel/project.json` → orgId
+#   VERCEL_PROJECT_ID  same file → projectId
+# Add them at: Settings → Secrets and variables → Actions → New repository secret.
+#
+# Until all three exist the `preflight` job prints exactly what is missing and the
+# deploy jobs are skipped — the workflow never dies inside the Vercel CLI with an
+# opaque auth error, and it never turns the rest of CI red.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  VERCEL_CLI_VERSION: '48.2.0'
+
+jobs:
+  # ── Gate: are the secrets actually configured? ─────────────────────────────
+  preflight:
+    name: 'Preflight · Vercel credentials'
+    runs-on: ubuntu-latest
+    outputs:
+      configured: ${{ steps.check.outputs.configured }}
+    steps:
+      - name: Check for the three Vercel secrets
+        id: check
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          missing=()
+          [ -n "$VERCEL_TOKEN" ]      || missing+=("VERCEL_TOKEN")
+          [ -n "$VERCEL_ORG_ID" ]     || missing+=("VERCEL_ORG_ID")
+          [ -n "$VERCEL_PROJECT_ID" ] || missing+=("VERCEL_PROJECT_ID")
+
+          if [ ${#missing[@]} -eq 0 ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "✅ All three Vercel secrets are present — deploying." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "configured=false" >> "$GITHUB_OUTPUT"
+          {
+            echo "## ⏭️ Vercel deploy skipped — credentials not configured"
+            echo
+            echo "Missing repository secret(s): \`${missing[*]}\`"
+            echo
+            echo "Add them under **Settings → Secrets and variables → Actions**:"
+            echo
+            echo "| Secret | Where to get it |"
+            echo "| --- | --- |"
+            echo "| \`VERCEL_TOKEN\` | vercel.com → Account Settings → Tokens → **Create Token** (scope: the team that owns the project) |"
+            echo "| \`VERCEL_ORG_ID\` | run \`npx vercel link\` in this repo, then read \`orgId\` from \`.vercel/project.json\` |"
+            echo "| \`VERCEL_PROJECT_ID\` | same \`.vercel/project.json\` → \`projectId\` |"
+            echo
+            echo "Nothing else in CI is affected — this job is green on purpose so an"
+            echo "unconfigured deploy never blocks a merge."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "::warning title=Vercel deploy skipped::Missing repository secret(s): ${missing[*]} — see the job summary for where to get each value."
+
+  # ── Preview deploy on pull requests ────────────────────────────────────────
+  preview:
+    name: 'Deploy · Preview'
+    needs: preflight
+    if: needs.preflight.outputs.configured == 'true' && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.url }}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install --global "vercel@${VERCEL_CLI_VERSION}"
+
+      - name: Pull Vercel environment (preview)
+        run: vercel pull --yes --environment=preview --token="${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Build
+        run: vercel build --token="${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Deploy prebuilt artifact
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --token="${{ secrets.VERCEL_TOKEN }}")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          {
+            echo "## 🔎 Preview deployed"
+            echo
+            echo "- Landing — $url/"
+            echo "- Pitch deck — $url/pitch"
+            echo "- The app — $url/party"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # ── Production deploy on main ──────────────────────────────────────────────
+  production:
+    name: 'Deploy · Production'
+    needs: preflight
+    if: needs.preflight.outputs.configured == 'true' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install --global "vercel@${VERCEL_CLI_VERSION}"
+
+      - name: Pull Vercel environment (production)
+        run: vercel pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Build
+        run: vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Deploy prebuilt artifact
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          {
+            echo "## 🚀 Production deployed"
+            echo
+            echo "- Landing — $url/"
+            echo "- Pitch deck — $url/pitch"
+            echo "- The app — $url/party"
+            echo
+            echo "> The custom domain \`onedress.edycu.dev\` is attached in the Vercel"
+            echo "> dashboard, not here. If it still serves the old standalone \`site\`"
+            echo "> project, re-point it at this project's production deployment."
+          } >> "$GITHUB_STEP_SUMMARY"
