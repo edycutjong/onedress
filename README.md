@@ -28,6 +28,12 @@
   ![Coverage](https://img.shields.io/badge/coverage-100%25-22C55E?style=flat)
   ![License](https://img.shields.io/badge/license-MIT-blue?style=flat)
 
+  <br/><br/>
+
+  <img width="720" alt="The full OneDress flow: measure six skin tones, score 24 colorways, show the counterfactual, render the winner on everyone, deliver the verdict" src="docs/media/flow-reel.gif" />
+
+  <sub><b>The whole product in 28 seconds</b> — measure → score → counterfactual → render → verdict.<br/>Recorded from the shipped app at <a href="https://onedress.edycu.dev">onedress.edycu.dev</a>. Nothing here is a mockup.</sub>
+
 </div>
 
 ---
@@ -48,6 +54,12 @@ garment all N people must wear, which single color harms the group least?"** —
 single-user analysis can't answer, because the group's answer is never any individual's
 top pick.
 
+<img width="880" alt="The counterfactual: the by-eye pick scores 38.8 on the deepest-skin bridesmaid; the maximin pick scores 65.3 — same woman, same measurement" src="docs/media/counterfactual.gif" />
+
+<sub>**One of them pays for the average.** The by-eye pick scores **38.8** on Esi. Ours
+scores **65.3** — same woman, same measurement, a **26.5-point swing** on the party's
+worst-off. This one screen is the product.</sub>
+
 ## 🔬 Verified live against the YouCam API (Perfect Corp)
 
 The sponsor SDK is the **engine**, not decoration. All five load-bearing endpoints are
@@ -66,6 +78,13 @@ face-attr 10 + cloth-v3 2 + earring 1) — independently confirmed by the credit
 delta in `npm run bench`. Analysis is the cost center, so each bridesmaid is measured
 **once per run** and every re-score after that is free (ranking all 24 colorways is pure
 local math, zero API cost).
+
+<img width="880" alt="The Measure step: the Fitzpatrick range strip and six per-bridesmaid cards resolving in with measured hex chips and I–VI badges" src="docs/media/measure.gif" />
+
+<sub>**Three Skin AI endpoints landing per person.** Real values off the wire, not a
+palette we chose: every hex came back from `skin-tone-analysis`, every roman numeral from
+`fitzpatrick-scale-analyzer`. Where a reading is missing the card says so — see the
+per-value detail in [`09-measured-hexes.png`](docs/screenshots/09-measured-hexes.png).</sub>
 
 ## 🎨 The scoring engine (published, not a black box)
 
@@ -100,6 +119,15 @@ check. We report who it actually turned out to be on each run rather than assumi
 math (sRGB → CIELAB D65, ITA°, hue angle, ΔE2000) is fixed physics; the three weights and
 transfer-function constants are disclosed, calibratable parameters. Full derivation:
 `lib/colorway/engine.ts`.
+
+<img width="880" alt="Twenty-four colours, one objective: the maximin/mean objective card, the scoring formula panel, and the 24-colorway ranked row" src="docs/media/score.gif" />
+
+<sub>**Twenty-four colours, one objective.** Same party, same measurements — flipping the
+objective **changes the winner**, live. The formula is printed on screen rather than
+hidden. Study either side at leisure:
+[maximin → Marigold](docs/screenshots/04-score-maximin.png) ·
+[best-on-average → Rust](docs/screenshots/05-score-objective-flipped.png) ·
+[all 24 ranked](docs/screenshots/06-ranked-24.png).</sub>
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -162,6 +190,13 @@ rendering, with a deterministic engine in between that turns measurements into a
 Each bridesmaid is measured **once per run**; every re-score after that is pure local
 maths, so ranking all 24 colorways again costs zero API units. Only a re-render calls out.
 
+<img width="880" alt="The verdict lineup populates, then the page turns into Seven try-ons in Wine and the cloth-v3 cascade fills in" src="docs/media/render.gif" />
+
+<sub>**The engine handing off to the renderer.** The verdict lands, then `cloth-v3` fills
+in the cascade — the measured skin values *drive* this render, they aren't shown beside
+it. Person 5 is not missing: the API rejected her frame with `error_pose` and her card
+says exactly that instead of quietly dropping her.</sub>
+
 | Layer | Technology |
 |---|---|
 | **Frontend** | Next.js 15 (App Router), React 19, Tailwind CSS |
@@ -188,7 +223,13 @@ tests and coverage run with no key and no network.
 | Live endpoints proven | **5 / 5 green** | `npm run spike` |
 | End-to-end latency | **33.4s** for one subject; per-stage medians in [DEMO.md](DEMO.md) | `npm run bench --yes` |
 | HTTP requests | **47** for one subject (5 uploads · 5 PUTs · 5 creates · 26 polls · 4 credit · 2 downloads) | `npm run bench --yes` |
-| True p50 / p95 | *not measured* — needs ~20 runs (≈860 units, more than the grant) | stated, not guessed |
+| `cloth-v3` p50 / p95 | **11 071 ms / 13 126 ms** over **n = 20** (min 10 706 · max 14 720 · 20/20 succeeded) | `npm run bench:cloth -- --yes` |
+| True p50 / p95, *full pipeline* | *not measured* — needs ~20 full runs (≈860 units, more than the grant ever held) | stated, not guessed |
+
+![The benchmark report rendered from a real run: request counts, per-stage latency and the ΔE distribution](docs/screenshots/12-benchmark.png)
+
+<sub>Rendered from the run recorded verbatim in [DEMO.md](DEMO.md) — reproduce it with
+`npm run bench`, which defaults to a dry run and spends nothing.</sub>
 
 ## 🏆 Sponsor Track
 
@@ -324,7 +365,34 @@ onedress/
 ## 📽️ Demo
 
 **Live:** [onedress.edycu.dev](https://onedress.edycu.dev) — landing · [`/party`](https://onedress.edycu.dev/party) the app · [`/pitch`](https://onedress.edycu.dev/pitch) the deck
-**Video:** posted at submission
+**Video:** [youtu.be/8iKm7LpjUEA](https://youtu.be/8iKm7LpjUEA) — 2:41, captioned
+
+<img width="880" alt="The cloth-v3 cascade: seven real people appearing one by one, each wearing the same rendered colourway with its delta-E badge" src="docs/media/loop.gif" />
+
+<sub>**Seven try-ons in Wine.** Seven real people, one winning colourway, every frame
+returned by `cloth-v3` — each with its own ΔE badge against the reference swatch. Group
+floor 56.9, party mean 72.9. Still:
+[`08-measured-lineup.png`](docs/screenshots/08-measured-lineup.png).</sub>
+
+<img width="880" alt="The Marigold verdict card fades up and the six-up lineup populates, settling on the group floor and party mean dials" src="docs/media/verdict.gif" />
+
+<sub>**The payoff.** Marigold on all six, nobody below **57.8**. The promise is the
+party's **worst** score, not its average — which is the entire difference between this and
+picking a colour by eye. Still:
+[`03-verdict-lineup.png`](docs/screenshots/03-verdict-lineup.png).</sub>
+
+### All screenshots
+
+Every frame in [`docs/screenshots/`](docs/screenshots) is the shipped UI captured in a real
+browser at `https://onedress.edycu.dev` — none are mockups. Rebuild them with
+`node ../assets/capture-gallery.cjs`.
+
+| | | |
+|---|---|---|
+| [`01` counterfactual](docs/screenshots/01-counterfactual.png) | [`02` Fitzpatrick board](docs/screenshots/02-fitzpatrick-board.png) | [`03` verdict lineup](docs/screenshots/03-verdict-lineup.png) |
+| [`04` maximin score](docs/screenshots/04-score-maximin.png) | [`05` objective flipped](docs/screenshots/05-score-objective-flipped.png) | [`06` all 24 ranked](docs/screenshots/06-ranked-24.png) |
+| [`07` render cascade](docs/screenshots/07-render-cascade.png) | [`08` measured lineup](docs/screenshots/08-measured-lineup.png) | [`09` measured hexes](docs/screenshots/09-measured-hexes.png) |
+| [`10` objectives agree](docs/screenshots/10-objectives-agree.png) | [`11` input contract](docs/screenshots/11-input-contract.png) | [`12` benchmark](docs/screenshots/12-benchmark.png) |
 
 Deployment is automated — see [`docs/deploy.md`](docs/deploy.md).
 
@@ -336,9 +404,10 @@ Pre-submission (deadline 2026-08-17).
 - [x] Live 5-endpoint proof (`npm run spike`) — all green, cost measured
 - [x] CIELAB pipeline + published maximin scoring engine, 77 unit tests at 100% coverage
 - [x] Full harness: 6-stage CI, CodeQL, Dependabot, Playwright, Lighthouse
-- [ ] 7-step interactive UI (Create · Measure · Score · Compare · Render · Finish · Verdict)
-- [ ] Cached zero-unit demo party — the live URL's default, no key required
+- [x] 7-step interactive UI (Create · Measure · Score · Compare · Render · Finish · Verdict) — live at [`/party`](https://onedress.edycu.dev/party), asserted by `e2e/app.spec.ts`
+- [x] Cached zero-unit demo party — the live URL's default, no key required (`e2e/demo-mode.spec.ts`)
 - [x] `npm run bench` — call counts, per-stage latency and ΔE distribution, published in DEMO.md
+- [ ] Blind preference study at n ≥ 20 — protocol pre-registered, raters not yet collected
 - [ ] Post-hackathon: real garment catalogue integration, shareable party links
 
 ## 📄 License

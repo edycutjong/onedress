@@ -1,4 +1,4 @@
-# Asset licences — `public/refs/` and `public/party/`
+# Asset licences — `public/refs/`, `public/party/`, `docs/screenshots/` and `docs/media/`
 
 Every image committed to this repository must be licensed for **redistribution**, not
 merely for use inside the app, because this repository is public. This file is the
@@ -7,6 +7,27 @@ as `ref_file_id` (see `lib/pipeline/asset-refs.ts`), and for the 12 party photog
 in `public/party/` that back the measured demo party (`lib/demo/measured-party.ts`).
 
 **Rule:** a file with no row in this table must not be committed.
+
+## Screenshots and screen recordings
+
+Two sets, both **derivative works of the assets already listed below**: each is a browser
+capture of the shipped UI at `https://onedress.edycu.dev`, so the only third-party imagery
+inside them is the `public/party/` photographs and the `public/refs/colorways/` garment
+shots, plus `cloth-v3` renders derived from both.
+
+| Set | Where | Note |
+|---|---|---|
+| 12 stills | `docs/screenshots/` — committed | 1400 px, the repo stays self-contained for stills |
+| 7 animated GIFs | `docs/media/` — committed | 880 px / 12 fps (reel 640 px / 9 fps); referenced relatively so the README renders anywhere, including offline and outside GitHub |
+
+No separate licence is required and none is claimed: every source row below permits
+redistribution and modification, which is exactly what a screenshot of a render is. The
+`cloth-v3` outputs are generated from those licensed inputs through the Perfect Corp
+YouCam API under the hackathon grant.
+
+**Consequence of the rule above:** a screenshot may only be committed if every photograph
+visible in it has a row in the tables below. If a future capture includes a person who is
+not listed, it does not get committed.
 
 Sources used: **Pexels only.** No Adobe Stock, Getty, Shutterstock, or any source whose
 licence bars redistributing the asset as a standalone file.
