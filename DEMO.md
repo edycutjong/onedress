@@ -75,12 +75,62 @@ refused rather than half-paid-for.
 | File upload (p50 of 5) | 1 008 ms |
 | Render fidelity ΔE00, 9 patches | **min 5.48 · median 7.76 · max 11.22** |
 
-**Caveats, stated up front.** N = 1, so there is no p95 here — with one sample the "p95" is
-the maximum, and the harness prints it with a `*` and the raw sample list rather than dressing
-it up. Latency is wall-clock from an Apple M1 Max on a residential connection, and *includes*
-this client's own ≤5 QPS rate limiter and 1 500 ms poll interval — it is not YouCam server
-processing time. The poll counts are the useful part of the latency story: `cloth-v3` needed
-**8** polls to finish while `2d-vto/earring` needed 3, which is why the render stage dominates.
+**Caveats, stated up front.** N = 1, so there is no p95 *for the full pipeline* — with one
+sample the "p95" is the maximum, and the harness prints it with a `*` and the raw sample list
+rather than dressing it up. (The one stage cheap enough to sample properly now has a real
+distribution — see the next section.) Latency is wall-clock from an Apple M1 Max on a
+residential connection, and *includes* this client's own ≤5 QPS rate limiter and 1 500 ms poll
+interval — it is not YouCam server processing time. The poll counts are the useful part of the
+latency story: `cloth-v3` needed **8** polls to finish while `2d-vto/earring` needed 3, which
+is why the render stage dominates.
+
+### Live run — `cloth-v3` latency, N = 20, 2026-08-11
+
+A full pipeline sample at N = 20 would cost ≈860 units, more than the grant ever held. But
+the stage that *dominates* the wall clock bills only **2 units per call**, so 20 renders cost
+**40 units** — 7.6% of the grant for a real, non-degenerate p95 on the slowest endpoint.
+
+**Cost of this run: 40 units** (balance 525 → 485), matching the a-priori estimate exactly.
+**20 of 20 renders succeeded.**
+
+| Metric | Measured |
+|---|---|
+| n | **20** (`stats.MEANINGFUL_N` — the point where nearest-rank p95 stops being the max) |
+| min | 10 706 ms |
+| **p50** | **11 071 ms** |
+| **p95** | **13 126 ms** |
+| max | 14 720 ms |
+| mean | 11 564 ms |
+
+Raw samples, in call order (ms) — read them yourself:
+
+```
+10706, 11243, 13126, 11275, 11270, 11034, 11033, 11053, 11039, 11035,
+11255, 14720, 11300, 11064, 12942, 12762, 11048, 11239, 11057, 11071
+```
+
+Full result including the balance delta: [`docs/bench-cloth-latency.json`](docs/bench-cloth-latency.json).
+
+**What this measures, and what it does not.** Latency only. The same garment is rendered onto
+the same body 20 times, so ΔE would just re-measure one pairing 20 times — fidelity stays with
+the full bench above. Calls are strictly **sequential**; firing 20 concurrently would measure
+our own token-bucket limiter and the API's queue depth rather than the endpoint, and that
+"p95" would be an artefact of the harness.
+
+**One honest note.** The N = 1 full run above recorded `cloth-v3` at 12 953 ms. At N = 20 the
+median is **11 071 ms** — so that single sample sat well above the middle of the distribution,
+between p50 and p95. That is exactly why one sample is not a benchmark, and it is why this
+section exists.
+
+```bash
+npm run bench:cloth                  # dry run, 0 units
+npm run bench:cloth -- --yes         # LIVE, 20 renders ≈ 40 units
+npm run bench:cloth -- --help        # every flag
+```
+
+`--body` defaults to a Phase-0 fixture, and that directory is gitignored (throwaway stock
+images that never enter history), so a fresh clone must supply its own head-to-toe standing
+shot via `--body`. The garment default (`public/refs/colorways/marigold.jpg`) **is** committed.
 
 #### Verbatim output
 

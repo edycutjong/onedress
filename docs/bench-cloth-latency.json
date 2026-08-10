@@ -1,0 +1,31 @@
+{
+  "measured": "live",
+  "n": 20,
+  "succeeded": 20,
+  "failed": [],
+  "latencyMs": {
+    "n": 20,
+    "min": 10706.431084,
+    "median": 11070.935999999987,
+    "p50": 11070.935999999987,
+    "p95": 13125.670166999997,
+    "max": 14719.702375000008,
+    "mean": 11563.590075149998,
+    "meaningful": true,
+    "samples": [
+      10706, 11243, 13126, 11275, 11270, 11034, 11033, 11053, 11039, 11035, 11255, 14720, 11300,
+      11064, 12942, 12762, 11048, 11239, 11057, 11071
+    ]
+  },
+  "units": {
+    "estimate": 40,
+    "spent": 40,
+    "balanceBefore": 525,
+    "balanceAfter": 485
+  },
+  "inputs": {
+    "body": "scripts/fixtures/body_c.jpg",
+    "garment": "public/refs/colorways/marigold.jpg"
+  },
+  "host": "darwin"
+}
