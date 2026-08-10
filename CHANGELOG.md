@@ -1,3 +1,14 @@
+## [1.4.0](https://github.com/edycutjong/onedress/compare/v1.3.1...v1.4.0) (2026-08-10)
+
+### Features
+
+* **bench:** measure cloth-v3 latency at n=20, the one stage worth sampling ([7f76787](https://github.com/edycutjong/onedress/commit/7f767876f4d44dd99bcc4258aa52be6ea28edd5c))
+
+### Documentation
+
+* **readme:** link the Devpost submission, not just the event ([5e0d49b](https://github.com/edycutjong/onedress/commit/5e0d49b66c42334e1e2df45e3026b533842a2025))
+* **readme:** show the product, and correct two claims that had gone stale ([c4868b5](https://github.com/edycutjong/onedress/commit/c4868b55356fe9835c5f1d85d787598869b92394))
+
 ## [1.3.1](https://github.com/edycutjong/onedress/compare/v1.3.0...v1.3.1) (2026-08-09)
 
 ### Bug Fixes
