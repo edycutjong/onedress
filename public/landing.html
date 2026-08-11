@@ -919,8 +919,8 @@ footer {
         <div class="stat-label">YouCam endpoints proven live, end-to-end</div>
       </div>
       <div class="stat rv rv-d1" role="listitem">
-        <div class="stat-figure num">ΔE ≈ 7.7</div>
-        <div class="stat-label">measured render fidelity (CIEDE2000)</div>
+        <div class="stat-figure num">ΔE00 7.8</div>
+        <div class="stat-label">median measured render fidelity, range 5.5–11.2 (CIEDE2000)</div>
       </div>
       <div class="stat rv rv-d2" role="listitem">
         <div class="stat-figure num">43<span class="u">units</span></div>
@@ -1037,7 +1037,7 @@ footer {
         </div>
         <div class="chips">
           <span class="chip math">deterministic engine</span>
-          <span class="chip math">77 passing tests</span>
+          <span class="chip math">82 passing tests</span>
         </div>
       </article>
 
@@ -1045,7 +1045,7 @@ footer {
         <div class="step-no" aria-hidden="true">03</div>
         <div>
           <h3>Render it on every bridesmaid</h3>
-          <p>The winning colorway is rendered <strong>photorealistically on each bridesmaid's own full-length photo</strong> with AI Clothes Try-On — measured render fidelity <span class="mono">ΔE00 ≈ 7.7</span> against the intended swatch. Seeing all six in the same color is the proof no swatch kit can give.</p>
+          <p>The winning colorway is rendered <strong>photorealistically on each bridesmaid's own full-length photo</strong> with AI Clothes Try-On — measured render fidelity <span class="mono">ΔE00 median 7.8, range 5.5–11.2</span> against the intended swatch. Seeing all six in the same color is the proof no swatch kit can give.</p>
         </div>
         <div class="chips">
           <span class="chip live">cloth-v3</span>
@@ -1161,7 +1161,7 @@ by-eye  = argmax_c <span class="k">mean</span> flatter</pre>
           <span class="m"><b id="sum-min">—</b> worst bridesmaid</span>
           <span class="verdict-line" id="sum-verdict"></span>
         </div>
-        <p class="chart-note">Illustrative scores, shown to explain the mechanism. Run on synthetic Fitzpatrick I–VI profiles, the engine picks <em>marigold</em> with nobody below <strong>57.8</strong>, while the mean-maximizing pick (<em>rust</em>) drops the deepest-skin member to <strong>38.8</strong>. Real measured profiles land with the demo party.</p>
+        <p class="chart-note">Real engine output, not a mock-up: the per-person scores for the six synthetic Fitzpatrick I–VI profiles in <span class="mono">lib/demo/demo-party.ts</span>. The engine picks <em>marigold</em> with nobody below <strong>57.8</strong>; the mean-maximizing pick (<em>rust</em>) drops the deepest-skin member to <strong>38.8</strong>. Treat the <em>size</em> of that gap as illustrative — a units bug in our own undertone term inflates it, and we published the defect rather than patching it (<a href="https://github.com/edycutjong/onedress/blob/main/docs/scoring-defect.md">docs/scoring-defect.md</a>). What survives every correction is the shape: the objective you choose changes who pays.</p>
         <noscript><p class="chart-note">Enable JavaScript to toggle the two objectives — the by-eye (max-average) pick scores the deepest-skin bridesmaid far below everyone else; the maximin pick lifts her at the cost of two average points.</p></noscript>
       </div>
     </div>
@@ -1192,7 +1192,7 @@ by-eye  = argmax_c <span class="k">mean</span> flatter</pre>
             </tr>
             <tr>
               <td class="ep"><span class="ok" aria-hidden="true"></span>fitzpatrick-scale-analyzer</td>
-              <td>Type I–VI depth cross-check</td>
+              <td>Type I–VI depth badge — displayed, never scored</td>
               <td class="res">Type II returned on the test face</td>
             </tr>
             <tr>
@@ -1203,7 +1203,7 @@ by-eye  = argmax_c <span class="k">mean</span> flatter</pre>
             <tr>
               <td class="ep"><span class="ok" aria-hidden="true"></span>cloth-v3</td>
               <td>renders the winning color on each bridesmaid</td>
-              <td class="res">photoreal render · fidelity <span class="mono">ΔE00 ≈ 7.7</span></td>
+              <td class="res">photoreal render · fidelity <span class="mono">ΔE00 median 7.8 (5.5–11.2)</span></td>
             </tr>
             <tr>
               <td class="ep"><span class="ok" aria-hidden="true"></span>2d-vto/earring</td>
@@ -1217,11 +1217,11 @@ by-eye  = argmax_c <span class="k">mean</span> flatter</pre>
       <div class="proof-stats">
         <div class="proof-stat"><div class="fig num">5<span class="u">/5</span></div><div class="lbl">endpoints proven end-to-end by a live spike</div></div>
         <div class="proof-stat"><div class="fig num">43<span class="u">units</span></div><div class="lbl">measured cost of a full single-person run</div></div>
-        <div class="proof-stat"><div class="fig num">ΔE ≈ 7.7</div><div class="lbl">measured render fidelity vs the intended swatch</div></div>
+        <div class="proof-stat"><div class="fig num">ΔE00 7.8</div><div class="lbl">median measured render fidelity vs the intended swatch (range 5.5–11.2)</div></div>
         <div class="proof-stat"><div class="fig num">0<span class="u">units</span></div><div class="lbl">to re-score all 24 colorways — measure once, math forever</div></div>
       </div>
 
-      <p class="honesty"><strong>Status, honestly:</strong> the typed API client, the live five-endpoint integration, and the published scoring engine (77 passing tests) are done and reproducible — run <span class="mono">npm&nbsp;run&nbsp;spike</span>. The interactive product UI ships in <strong>this same deploy</strong> — <a href="/party">open it at /party</a>, where it runs on a cached demo party with zero API units spent. Nothing on this page is a screenshot of an app that doesn't exist.</p>
+      <p class="honesty"><strong>Status, honestly:</strong> the typed API client, the live five-endpoint integration, and the published scoring engine (82 passing tests) are done and reproducible — run <span class="mono">npm&nbsp;run&nbsp;spike</span>. The interactive product UI ships in <strong>this same deploy</strong> — <a href="/party">open it at /party</a>, where it runs on a cached demo party with zero API units spent. Nothing on this page is a screenshot of an app that doesn't exist.</p>
     </div>
   </div>
 </section>
@@ -1270,7 +1270,7 @@ by-eye  = argmax_c <span class="k">mean</span> flatter</pre>
         <ul>
           <li><b>Live 5-endpoint integration</b> — reproducible via <code class="mono" style="font-size:0.85em">npm run spike</code></li>
           <li><b>Typed, Zod-validated API client</b> — rate-limited, retrying, server-side key</li>
-          <li><b>Published scoring engine</b> — CIELAB physics + maximin objective, 77 passing tests</li>
+          <li><b>Published scoring engine</b> — CIELAB physics + maximin objective, 82 passing tests</li>
           <li><b>Full CI harness</b> — lint, typecheck, unit + E2E, CodeQL, secret scanning</li>
           <li><b>The 7-step product UI</b> — Create · Measure · Score · Compare · Render · Finish · Verdict, live at <a href="/party">/party</a></li>
           <li><b>Cached zero-unit demo party</b> — instant judge-facing demo, no key required</li>
@@ -1359,17 +1359,19 @@ by-eye  = argmax_c <span class="k">mean</span> flatter</pre>
     revealed.forEach(function (el) { io.observe(el); });
   }
 
-  /* ---------- Maximin vs mean chart (illustrative values) ---------- */
+  /* ---------- Maximin vs mean chart — REAL engine output, not illustrative.
+     Per-person flatter scores for the six synthetic Fitzpatrick I–VI profiles in
+     lib/demo/demo-party.ts. Reproduce: npx tsx scripts/scoring-variants.ts ---------- */
   var TONES = ["#F9EADD", "#F3DCC9", "#E9BE9B", "#CE9268", "#9A6844", "#5F3B27"];
   var FITZ  = ["I", "II", "III", "IV", "V", "VI"];
   var DATA = {
     mean: {
-      scores: [90, 85, 78, 66, 52, 39],
+      scores: [90, 93, 76, 47, 39, 52],
       verdict: "The average looks fine — because the deepest-skin bridesmaid quietly pays for it."
     },
     maximin: {
-      scores: [63, 70, 74, 68, 64, 58],
-      verdict: "Two average points traded for +19 exactly where it hurt most. That trade is the product."
+      scores: [70, 64, 64, 58, 65, 70],
+      verdict: "One average point traded to lift the party's floor from 38.8 to 57.8. That trade is the product."
     }
   };
 

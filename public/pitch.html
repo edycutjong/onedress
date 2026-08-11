@@ -674,12 +674,12 @@ body.debug-contrast .slide * { outline: 1px dashed rgba(217,185,140,0.35); }
           <span class="no">02</span>
           <h3>Score</h3>
           <p><strong>24 colorways × N profiles</strong>, scored by a published formula. Pure math on cached measurements — <strong>zero API units</strong> to re-score.</p>
-          <div class="chips"><span class="chip math">deterministic engine</span><span class="chip math">31 tests</span></div>
+          <div class="chips"><span class="chip math">deterministic engine</span><span class="chip math">82 tests</span></div>
         </div>
         <div class="flow-step fx d3">
           <span class="no">03</span>
           <h3>Render</h3>
-          <p>The maximin winner rendered <strong>photorealistically on every bridesmaid's own photo</strong> — fidelity ΔE00 ≈ 7.7.</p>
+          <p>The maximin winner rendered <strong>photorealistically on every bridesmaid's own photo</strong> — fidelity ΔE00 median 7.8, range 5.5–11.2.</p>
           <div class="chips"><span class="chip live">cloth-v3</span></div>
         </div>
         <div class="flow-step fx d4">
@@ -711,16 +711,16 @@ winner  = <span class="g">argmax</span>_c groupScore(c)
           <div class="duel-panel byeye">
             <div class="dp-head"><h3>The by-eye pick</h3><span class="obj">maximize the average</span></div>
             <div class="duel-bars" data-scores="90,85,78,66,52,39"></div>
-            <p class="dp-sum">average <b>68</b> · worst bridesmaid <b>39</b> — Type VI pays for the pretty average</p>
+            <p class="dp-sum">average <b>66</b> · worst bridesmaid <b>39</b> — Type VI pays for the pretty average</p>
           </div>
           <div class="duel-panel ours">
             <div class="dp-head"><h3>The OneDress pick</h3><span class="obj">maximize the minimum</span></div>
             <div class="duel-bars" data-scores="63,70,74,68,64,58"></div>
-            <p class="dp-sum">average <b>66</b> · worst bridesmaid <b>58</b> — two average points traded for <b>+19</b> where it hurt most</p>
+            <p class="dp-sum">average <b>65</b> · worst bridesmaid <b>58</b> — one average point traded to lift the party floor by <b>+19</b></p>
           </div>
         </div>
       </div>
-      <p class="math-note fx d4">Illustrative scores, to show the mechanism. Run on synthetic Fitzpatrick I–VI profiles the engine picks marigold with nobody below 57.8, while the mean-maximizing pick (rust) drops the deepest-skin member to 38.8 — a 26.5-point swing on one person. Real measured profiles land with the demo party. Full derivation: lib/colorway/engine.ts.</p>
+      <p class="math-note fx d4">Real engine output for the six synthetic Fitzpatrick I–VI profiles in lib/demo/demo-party.ts. The engine picks marigold with nobody below 57.8; the mean-maximizing pick (rust) drops the deepest-skin member to 38.8. Two ways to read the gain, both real: the party <em>floor</em> rises +19.1 (38.8 → 57.8), and the worst-off person under rust rises +26.5 (38.8 → 65.3) — different metrics, not the same number. Treat the size of both as illustrative: a units bug in our own undertone term inflates them, published in full at docs/scoring-defect.md rather than patched. Derivation: lib/colorway/engine.ts.</p>
       <aside class="speaker-notes">The one chart that matters: same six women, two objectives, different winners. The mean pick sacrifices Type VI; maximin lifts her for two average points. That trade IS the product — and it's why inclusivity here is math, not marketing.</aside>
     </section>
 
@@ -732,9 +732,9 @@ winner  = <span class="g">argmax</span>_c groupScore(c)
         <thead><tr><th scope="col">Endpoint</th><th scope="col">Role</th><th scope="col">Verified live result</th></tr></thead>
         <tbody>
           <tr><td class="ep"><span class="ok"></span>skin-tone-analysis</td><td>measured skin hex — the scoring input</td><td class="res mono">#bb9982 → ITA° 43 · hue° 61</td></tr>
-          <tr><td class="ep"><span class="ok"></span>fitzpatrick-scale-analyzer</td><td>depth I–VI cross-check</td><td class="res">Type II returned</td></tr>
+          <tr><td class="ep"><span class="ok"></span>fitzpatrick-scale-analyzer</td><td>depth I–VI badge — displayed, never scored</td><td class="res">Type II returned</td></tr>
           <tr><td class="ep"><span class="ok"></span>face-attr-analysis</td><td>face shape → earring silhouette</td><td class="res">"Heart" returned</td></tr>
-          <tr><td class="ep"><span class="ok"></span>cloth-v3</td><td>winner rendered on each bridesmaid</td><td class="res">photoreal · <span class="mono">ΔE00 ≈ 7.7</span></td></tr>
+          <tr><td class="ep"><span class="ok"></span>cloth-v3</td><td>winner rendered on each bridesmaid</td><td class="res">photoreal · <span class="mono">ΔE00 median 7.8 (5.5–11.2)</span></td></tr>
           <tr><td class="ep"><span class="ok"></span>2d-vto/earring</td><td>chained finishing touch</td><td class="res">gold hoop landed on the render</td></tr>
         </tbody>
       </table>
@@ -796,7 +796,7 @@ winner  = <span class="g">argmax</span>_c groupScore(c)
           <ul>
             <li><b>Live 5-endpoint integration</b> — npm run spike</li>
             <li><b>Typed, Zod-validated client</b> — rate-limited, retrying</li>
-            <li><b>Published scoring engine</b> — 77 passing tests</li>
+            <li><b>Published scoring engine</b> — 82 passing tests</li>
             <li><b>Full CI harness</b> — lint, tests, CodeQL, secret scan</li>
             <li><b>7-step product UI</b> — Create → Verdict, live at /party</li>
             <li><b>Cached zero-unit demo party</b> — instant for judges</li>
