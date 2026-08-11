@@ -3,8 +3,16 @@
    ============================================================
    Six bridesmaids, six skin tones, one dress color, zero arguments.
    Palette: "bridal atelier after dark" — deep plum-charcoal base,
-   dusty-rose primary, dusty-sage accent (the winning colorway),
-   champagne tertiary, and a five-step Fitzpatrick skin-tone ramp.
+   dusty-rose primary, dusty-sage secondary, champagne tertiary, and a
+   five-step Fitzpatrick skin-tone ramp.
+
+   BRAND vs DATA. --primary paints every piece of chrome (spine, buttons,
+   focus, eyebrows) and never changes, so the app reads as the same product
+   as the landing page it ships beside. --winner (see globals.css) carries
+   the ACTUAL winning colorway and paints only things that genuinely are
+   that colour: the verdict swatch, garment fills, the colorway chip, the
+   score dials. Chrome must not follow data, or the brand disappears the
+   moment a party picks an amber.
 
    This file contains ONLY CSS custom properties inside :root
    (plus a commented light-mode stub). No element selectors, no
@@ -17,8 +25,8 @@
 
 :root {
   /* === Brand Colors === */
-  --primary: #d98ba3; /* dusty rose — the bridal brand hue */
-  --accent: #9caf88; /* dusty sage — the winning colorway */
+  --primary: #d98ba3; /* dusty rose — the bridal brand hue, and ALL app chrome */
+  --accent: #9caf88; /* dusty sage — brand secondary */
   --tertiary: #d9b98c; /* champagne — jewelry / seam highlights */
   --primary-glow: color-mix(in srgb, var(--primary) 35%, transparent);
   --accent-glow: color-mix(in srgb, var(--accent) 35%, transparent);

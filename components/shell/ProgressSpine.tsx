@@ -13,7 +13,7 @@ import { STEPS } from '@/lib/demo/steps';
 export type StepStatus = 'done' | 'skipped' | 'todo';
 
 const DOT: Record<StepStatus, string> = {
-  done: 'bg-[var(--winner)] border-[var(--winner)]',
+  done: 'bg-[var(--primary)] border-[var(--primary)]',
   skipped: 'bg-transparent border-[var(--border-default)] border-dashed',
   todo: 'bg-transparent border-[var(--border-default)]',
 };

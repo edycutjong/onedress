@@ -17,15 +17,17 @@ export function ScreenHeading({
   trailing?: ReactNode;
 }) {
   return (
-    <header className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+    <header className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
       <div className="max-w-2xl">
-        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-[var(--winner)]">
+        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-[var(--primary)]">
           {eyebrow}
         </p>
-        <h1 className="mt-2 font-display text-3xl font-semibold leading-[1.1] tracking-tight text-text-hi sm:text-4xl">
+        <h1 className="mt-2 font-display text-[2.125rem] font-semibold leading-[1.08] tracking-[-0.02em] text-text-hi sm:text-[2.75rem]">
           {title}
         </h1>
-        {lead ? <p className="mt-3 text-base leading-relaxed text-text-mid">{lead}</p> : null}
+        {lead ? (
+          <p className="mt-3 max-w-prose text-[1.0625rem] leading-relaxed text-text-mid">{lead}</p>
+        ) : null}
       </div>
       {trailing ? <div className="shrink-0">{trailing}</div> : null}
     </header>
@@ -47,7 +49,7 @@ export function SectionHeading({
   return (
     <div className="mb-4 flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
       <div>
-        <h2 id={id} className="font-display text-xl text-text-hi">
+        <h2 id={id} className="font-display text-[1.375rem] tracking-[-0.01em] text-text-hi">
           {title}
         </h2>
         {note ? <p className="mt-1 max-w-2xl text-sm leading-snug text-text-mid">{note}</p> : null}

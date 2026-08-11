@@ -38,9 +38,11 @@
   .tabular {
     font-variant-numeric: tabular-nums;
   }
-  /* One visible focus treatment for every interactive element. */
+  /* One visible focus treatment for every interactive element.
+     Brand rose, NOT --winner: chrome identity must not shift when the data does,
+     or the app stops looking like the landing page it ships beside. */
   :focus-visible {
-    outline: 2px solid var(--winner);
+    outline: 2px solid var(--primary);
     outline-offset: 2px;
     border-radius: var(--radius-4);
   }
@@ -131,7 +133,7 @@
   }
   .btn:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.06);
-    border-color: var(--winner);
+    border-color: var(--primary);
   }
   .btn:active:not(:disabled) {
     transform: translateY(1px);
@@ -141,14 +143,14 @@
     cursor: not-allowed;
   }
   .btn--primary {
-    background: var(--winner);
-    border-color: var(--winner);
+    background: var(--primary);
+    border-color: var(--primary);
     color: #1b1016;
     font-weight: 600;
   }
   .btn--primary:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--winner) 85%, white);
-    border-color: color-mix(in srgb, var(--winner) 85%, white);
+    background: color-mix(in srgb, var(--primary) 85%, white);
+    border-color: color-mix(in srgb, var(--primary) 85%, white);
   }
   /* Chrome-sized action — the dataset switch lives in the sticky header, where a
      full-height button would push the spine off a 375px screen. */
