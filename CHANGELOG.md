@@ -1,3 +1,9 @@
+## [1.4.2](https://github.com/edycutjong/onedress/compare/v1.4.1...v1.4.2) (2026-08-11)
+
+### Bug Fixes
+
+* **ui:** give the app the landing page's wordmark, mark and all ([fc38815](https://github.com/edycutjong/onedress/commit/fc38815b9eaf3be2294222b8e99949f98cccbfec))
+
 ## [1.4.1](https://github.com/edycutjong/onedress/compare/v1.4.0...v1.4.1) (2026-08-11)
 
 ### Bug Fixes
