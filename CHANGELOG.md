@@ -1,3 +1,17 @@
+## [1.4.1](https://github.com/edycutjong/onedress/compare/v1.4.0...v1.4.1) (2026-08-11)
+
+### Bug Fixes
+
+* **ui:** stop the app chrome following the data, so /party matches the landing ([19a1fd6](https://github.com/edycutjong/onedress/commit/19a1fd694f950e04296517c96fdffb095749b45f))
+
+### Documentation
+
+* **engine:** publish a units bug in our own undertone term ([7785c99](https://github.com/edycutjong/onedress/commit/7785c9977db6b13298beafc0980547f12ee54630))
+
+### Tests
+
+* **evidence:** commit the spike dumps and a Lighthouse report for /party ([fa15155](https://github.com/edycutjong/onedress/commit/fa15155729e118b16201e87353d005369e86c836))
+
 ## [1.4.0](https://github.com/edycutjong/onedress/compare/v1.3.1...v1.4.0) (2026-08-10)
 
 ### Features
