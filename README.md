@@ -10,8 +10,9 @@
   [![Demo Video](https://img.shields.io/badge/🎬_Demo-Video-ef4444?style=for-the-badge)](https://youtu.be/8iKm7LpjUEA)
   [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://onedress.edycu.dev/pitch)
   [![Devpost](https://img.shields.io/badge/Devpost-Submission-8b5cf6?style=for-the-badge)](https://devpost.com/software/onedress)
+  [![Hackathon](https://img.shields.io/badge/🏆_YouCam_API-Hackathon-a85f7a?style=for-the-badge)](https://youcam-api.devpost.com/)
 
-  <sub>Submitted to the <a href="https://youcam-api.devpost.com/">YouCam API Hackathon</a> — Topic C, Skin AI + Apparel VTO.</sub>
+  <sub>Topic C — Skin AI + Apparel VTO, combined.</sub>
 
   <br/>
 
@@ -24,7 +25,7 @@
   ![YouCam API](https://img.shields.io/badge/YouCam_API-Perfect_Corp-8b5cf6?style=flat)
   [![CI](https://github.com/edycutjong/onedress/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/onedress/actions/workflows/ci.yml)
   [![Release](https://img.shields.io/github/v/release/edycutjong/onedress?style=flat&color=8b5cf6&label=release)](https://github.com/edycutjong/onedress/releases)
-  ![Tests](https://img.shields.io/badge/tests-77_passing-22C55E?style=flat)
+  ![Tests](https://img.shields.io/badge/tests-82_passing-22C55E?style=flat)
   ![Coverage](https://img.shields.io/badge/coverage-100%25-22C55E?style=flat)
   ![License](https://img.shields.io/badge/license-MIT-blue?style=flat)
 
@@ -56,9 +57,12 @@ top pick.
 
 <img width="880" alt="The counterfactual: the by-eye pick scores 38.8 on the deepest-skin bridesmaid; the maximin pick scores 65.3 — same woman, same measurement" src="docs/media/counterfactual.gif" />
 
-<sub>**One of them pays for the average.** The by-eye pick scores **38.8** on Esi. Ours
-scores **65.3** — same woman, same measurement, a **26.5-point swing** on the party's
-worst-off. This one screen is the product.</sub>
+<sub>**One of them pays for the average.** The by-eye pick scores **38.8** on Esi, ours
+**65.3** — same woman, same measurement. Treat that 26.5-point gap as **illustrative, not
+load-bearing**: ~25 of those points come from a units bug in our own undertone term, written
+up in [Limitation 4](#-sponsor-track) and [`docs/scoring-defect.md`](docs/scoring-defect.md).
+The claim that survives every correction is the one this screen is really about — **which
+objective you choose changes who pays.**</sub>
 
 ## 🔬 Verified live against the YouCam API (Perfect Corp)
 
@@ -68,7 +72,7 @@ proven end-to-end by a live spike (`scripts/spike.ts`, `npm run spike`):
 | # | Endpoint | Role | Verified result |
 |---|---|---|---|
 | 1 | `skin-tone-analysis` | measured skin hex — the scoring input | e.g. `#bb9982` → ITA° 43, hue° 61 |
-| 2 | `fitzpatrick-scale-analyzer` | Type I–VI depth cross-check | e.g. `Type II` |
+| 2 | `fitzpatrick-scale-analyzer` | Type I–VI depth badge — **displayed, never scored** (`lib/demo/measured-party.ts:73`) | e.g. `Type II` |
 | 3 | `face-attr-analysis` | `faceShape` → earring silhouette | e.g. `Heart` |
 | 4 | `cloth-v3` | render the winning color on each bridesmaid | render-fidelity **ΔE00 median 7.8** (5.5–11.2) |
 | 5 | `2d-vto/earring` | chained onto the render (undertone → metal) | gold hoop landed on the render |
@@ -110,8 +114,15 @@ The **by-eye** (mean-maximizing) pick is the counterfactual, and the gap between
 objectives is the whole product. Run on synthetic Fitzpatrick I–VI profiles, they choose
 **different colorways**: maximizing the average picks `rust`, which is excellent for four
 of six and drops the deepest-skin bridesmaid to **38.8/100**. The maximin winner,
-`marigold`, lifts her to **65.3** — a **26.5-point swing on one person** — with nobody in
-the party below **57.8**.
+`marigold`, lifts her to **65.3**, with nobody in the party below **57.8**.
+
+> **Read the 26.5-point gap as illustrative.** A units bug in the undertone term accounts
+> for ~25 of those points — see [Limitation 4](#-sponsor-track) and
+> [`docs/scoring-defect.md`](docs/scoring-defect.md). **The claim that survives every
+> candidate correction is structural, not numeric:** the objective you choose changes the
+> winner, and the maximin winner's floor is never below the mean-maximiser's floor. That is
+> a theorem (`__tests__/engine.test.ts:69-72`), true under the shipped engine and all three
+> corrections alike. It was always the real thesis.
 
 Who the objective protects is **party-dependent, not structural**: it defends whoever the
 available palette serves worst, which on some parties is a mid-tone member nobody thinks to
@@ -214,9 +225,10 @@ tests and coverage run with no key and no network.
 
 | Metric | Value | Where it comes from |
 |---|---|---|
-| Unit tests | **77 passing** | `npm run test` |
-| Coverage | **100%** — statements, branches, functions, lines | `npm run test:coverage` |
-| E2E tests | **16 passing** (desktop + mobile) | `npm run e2e` |
+| Unit tests | **82 passing** | `npm run test` |
+| Coverage | **100%** across the 7 pure-logic modules in scope — see the `include` list in `vitest.config.ts`. The HTTP client is proven by the live spike, not unit-covered, and the config says so. | `npm run test:coverage` |
+| E2E tests | **72 passing** — 36 specs × desktop + mobile | `npx playwright test --list` |
+| Lighthouse (median of 3) | **/party 100 · 100 · 100 · 100** — perf, a11y, best-practices, SEO. Landing `/` 96 · 99 · 100 · 100 | `npm run lighthouse` → [`docs/lighthouse.json`](docs/lighthouse.json) |
 | CI pipeline | **6 stages**, parallel, concurrency-guarded | `.github/workflows/ci.yml` |
 | Render fidelity | **ΔE00 median 7.8**, range **5.5–11.2** (n=1 subject, 9 patches) | `npm run bench --yes` |
 | API cost | **43 units** per bridesmaid, measured | `npm run spike` |
@@ -247,7 +259,7 @@ is defensible. Then the same vendor renders the result on the real person — so
 solved for and the color you see on her are the same pipeline, and we can measure the drift
 (ΔE) between them.
 
-**Honest limitations.** Three, stated here rather than left to be discovered:
+**Honest limitations.** Four, stated here rather than left to be discovered:
 
 **1. The render drifts from the intended hex.** `cloth-v3` is a generative try-on, so the
 rendered fabric does not land exactly on the target. Measured across 9 patches of one
@@ -271,6 +283,28 @@ Fitzpatrick VI, maximin and mean choose different colorways and the gap is 26.5 
 narrower real party we measured (ITA 46.6 → −13.3), **both objectives chose the same colour**
 and the counterfactual lift was zero. That is the honest behaviour: when no colorway
 disadvantages anyone, OneDress says so instead of manufacturing a difference.
+
+**4. There is a units bug in our own undertone term, and it inflates the 26.5.**
+`lib/colorway/engine.ts:79-82` compares a *linear ramp in hue* (skin) against a *cosine of
+hue* (dress) as though they were the same quantity. The consequence is that `U` peaks at
+dress hues of ~106.5° and ~353.5° rather than at the skin's own hue — so a magenta scores
+higher "undertone harmony" than the caramel nearest a subject's measured undertone.
+Decomposing the headline: Esi's skin hue is 51.20°, Rust's is 48.17° — **3.03° apart** — yet
+the shipped term scores that pairing 48.01 where the spec formula gives 98.32. **25.15 of
+the published 26.51-point swing is the defect's own magnitude.** What survives is real but
+small: her contrast term is genuinely 0.00, because a dark dress on dark skin falls below the
+contrast band. The direction of the claim holds; the magnitude does not.
+
+We are **not** fixing it before the deadline, and the reasoning is written out in full in
+[`docs/scoring-defect.md`](docs/scoring-defect.md) — with the algebra, the pathology that
+proves it is a bug rather than a modelling choice, and the complete recomputation of both
+parties under three candidate corrections
+(`npx tsx scripts/scoring-variants.ts` reproduces every row). Short version: `specs/scoring.md`
+already commits these constants to being fit against a blind preference study we have not yet
+run, no candidate correction preserves both published verdicts, and the corrected answer
+swings from "no divergence at all" to "+16.9" on a lobe choice the spec never pins down.
+Swapping a demonstrably-wrong guess for an undemonstrated one — at the cost of every proof
+artifact here — is worse than shipping the wrong one fully explained.
 
 ## 🛍️ Why a retailer wants this
 
@@ -329,7 +363,7 @@ npm run spike     # runs all 5 endpoints live and prints a green summary + unit 
 npm run ci            # format:check + lint + typecheck + tests w/ coverage
 npm run test          # Vitest unit tests
 npm run e2e           # Playwright (mobile + desktop, zero-config)
-npm run lighthouse    # Lighthouse CI (a11y is a hard gate)
+npm run lighthouse    # Lighthouse CI (advisory — `continue-on-error` in ci.yml, not a merge gate)
 make security-scan    # npm audit + license check
 ```
 
@@ -366,6 +400,11 @@ onedress/
 
 **Live:** [onedress.edycu.dev](https://onedress.edycu.dev) — landing · [`/party`](https://onedress.edycu.dev/party) the app · [`/pitch`](https://onedress.edycu.dev/pitch) the deck
 **Video:** [youtu.be/8iKm7LpjUEA](https://youtu.be/8iKm7LpjUEA) — 2:41, captioned
+
+<sub>Recorded against the build as it stands. The numbers it speaks aloud are the ones
+[Limitation 4](#-sponsor-track) and [`docs/scoring-defect.md`](docs/scoring-defect.md)
+explain — we left the video honest to the code rather than re-recording it over a defect we
+had chosen not to patch.</sub>
 
 <img width="880" alt="The cloth-v3 cascade: seven real people appearing one by one, each wearing the same rendered colourway with its delta-E badge" src="docs/media/loop.gif" />
 

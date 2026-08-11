@@ -5,6 +5,7 @@ import {
   scorePair,
   WEIGHTS,
   type SkinProfile,
+  undertoneSpecFaithful,
 } from '../lib/colorway/engine';
 import { COLORWAYS, type Colorway } from '../lib/colorway/data';
 import { hexToLab } from '../lib/color/lab';
@@ -136,5 +137,44 @@ describe('scoreParty — edge cases', () => {
   it('single-person party: winner == by-eye (min == mean)', () => {
     const solo = scoreParty([{ id: 's', skinHex: '#CE9268' }]);
     expect(solo.differsFromByEye).toBe(false);
+  });
+});
+
+/**
+ * The undertone term as specs/scoring.md specifies it. `scorePair` does NOT use this —
+ * it ships a known units bug (docs/scoring-defect.md). These tests pin the CORRECT
+ * semantics so the intended model is on the record and cannot silently rot, while the
+ * published verdicts stay stable through judging.
+ */
+describe('undertoneSpecFaithful (spec form, not wired into scorePair)', () => {
+  it('identical hue scores a perfect 100 — the property the shipped term violates', () => {
+    for (const h of [0, 48.17, 51.2, 63.04, 180, 359.9]) {
+      expect(undertoneSpecFaithful(h, h)).toBeCloseTo(100, 10);
+    }
+  });
+
+  it('opposite hue scores 0', () => {
+    expect(undertoneSpecFaithful(0, 180)).toBeCloseTo(0, 10);
+    expect(undertoneSpecFaithful(90, 270)).toBeCloseTo(0, 10);
+  });
+
+  it('falls monotonically as hue distance grows', () => {
+    const base = 60;
+    let prev = Infinity;
+    for (const d of [0, 15, 30, 60, 90, 120, 150, 180]) {
+      const u = undertoneSpecFaithful(base, base + d);
+      expect(u).toBeLessThanOrEqual(prev);
+      prev = u;
+    }
+  });
+
+  it('wraps across 0/360 rather than treating it as maximum distance', () => {
+    expect(undertoneSpecFaithful(10, 350)).toBeCloseTo(undertoneSpecFaithful(10, 30), 10);
+  });
+
+  it('documents the defect: the SHIPPED term scores a 3.03° pairing far below a 90° one', () => {
+    // Esi #7A4A33 (hue 51.20) vs Rust #B7410E (hue 48.17) — 3.03 apart.
+    // Spec form scores this 98.32; the shipped term scores it 48.01. See scoring-defect.md §2.
+    expect(undertoneSpecFaithful(51.2, 48.17)).toBeGreaterThan(98);
   });
 });

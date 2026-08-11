@@ -17,7 +17,7 @@
  * fit to the blind human-preference study (scoring.md §Validation). They are the only
  * tunable knobs — the color math (CIELAB, ITA°, hue angle) is fixed physics.
  */
-import { hexToLab, ita, hueAngle, chroma, type Lab } from '../color/lab';
+import { hexToLab, ita, hueAngle, hueDistance, chroma, type Lab } from '../color/lab';
 import { COLORWAYS, type Colorway } from './data';
 
 // ---- calibrated parameters (disclosed; to be fit to the preference study) ----
@@ -75,9 +75,38 @@ export interface TermBreakdown {
   flatter: number;
 }
 
+/**
+ * The undertone term as `specs/scoring.md` §Step 2 actually specifies it: circular hue
+ * distance, so `U(h, h) === 100` and U falls monotonically as hues diverge.
+ *
+ * Exported and unit-tested, but **not used by `scorePair`** — see the defect note there
+ * and `docs/scoring-defect.md` §5. It exists so the correct maths is on the record and
+ * verifiable while the published verdicts stay stable through judging.
+ */
+export function undertoneSpecFaithful(skinHue: number, dressHue: number): number {
+  return 100 * (1 - hueDistance(dressHue, skinHue) / 180);
+}
+
 /** Per-person flatter score for one colorway, with the three published terms. */
 export function scorePair(skin: DerivedSkin, dressLab: Lab): TermBreakdown {
-  // U — undertone harmony: reward matching warm/cool character (seasonal color).
+  // U — undertone harmony.
+  //
+  // ⚠ KNOWN DEFECT, DELIBERATELY UNPATCHED — see ../../docs/scoring-defect.md.
+  // `skin.warmth` is a LINEAR RAMP in hue (deriveSkin, above); `dressWarmth` is a
+  // COSINE of hue. Subtracting them treats two different transfer functions as one
+  // quantity — a units error. The consequence is that U peaks at dress hues of
+  // ~106.5° and ~353.5° instead of at the skin's own hue, so a magenta can outscore
+  // the caramel nearest a subject's measured undertone. It accounts for ~25 of the
+  // 26.5-point swing quoted in the README, which is why the README now calls that
+  // number illustrative.
+  //
+  // `specs/scoring.md` §Step 2 specifies the correct form and `hueDistance()` in
+  // lib/color/lab.ts already implements the primitive — see `undertoneSpecFaithful`
+  // below, which is exported and tested but NOT wired in. It is not wired in because
+  // scoring.md commits these constants to being fit against a blind preference study
+  // that has not run, and every candidate correction changes published verdicts and
+  // destroys the study's own stimuli. Reproduce the alternatives:
+  //   npx tsx scripts/scoring-variants.ts
   const dressWarmth = warmthFromHue(hueAngle(dressLab));
   const U = 100 * (1 - Math.abs(skin.warmth - dressWarmth) / 2);
 
