@@ -57,10 +57,16 @@ export function AppShell({
             <a
               href="/"
               aria-label="OneDress — back to the landing page"
-              className="flex items-baseline gap-2 no-underline"
+              className="flex items-center gap-3 no-underline"
             >
-              <span className="font-display text-lg font-semibold tracking-tight text-text-hi">
-                OneDress
+              {/* Wordmark is byte-for-byte the landing page's `.brand`: 32px mark,
+                  Fraunces 460 at 1.22rem, and "Dress" set as a rose italic. The app
+                  and the brochure are one deploy — the logo must not be two logos.
+                  Plain <img>: a 1KB static SVG needs no optimisation pipeline. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icon.svg" alt="" width={32} height={32} className="rounded-[9px]" />
+              <span className="font-display text-[1.22rem] font-[460] leading-none tracking-[0.01em] text-text-hi">
+                One<em className="font-[420] italic text-[var(--primary)]">Dress</em>
               </span>
               <span className="hidden font-mono text-[0.625rem] uppercase tracking-[0.16em] text-text-low sm:inline">
                 one color · every complexion
