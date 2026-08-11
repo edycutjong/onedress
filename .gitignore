@@ -22,8 +22,12 @@ next-env.d.ts
 # Vercel CLI link + pulled env
 .vercel/
 
-# Phase-0 spike scratch: throwaway stock test images + raw API dumps.
-# The shipped demo uses properly-consented models; these never enter history.
+# Phase-0 spike INPUT images: throwaway stock test photos. The shipped demo uses
+# properly-consented models; these never enter history.
 scripts/fixtures/
-scripts/raw-*.json
-scripts/spike-results.json
+
+# The spike's raw API RESPONSES are committed on purpose — they are the evidence
+# behind the README's "5/5 endpoints proven" claim, and a clone cannot rerun the
+# spike (it needs a key AND the gitignored fixtures above). They contain no
+# credentials; the only URLs are S3 presigned links that expired 2026-08-09
+# (X-Amz-Expires=7200).

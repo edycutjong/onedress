@@ -1,0 +1,22 @@
+{
+  "task_status": "success",
+  "error": null,
+  "results": {
+    "color": {
+      "eye_color": "#705d44",
+      "eye_color_name": "Amber",
+      "lip_color": "#d59687",
+      "eyebrow_color": "#a78b78",
+      "skin_color": "#bb9982",
+      "hair_color": "#FAF0BE",
+      "hair_color_name": "Blonde"
+    },
+    "face_quality": {
+      "has_face": true,
+      "area": "good",
+      "frontal": "good",
+      "lighting": "good",
+      "faceangle": "good"
+    }
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "at": "2026-08-09T02:54:00.659Z",
+  "gates": {
+    "skin-tone → hex": true,
+    "fitzpatrick → type": true,
+    "face-attr → faceShape": true,
+    "cloth-v3 → render": true,
+    "earring chained onto render (re-upload path)": true
+  },
+  "skinHex": "#bb9982",
+  "fitzType": "II",
+  "faceShape": "Heart",
+  "renderDeltaE": 7.7440415420246875,
+  "spent": 43,
+  "steps": [
+    {
+      "name": "credit:before",
+      "ok": true,
+      "ms": 832,
+      "detail": 941
+    },
+    {
+      "name": "upload:face",
+      "ok": true,
+      "ms": 1292,
+      "detail": "I5LyEHZ7zuCq/2PM+tbIOTwcwo/tn6DsH8xe+hL5nVALbKfeLEmuXUa9yH4wuc2K"
+    },
+    {
+      "name": "upload:body",
+      "ok": true,
+      "ms": 1051,
+      "detail": "4oe4Zyq4lBOGESiyDc9zf9CUua03M06sHaZRqBhGWKwLbKfeLEmuXUa9yH4wuc2K"
+    },
+    {
+      "name": "upload:dress",
+      "ok": true,
+      "ms": 1262,
+      "detail": "pBoCeawjwVhOoTZ10Nz1biBHnllpjYACk7NDYP2eWXsLbKfeLEmuXUa9yH4wuc2K"
+    },
+    {
+      "name": "upload:earring",
+      "ok": true,
+      "ms": 496,
+      "detail": "p8r15doY9vZW63/spgz0Av2WvQ2S0jxIgoUDeR1gpWsLbKfeLEmuXUa9yH4wuc2K"
+    },
+    {
+      "name": "skin-tone-analysis",
+      "ok": true,
+      "ms": 3900,
+      "detail": {
+        "task_status": "success",
+        "error": null,
+        "results": {
+          "color": {
+            "eye_color": "#705d44",
+            "eye_color_name": "Amber",
+            "lip_color": "#d59687",
+            "eyebrow_color": "#a78b78",
+            "skin_color": "#bb9982",
+            "hair_color": "#FAF0BE",
+            "hair_color_name": "Blonde"
+          },
+          "face_quality": {
+            "has_face": true,
+            "area": "good",
+            "frontal": "good",
+            "lighting": "good",
+            "faceangle": "good"
+          }
+        }
+      }
+    },
+    {
+      "name": "fitzpatrick-scale-analyzer",
+      "ok": true,
+      "ms": 2232,
+      "detail": {
+        "task_status": "success",
+        "error": null,
+        "results": {
+          "timed": 852,
+          "fitzpatrick_scale": "II"
+        }
+      }
+    },
+    {
+      "name": "face-attr-analysis",
+      "ok": true,
+      "ms": 3956,
+      "detail": {
+        "task_status": "success",
+        "error": null,
+        "results": {
+          "nose": {},
+          "agegender": {},
+          "eyelid": {},
+          "eyebrow": {},
+          "color": {},
+          "face_quality": {
+            "has_face": true,
+            "area": "good",
+            "frontal": "good",
+            "lighting": "good",
+            "faceangle": "good"
+          },
+          "cheekbone": {},
+          "faceshape": "Heart",
+          "facialratio": {}
+        }
+      }
+    },
+    {
+      "name": "cloth-v3",
+      "ok": true,
+      "ms": 10666,
+      "detail": {
+        "task_status": "success",
+        "error": null,
+        "results": {
+          "url": "https://yce-us.s3-accelerate.amazonaws.com/ttl30/487478760023524724/116650423717/v2/aeMNNB0KmUIP8rnQ996tC5Q/da2f4bac-e5d5-4b64-952c-171d3c247438.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260809T025354Z&X-Amz-SignedHeaders=host&X-Amz-Expires=7200&X-Amz-Credential=AKIARB77EV5Y5D7DAE3S%2F20260809%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Signature=8e629b41a71d8aa33642cf1da4ad2f77b2efd6363b38ba4a54b4c8e8c8aff692"
+        }
+      }
+    },
+    {
+      "name": "cloth-v3:fidelity-ΔE",
+      "ok": true,
+      "ms": 845,
+      "detail": {
+        "intended": "#AE011C",
+        "rendered": "#D30B28",
+        "deltaE2000": 7.74
+      }
+    },
+    {
+      "name": "2d-vto/earring",
+      "ok": true,
+      "ms": 5058,
+      "detail": {
+        "task_status": "success",
+        "error": null,
+        "results": {
+          "url": "https://yce-us.s3-accelerate.amazonaws.com/ttl30/487478760023524724/116650435760/v2/aeMNNB0KmUIP8rnQ996tC5Q/55e11007-cd5b-49a9-a008-71aac5f8fdc1.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260809T025400Z&X-Amz-SignedHeaders=host&X-Amz-Expires=7200&X-Amz-Credential=AKIARB77EV5Y5D7DAE3S%2F20260809%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Signature=6dbd7a14e74abb61e792bb295692b79d887d11acba477e520bc681ea1d6fda13"
+        }
+      }
+    },
+    {
+      "name": "credit:after",
+      "ok": true,
+      "ms": 203,
+      "detail": 898
+    }
+  ]
+}

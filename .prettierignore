@@ -10,3 +10,8 @@ package-lock.json
 # Hand-authored single-file HTML surfaces (landing + pitch deck). Prettier would
 # reflow 60KB of deliberately hand-tuned markup, inline CSS and inline JS.
 public/*.html
+
+# Spike evidence — raw API responses, committed verbatim as captured 2026-08-04.
+# Reformatting them would alter the artifact the README points at as proof.
+scripts/raw-*.json
+scripts/spike-results.json
