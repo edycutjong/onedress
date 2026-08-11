@@ -1,3 +1,9 @@
+## [1.4.3](https://github.com/edycutjong/onedress/compare/v1.4.2...v1.4.3) (2026-08-11)
+
+### Bug Fixes
+
+* **copy:** reconcile every claim across landing, pitch and README ([cb5d41e](https://github.com/edycutjong/onedress/commit/cb5d41ed30924dbaf5ee8b2208eeb6741c32333b))
+
 ## [1.4.2](https://github.com/edycutjong/onedress/compare/v1.4.1...v1.4.2) (2026-08-11)
 
 ### Bug Fixes
