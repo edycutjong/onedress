@@ -27,15 +27,95 @@
 
 <meta name="theme-color" content="#140A11">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..640;1,9..144,300..640&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Type is self-hosted from /fonts, exactly as the app self-hosts it through
+     next/font. It used to come from fonts.googleapis.com, and that cost the LCP:
+     the headline could not reach its final paint until a render-blocking
+     stylesheet on one third-party origin had resolved and then pointed at font
+     files on a second one — two DNS+TLS handshakes deep, ~3.6s of render delay,
+     89% of a 4.0s LCP. Same files, same bytes; one origin, no stylesheet hop,
+     and the two faces the hero is set in are preloaded so they are in flight
+     with the HTML rather than after it. -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/fraunces-latin.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/fraunces-italic-latin.woff2">
 
 <style>
 /* ============================================================
    OneDress landing — "bridal atelier after dark"
    Tokens ported from assets/tokens.css (single dark theme by design)
    ============================================================ */
+
+/* ---------- Self-hosted type ----------
+   The three families this page has always used, now served from our own origin
+   instead of fonts.googleapis.com. That move is the LCP fix: the headline could
+   not reach its final paint until a render-blocking stylesheet on one third-party
+   origin had resolved and then pointed at font files on a second one, which cost
+   ~3.6s of render delay — 89% of a 4.0s LCP. The two faces the hero is set in are
+   preloaded in <head>, so they are in flight with the HTML rather than after it.
+
+   The files are Google's own woff2 subsets, then subset again with pyftsubset to
+   the 107 characters this page actually sets (printable ASCII plus © ° · × Δ – —
+   ₚ ↑ → ≤). No outlines, axes or metrics were touched — a variable Fraunces still
+   varies across opsz and wght — only unused glyphs were dropped, which took the
+   type payload from 248KB to 155KB and the measured LCP from 2481ms to 2031ms.
+   The exact command and the OFL notice are in fonts/OFL.txt.
+
+   Two greek faces are here for one character: the Δ of ΔE00, which appears in
+   body copy and in mono. Subset to that single glyph they cost about 1KB each.
+   Fraunces has no greek subset upstream, so the Δ in the display figures comes
+   from the serif fallback — as it always has.
+
+   unicode-range is Google's, unchanged, so a character outside these subsets
+   falls through to a system face rather than pulling down a face for one
+   glyph. */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 300 640;
+  font-display: swap;
+  src: url('/fonts/fraunces-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 300 640;
+  font-display: swap;
+  src: url('/fonts/fraunces-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+
 :root {
   --primary: #D98BA3;            /* dusty rose */
   --accent: #9CAF88;             /* dusty sage — the winning colorway */
@@ -853,10 +933,28 @@ footer {
 .rv-d2 { transition-delay: 180ms; }
 .rv-d3 { transition-delay: 270ms; }
 
+/* ---------- Reveal on load (above the fold only) ----------
+   Same 700ms curve and same stagger as `.rv`, driven by CSS instead of the
+   IntersectionObserver at the bottom of the document. It exists because the hero
+   headline is the LCP element and an element at opacity 0 is not an LCP candidate
+   at all: gating it on a script that only runs after 65KB of HTML has parsed cost
+   ~3.7s of pure render delay (88% of LCP, per Lighthouse's LCP phase breakdown).
+   Nothing below the fold uses this — there `.rv` is still the right behaviour,
+   because content that has never been on screen has nothing to reveal. */
+.rv-now { animation: rv-in 700ms var(--ease) both; }
+.rv-now.rv-d1 { animation-delay: 90ms; }
+.rv-now.rv-d2 { animation-delay: 180ms; }
+.rv-now.rv-d3 { animation-delay: 270ms; }
+@keyframes rv-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { animation: none !important; transition-duration: 0.01ms !important; }
   .rv { opacity: 1; transform: none; }
+  .rv-now { animation: none !important; }
 }
 </style>
 </head>
@@ -886,10 +984,10 @@ footer {
 <!-- ================= HERO ================= -->
 <section class="hero" id="top" aria-labelledby="hero-h">
   <div class="wrap">
-    <p class="hero-badge rv"><span class="dot" aria-hidden="true"></span> Built for the YouCam API Hackathon · Topic C — Skin AI × Apparel VTO</p>
-    <h1 id="hero-h" class="rv rv-d1">Six bridesmaids. Six skin tones. One dress color — <span class="proof">provably no&nbsp;one's worst&nbsp;option.</span></h1>
+    <p class="hero-badge rv-now"><span class="dot" aria-hidden="true"></span> Built for the YouCam API Hackathon · Topic C — Skin AI × Apparel VTO</p>
+    <h1 id="hero-h" class="rv-now rv-d1">Six bridesmaids. Six skin tones. One dress color — <span class="proof">provably no&nbsp;one's worst&nbsp;option.</span></h1>
 
-    <div class="tone-run rv rv-d2" role="img" aria-label="Six skin tones, Fitzpatrick I to VI, converging on one dress color">
+    <div class="tone-run rv-now rv-d2" role="img" aria-label="Six skin tones, Fitzpatrick I to VI, converging on one dress color">
       <span class="t" style="background:var(--tone-0)"></span>
       <span class="t" style="background:var(--tone-1)"></span>
       <span class="t" style="background:var(--tone-2)"></span>
@@ -900,13 +998,13 @@ footer {
       <span class="one"></span>
     </div>
 
-    <p class="sub rv rv-d2">Bridesmaid dresses are one color for the whole party — and usually final-sale. OneDress measures every bridesmaid's <strong>real skin hex and Fitzpatrick depth</strong>, solves for the single color that <strong>harms the group least</strong>, and renders it photorealistically on each of them.</p>
+    <p class="sub rv-now rv-d2">Bridesmaid dresses are one color for the whole party — and usually final-sale. OneDress measures every bridesmaid's <strong>real skin hex and Fitzpatrick depth</strong>, solves for the single color that <strong>harms the group least</strong>, and renders it photorealistically on each of them.</p>
 
-    <div class="hero-ctas rv rv-d3">
+    <div class="hero-ctas rv-now rv-d3">
       <a class="btn btn-primary" href="/party">Open the live app <span class="arrow" aria-hidden="true">→</span></a>
       <a class="btn btn-ghost" href="/pitch">See the pitch</a>
     </div>
-    <p class="hero-note rv rv-d3">The app opens on a cached demo party — six measured bridesmaids, zero API units spent, no key required. Engine proven live against 5 YouCam (Perfect Corp) endpoints.</p>
+    <p class="hero-note rv-now rv-d3">The app opens on a cached demo party — six measured bridesmaids, zero API units spent, no key required. Engine proven live against 5 YouCam (Perfect Corp) endpoints.</p>
 
     <figure class="hero-figure rv">
       <!-- The figure is never wider than the 1120px wrap minus its 24px gutters,
