@@ -168,6 +168,13 @@ h1, h2 { font-family: var(--font-display); font-weight: 380; letter-spacing: -0.
   display: flex; align-items: center; gap: 12px;
   z-index: 70;
   text-decoration: none;
+  /* The stage is a fixed 1920x1080 board scaled to fit, so on a 390px phone every
+     target shrinks with it — this 30px wordmark renders 6px tall and failed axe's
+     24x24 target-size rule. The padding is invisible (no background, no border) and
+     grows the hit box upward only, so the wordmark itself does not move: 88 stage px
+     of padding puts the box at 118px, which is 24 CSS px at the narrowest scale the
+     deck is designed for. */
+  padding-top: 88px;
 }
 .deck-brand img { width: 30px; height: 30px; border-radius: 8px; }
 .deck-brand span {
@@ -197,7 +204,10 @@ kbd {
   -webkit-tap-highlight-color: transparent;
 }
 .zone:focus-visible { outline-offset: -4px; }
-.zone.prev { left: 0; width: 12%; }
+/* The prev zone stops above the footer strip so the wordmark it used to sit on top
+   of has clear space around it — the second half of the same target-size rule. The
+   next zone keeps the full height: nothing interactive lives in that corner. */
+.zone.prev { left: 0; width: 12%; bottom: 130px; }
 .zone.next { right: 0; width: 12%; }
 
 /* ---------- Presenter notes ---------- */
