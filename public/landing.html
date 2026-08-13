@@ -116,6 +116,55 @@
   unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
 }
 
+/* ---------- Webfont fallback metrics ----------
+   Even self-hosted and preloaded, `display: swap` leaves a window in which the
+   hero paints in a fallback face and re-lays out when the real font lands — and
+   that window is the whole of it on a slow first visit. Measured with the font
+   files held back 2.5s: CLS 0.33, almost all of it one entry — the h1 re-wraps,
+   the whole hero column moves up 46px, and the 775px-tall hero backdrop is
+   repainted somewhere else. That is the same intermittent 0.259 the live audit
+   caught. With these overrides in place the same experiment measures 0.030.
+
+   These two faces give the fallback the SAME metrics as the webfont, so the swap
+   changes letter shapes and not the space they occupy.
+
+   Inter is derived the way next/font derives it for the app (see app/layout.tsx),
+   from the metrics in next/dist/server/capsize-font-metrics.json:
+
+     size-adjust    = (xWidthAvg/unitsPerEm)_web ÷ (xWidthAvg/unitsPerEm)_local
+     ascent/descent = metric ÷ (unitsPerEm × size-adjust)
+     Inter 978/2048 vs Arial 913/2048 → 107.119%, asc 90.436%, desc 22.518%
+   Measured: that stack renders the hero badge string within 0.06% of Inter.
+
+   Fraunces cannot use that formula. It is a variable font with an `opsz` axis, so
+   its advance widths change with font-size — the same string is 4.7% narrower than
+   Georgia-derived metrics at the hero's mobile size and 11.7% narrower at its
+   desktop size, and one xWidthAvg ratio cannot describe both. size-adjust is
+   therefore calibrated by measurement at the size that actually decides the
+   layout: the h1 at 43.5px, where the headline's line count is what moves the
+   whole hero. 105.204% × (1516.94 ÷ 1592.19) = 100.23%; ascent/descent are then
+   renormalised over that adjusted em (1956 and 510 ÷ 2000 × 1.0023).
+
+   `local()` only, so nothing extra is downloaded; where none of the named faces
+   exist (most Linux desktops) the family is simply unusable and the stack falls
+   through to the generic fallback exactly as it did before. */
+@font-face {
+  font-family: 'Fraunces Fallback';
+  src: local('Georgia'), local('Times New Roman'), local('Times');
+  size-adjust: 100.23%;
+  ascent-override: 97.576%;
+  descent-override: 25.441%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+  size-adjust: 107.119%;
+  ascent-override: 90.436%;
+  descent-override: 22.518%;
+  line-gap-override: 0%;
+}
+
 :root {
   --primary: #D98BA3;            /* dusty rose */
   --accent: #9CAF88;             /* dusty sage — the winning colorway */
@@ -143,8 +192,8 @@
   --border-default: rgba(255,255,255,0.15);
   --hairline: color-mix(in srgb, var(--tertiary) 26%, transparent);
 
-  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --font-ui: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces', 'Fraunces Fallback', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Inter', 'Inter Fallback', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --radius: 16px;
