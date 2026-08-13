@@ -1,3 +1,25 @@
+## [1.5.0](https://github.com/edycutjong/onedress/compare/v1.4.3...v1.5.0) (2026-08-13)
+
+### Features
+
+* **app:** add a branded 404 that routes back into the product ([cb4141f](https://github.com/edycutjong/onedress/commit/cb4141fc806fc87458adf5fb5ba1245df413a766))
+
+### Bug Fixes
+
+* **a11y:** give the deck wordmark a 24px touch target ([79a5dfd](https://github.com/edycutjong/onedress/commit/79a5dfdd17b58aef0ef2b52d2367f2a28c472709))
+* **a11y:** keep the landing footer headings in order ([52467f7](https://github.com/edycutjong/onedress/commit/52467f7b13cddcc81d29649fb0a8ee24693b429a))
+* **landing:** stop the webfont swap from shifting the hero ([e750e45](https://github.com/edycutjong/onedress/commit/e750e45f6fc5829f2b16c178eb4bcc5ebeab7aba))
+* **seo:** cut the landing meta description to the 50-160 char window ([6b72a09](https://github.com/edycutjong/onedress/commit/6b72a0921e9c45ab90b540d9f1a03eb588ef4e54))
+
+### Performance
+
+* **landing:** self-host the type and paint the hero without waiting on JS ([b983c6e](https://github.com/edycutjong/onedress/commit/b983c6e2594a5dc66f61e476eecb97cd53ad21a9))
+* **landing:** serve the hero at display size, as WebP with a PNG fallback ([7b9130f](https://github.com/edycutjong/onedress/commit/7b9130ffce786bbcbf5dd7a099c50948ec715dd8))
+
+### Documentation
+
+* **screenshots:** recapture the gallery against the restyled app ([55c952c](https://github.com/edycutjong/onedress/commit/55c952cbb1517d88033621a48ccd8ff866d0c8d0))
+
 ## [1.4.3](https://github.com/edycutjong/onedress/compare/v1.4.2...v1.4.3) (2026-08-11)
 
 ### Bug Fixes
