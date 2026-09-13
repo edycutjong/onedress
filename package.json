@@ -29,7 +29,7 @@
     "bench:cloth": "tsx bench/run-cloth-latency.ts"
   },
   "dependencies": {
-    "next": "^15.5.23",
+    "next": "^15.5.24",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "sharp": "^0.35.3",
